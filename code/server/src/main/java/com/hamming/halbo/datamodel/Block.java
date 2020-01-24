@@ -1,15 +1,17 @@
 package com.hamming.halbo.datamodel;
 
+import java.awt.*;
+
 public class Block extends BasicObject {
 
-    private BlockType type;
+    private Color color = Color.WHITE;
 
 
-    public BlockType getType() {
-        return type;
+    public Color getColor() {
+        return color;
     }
 
-    public void setType(BlockType type) {
-        this.type = type;
+    public void setColor(Color color) {
+        this.color = color;
     }
 }
