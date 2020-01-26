@@ -9,6 +9,7 @@ public class RectangleBlock extends Block {
 
 
     public RectangleBlock( int width, int length) {
+        super();
         this.width = width;
         this.length = length;
     }

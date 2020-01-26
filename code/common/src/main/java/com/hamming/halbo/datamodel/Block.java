@@ -6,7 +6,6 @@ public class Block extends BasicObject {
 
     private Color color = Color.WHITE;
 
-
     public Color getColor() {
         return color;
     }

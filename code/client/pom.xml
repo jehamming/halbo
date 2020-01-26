@@ -1,0 +1,90 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.hamming.halbo</groupId>
+  <artifactId>client</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <jme3_g>com.jme3</jme3_g>
+    <jme3_v>3.0.10</jme3_v>
+    <lwjgl.version>2.9.3</lwjgl.version>
+    <natives.version>0.0.6</natives.version>
+  </properties>
+
+  <repositories>
+    <repository>
+      <id>mavenNatives</id>
+      <name>Maven Natives Repository</name>
+      <url>http://mavennatives.googlecode.com/svn/repo</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>com_jme3-repo</id>
+      <url>http://dl.bintray.com/jmonkeyengine/com.jme3</url>
+    </repository>
+  </repositories>
+
+
+  <dependencies>
+    <dependency>
+      <groupId>${jme3_g}</groupId>
+      <artifactId>jme3-core</artifactId>
+      <version>${jme3_v}</version>
+    </dependency>
+    <dependency>
+      <groupId>${jme3_g}</groupId>
+      <artifactId>jme3-desktop</artifactId>
+      <version>${jme3_v}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>${jme3_g}</groupId>
+      <artifactId>jme3-lwjgl</artifactId>
+      <version>${jme3_v}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.lwjgl.lwjgl</groupId>
+      <artifactId>lwjgl</artifactId>
+      <version>${lwjgl.version}</version>
+    </dependency>
+  </dependencies>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+
+<!--      <plugin>-->
+<!--        <groupId>com.googlecode.mavennatives</groupId>-->
+<!--        <artifactId>maven-nativedependencies-plugin</artifactId>-->
+<!--        <version>${natives.version}</version>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <id>unpacknatives</id>-->
+<!--            <phase>generate-resources</phase>-->
+<!--            <goals>-->
+<!--              &lt;!&ndash;suppress MavenModelInspection (this line is for IDEA)&ndash;&gt;-->
+<!--              <goal>copy</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--      </plugin>-->
+    </plugins>
+  </build>
+
+
+</project>
