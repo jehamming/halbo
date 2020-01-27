@@ -1,9 +1,15 @@
 package com.hamming.halbo;
 
 // This is the main server class
-public class Server {
+public abstract class Server {
 
-    public static void main(String[] args) {
-        System.out.println("NOT YET IMPLEMENTED");
+    private int port;
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 }

@@ -7,6 +7,9 @@ public class Baseplate extends BasicObject {
 
     private BaseplateType type ;
 
+    public Baseplate(HalboID id) {
+        super(id);
+    }
 
     public boolean addConstruction(Construction c) {
         // TODO Implement - How to position Contructions ?
@@ -16,5 +19,13 @@ public class Baseplate extends BasicObject {
     public List<Construction> getAllContructions() {
         // TODO Implement
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "Baseplate{" +
+                "type=" + type +
+                super.toString() +
+                '}';
     }
 }

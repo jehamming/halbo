@@ -10,6 +10,10 @@ public class City extends BasicObject {
 
     private User mayor;
 
+    public City(HalboID id) {
+        super(id);
+    }
+
     public boolean addBaseplate(Baseplate b, long x, long y) {
         //TODO Implement
         return true;
@@ -43,5 +47,13 @@ public class City extends BasicObject {
 
     public void setMayor(User mayor) {
         this.mayor = mayor;
+    }
+
+    @Override
+    public String toString() {
+        return "City{" +
+                "mayor=" + mayor +
+                super.toString() +
+                '}';
     }
 }

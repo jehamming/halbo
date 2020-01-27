@@ -3,17 +3,17 @@ package com.hamming.halbo.datamodel;
 // Everything extends a BasicObject
 public class BasicObject {
 
-    private long id;
+    private HalboID id;
     private User creator;
     private User owner;
     private String name;
 
-    public long getId() {
-        return id;
+    public BasicObject(HalboID id) {
+        this.id = id;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public HalboID getId() {
+        return id;
     }
 
     public User getCreator() {
@@ -38,5 +38,13 @@ public class BasicObject {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return  ", id=" + id +
+                ", creator=" + creator +
+                ", owner=" + owner +
+                ", name='" + name;
     }
 }

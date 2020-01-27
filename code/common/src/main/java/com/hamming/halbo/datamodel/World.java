@@ -6,7 +6,9 @@ package com.hamming.halbo.datamodel;
 public class World extends BasicObject {
 
 
-
+    public World(HalboID id) {
+        super(id);
+    }
 
     public boolean addContinent( Continent c ) {
         //TODO Implement
