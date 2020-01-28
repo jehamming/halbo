@@ -8,8 +8,8 @@ public class RectangleBlock extends Block {
     private int length;
 
 
-    public RectangleBlock( int width, int length) {
-        super();
+    public RectangleBlock( HalboID id,  int width, int length) {
+        super(id);
         this.width = width;
         this.length = length;
     }
@@ -20,5 +20,14 @@ public class RectangleBlock extends Block {
 
     public int getLength() {
         return length;
+    }
+
+    @Override
+    public String toString() {
+        return "RectangleBlock{" +
+                "width=" + width +
+                ", length=" + length +
+                super.toString() +
+                '}';
     }
 }

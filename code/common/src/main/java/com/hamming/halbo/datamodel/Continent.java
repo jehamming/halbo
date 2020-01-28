@@ -6,6 +6,10 @@ public class Continent extends BasicObject{
 
     private User senator;
 
+    public Continent(HalboID id) {
+        super(id);
+    }
+
     public boolean addCity( City c) {
         //TODO Implement
         return true;
@@ -18,5 +22,13 @@ public class Continent extends BasicObject{
 
     public void setSenator(User senator) {
         this.senator = senator;
+    }
+
+    @Override
+    public String toString() {
+        return "Continent{" +
+                "senator=" + senator +
+                super.toString() +
+                '}';
     }
 }

@@ -5,7 +5,11 @@ public class User {
     private String fullName;
     private String username;
     private String password;
-    
+    private HalboID id;
+
+    public User( HalboID id) {
+        this.id = id;
+    }
 
 
     public String getFullName() {
@@ -30,5 +34,19 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public HalboID getId() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "fullName='" + fullName + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", id=" + id +
+                '}';
     }
 }
