@@ -118,7 +118,19 @@ public class UserFactory {
             e.printStackTrace();
             retval = false;
         }
+        Long highestID = getHighestID();
+        IDManager.getInstance().setLastAddedID(HalboID.Prefix.USR, highestID);
         return retval;
+    }
+
+    private Long getHighestID() {
+        Long highest = 0L;
+        for (User u : users ) {
+            if (u.getId().getId() > highest) {
+                highest = u.getId().getId();
+            }
+        }
+        return highest;
     }
 
     public boolean storeUsersInFile(String filename) {

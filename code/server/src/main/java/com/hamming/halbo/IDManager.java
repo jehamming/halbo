@@ -22,14 +22,18 @@ public class IDManager {
     }
 
     public HalboID getNextID( HalboID.Prefix prefix) {
-        Long nextId = lastAdded.get(prefix);
-        if (nextId == null) { // Never created an ID before.
-            nextId = 0L;
+        Long lastId = lastAdded.get(prefix);
+        if (lastId == null) { // Never created an ID before.
+            lastId = 0L;
         }
-        nextId++;
+        Long nextId = lastId + 1;
         HalboID newId = new HalboID(prefix, nextId);
         lastAdded.put(prefix, nextId); // Store last added ID for this prefix
         return newId;
+    }
+
+    public void setLastAddedID(HalboID.Prefix prefix, Long id) {
+        lastAdded.put(prefix, id); // Store last added ID for this prefix
     }
 
 
