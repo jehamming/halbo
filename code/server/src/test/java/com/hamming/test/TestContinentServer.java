@@ -17,10 +17,6 @@ public class TestContinentServer {
         City city = cs.addCity("City01", user);
         System.out.println("City : " + city);
 
-        Baseplate baseplate = Bas
-
-        city.addBaseplate()
-
     }
 
     public static void main(String[] args) {

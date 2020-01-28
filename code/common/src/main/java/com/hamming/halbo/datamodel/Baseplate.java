@@ -1,9 +1,10 @@
 package com.hamming.halbo.datamodel;
 
+import java.io.Serializable;
 import java.util.List;
 
 // A baseplate is like a lego baseplate. There are several types of plates, with grass or with road parts, etc.
-public class Baseplate extends BasicObject {
+public class Baseplate extends BasicObject   {
 
     private BaseplateType type ;
 

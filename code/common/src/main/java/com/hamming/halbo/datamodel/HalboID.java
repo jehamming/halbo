@@ -1,12 +1,15 @@
 package com.hamming.halbo.datamodel;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 // The class to contain and ID for something.
 // An HalboID is a combination of a Prefix and a number, for example :
 // W1, w2 (World IDs)
 // C1,C2 (City IDs)
 // SYS1, SYS2, etc (System IDs)
 // Etc.
-public class HalboID {
+public class HalboID implements Serializable  {
 
     public enum Prefix {
         WLD, // World
@@ -32,6 +35,26 @@ public class HalboID {
 
     public long getId() {
         return id;
+    }
+
+    public static HalboID valueOf(Prefix prefix, long id) {
+        final HalboID hid = new HalboID(prefix,id);
+        return hid;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HalboID halboID = (HalboID) o;
+        return id == halboID.id &&
+                prefix == halboID.prefix;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(prefix, id);
     }
 
     @Override
