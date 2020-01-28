@@ -1,6 +1,7 @@
 package com.hamming.test;
 
 import com.hamming.halbo.ContinentServer;
+import com.hamming.halbo.datamodel.Baseplate;
 import com.hamming.halbo.datamodel.City;
 import com.hamming.halbo.datamodel.User;
 import com.hamming.halbo.factories.UserFactory;
@@ -15,6 +16,10 @@ public class TestContinentServer {
         ContinentServer cs = new ContinentServer();
         City city = cs.addCity("City01", user);
         System.out.println("City : " + city);
+
+        Baseplate baseplate = Bas
+
+        city.addBaseplate()
 
     }
 
