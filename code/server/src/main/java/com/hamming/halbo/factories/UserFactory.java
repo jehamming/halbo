@@ -55,4 +55,12 @@ public class UserFactory {
         }
         return returnValue;
     }
+
+    public String getUsers() {
+        StringBuilder sb = new StringBuilder();
+        for (User u : users){
+            sb.append(u + "\n");
+        }
+        return sb.toString();
+    }
 }
