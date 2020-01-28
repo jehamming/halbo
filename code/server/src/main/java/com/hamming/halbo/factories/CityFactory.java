@@ -5,15 +5,19 @@ import com.hamming.halbo.datamodel.City;
 import com.hamming.halbo.datamodel.HalboID;
 import com.hamming.halbo.datamodel.User;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CityFactory {
     private static CityFactory instance;
 
     private CityFactory() {
         initialize();
     };
+    private List<City> cities;
 
     private void initialize() {
-        // TODO Implement reading all the types from a source like XML?
+        cities = new ArrayList<City>();
     }
 
     public static CityFactory getInstance() {

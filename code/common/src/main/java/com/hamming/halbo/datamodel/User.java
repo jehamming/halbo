@@ -1,6 +1,9 @@
 package com.hamming.halbo.datamodel;
 
-public class User {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class User implements Serializable {
 
     private String fullName;
     private String username;
@@ -38,6 +41,27 @@ public class User {
 
     public HalboID getId() {
         return id;
+    }
+
+    public static User valueOf( HalboID id, String fullName, String username, String password ) {
+        final User u = new User(id);
+        u.setPassword(password);
+        u.setFullName(fullName);
+        u.setUsername(username);
+        return u;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override

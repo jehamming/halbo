@@ -1,7 +1,9 @@
 package com.hamming.halbo.datamodel;
 
+import java.io.Serializable;
+
 // Everything extends a BasicObject
-public class BasicObject {
+public class BasicObject implements Serializable {
 
     private HalboID id;
     private User creator;
