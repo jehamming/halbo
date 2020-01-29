@@ -2,6 +2,7 @@ package com.hamming.halbo;
 
 import com.hamming.halbo.datamodel.City;
 import com.hamming.halbo.datamodel.User;
+import com.hamming.halbo.factories.ContinentFactory;
 import com.hamming.halbo.factories.UserFactory;
 
 import java.util.Scanner;
@@ -9,7 +10,6 @@ import java.util.Scanner;
 public class ServerCLI {
 
     boolean runMenu = true;
-    ContinentServer cs = new ContinentServer();
 
     //                  Create Read Update Delete.
     //TODO Write methods to CRUD :
@@ -71,17 +71,17 @@ public class ServerCLI {
 
 
             case 2: //Search a city by city name
-                System.out.println(searchCityByCityName());
+                System.out.println(searchCityByName());
                 break;
 
 
             case 3://Delete a city
-                City toDeleteCity = searchCityByCityName();
-                cs.removeCityByCity(toDeleteCity);
+                City toDeleteCity = searchCityByName();
+                ContinentFactory.getInstance().removeCity(toDeleteCity);
                 break;
 
             case 4: //Return a list of cities on the continent
-                System.out.println(cs.getCitiesAsString());
+                System.out.println(ContinentFactory.getInstance().getCitiesAsString());
                 break;
 
             case 9: //Stop the menu
@@ -94,11 +94,11 @@ public class ServerCLI {
         }
     }
 
-    private City searchCityByCityName() {
+    private City searchCityByName() {
         Scanner userInput = new Scanner(System.in);
         System.out.println("What is the name of the city?");
         String cityName = userInput.nextLine();
-        City toSearchCity = cs.findCityByName(cityName);
+        City toSearchCity = ContinentFactory.getInstance().findCityByName(cityName);
         if(toSearchCity != null){
             //It has found an city.
             return toSearchCity;
@@ -113,7 +113,7 @@ public class ServerCLI {
         System.out.println("What will the name of the city be?");
         String cityName = userInput.nextLine();
         User creator = searchUserByUsername();
-        cs.addCity(cityName,creator);
+        ContinentFactory.getInstance().addCity(cityName,creator);
     }
 
 
