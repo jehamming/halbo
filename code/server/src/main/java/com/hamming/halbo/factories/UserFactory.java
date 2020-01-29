@@ -102,7 +102,7 @@ public class UserFactory {
         return returnValue;
     }
 
-    public String getUsers() {
+    public String getUsersAsAString() {
         StringBuilder sb = new StringBuilder();
         for (User u : users){
             sb.append(u + "\n");

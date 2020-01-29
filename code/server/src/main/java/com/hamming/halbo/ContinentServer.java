@@ -37,10 +37,10 @@ public class ContinentServer extends Server{
         return city;
     }
 
-    private City findCityByName(String name) {
+    public City findCityByName(String name) {
         City retVal = null;
         for (City city : cities) {
-            if ( city.getName().equals(name)) {
+            if (city.getName().equals(name)) {
                 retVal = city;
                 break;
             }
@@ -49,4 +49,15 @@ public class ContinentServer extends Server{
     }
 
 
+    public void removeCityByCity(City city) {
+        cities.remove(city);
+    }
+
+    public String getCitiesAsString() {
+        StringBuilder sb = new StringBuilder();
+        for (City c : cities){
+            sb.append(c + "\n");
+        }
+        return sb.toString();
+    }
 }

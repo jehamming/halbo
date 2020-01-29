@@ -1,5 +1,6 @@
 package com.hamming.halbo;
 
+import com.hamming.halbo.datamodel.City;
 import com.hamming.halbo.datamodel.User;
 import com.hamming.halbo.factories.UserFactory;
 
@@ -8,6 +9,7 @@ import java.util.Scanner;
 public class ServerCLI {
 
     boolean runMenu = true;
+    ContinentServer cs = new ContinentServer();
 
     //                  Create Read Update Delete.
     //TODO Write methods to CRUD :
@@ -34,10 +36,84 @@ public class ServerCLI {
                 showUserMenu();
                 break;
 
+            case 2:
+                System.out.println("Not yet implemented.");
+                break;
+            
+            case 3:
+                showContinentMenu();
+                break;
+                
             default:
                 System.out.println("Please fill in a valid number from the menu selection");
                 break;
         }
+    }
+
+    private void showContinentMenu() {
+        while(runMenu){
+            System.out.println("----- Welcome to the Halbo User Menu! -----");
+            System.out.println("1. Add a city to a continent");
+            System.out.println("2. Search a city by City name");
+            System.out.println("3. Delete a city by City name");
+            System.out.println("4. Show the list of cities");
+            System.out.println("9. Exit the menu");
+            int selection = getUserInput();
+            selectionContinentMenu(selection);
+        }
+    }
+
+    private void selectionContinentMenu(int selection) {
+        switch (selection){
+            case 1: //Create a city
+                createCity();
+                break;
+
+
+            case 2: //Search a city by city name
+                System.out.println(searchCityByCityName());
+                break;
+
+
+            case 3://Delete a city
+                City toDeleteCity = searchCityByCityName();
+                cs.removeCityByCity(toDeleteCity);
+                break;
+
+            case 4: //Return a list of cities on the continent
+                System.out.println(cs.getCitiesAsString());
+                break;
+
+            case 9: //Stop the menu
+                runMenu = false;
+                break;
+
+                default: //The user has not made an valid choice.
+                    System.out.println("Please choose a valid selection from the menu.");
+                    break;
+        }
+    }
+
+    private City searchCityByCityName() {
+        Scanner userInput = new Scanner(System.in);
+        System.out.println("What is the name of the city?");
+        String cityName = userInput.nextLine();
+        City toSearchCity = cs.findCityByName(cityName);
+        if(toSearchCity != null){
+            //It has found an city.
+            return toSearchCity;
+        }else {
+            //It has not found an city.
+            return null;
+        }
+    }
+
+    private void createCity() {
+        Scanner userInput = new Scanner(System.in);
+        System.out.println("What will the name of the city be?");
+        String cityName = userInput.nextLine();
+        User creator = searchUserByUsername();
+        cs.addCity(cityName,creator);
     }
 
 
@@ -87,7 +163,7 @@ public class ServerCLI {
                 break;
 
             case 5: //print out a list of users.
-                System.out.println(UserFactory.getInstance().getUsers());
+                System.out.println(UserFactory.getInstance().getUsersAsAString());
                 break;
 
             case 9: //Stop the user menu
