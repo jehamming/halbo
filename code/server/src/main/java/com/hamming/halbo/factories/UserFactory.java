@@ -101,6 +101,13 @@ public class UserFactory {
         return returnValue;
     }
 
+    public String getUsersAsAString() {
+        StringBuilder sb = new StringBuilder();
+        for (User u : users){
+            sb.append(u + "\n");
+        }
+        return sb.toString();
+    }
 
     public boolean loadUsersFromFile(String filename) {
         File file = new File(filename);
@@ -151,7 +158,5 @@ public class UserFactory {
         }
         return retval;
     }
-
-
 
 }
