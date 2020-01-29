@@ -25,7 +25,6 @@ public class UserFactory {
         systemUser = new User(id);
         systemUser.setFullName("SYSTEM");
         users = new ArrayList<User>();
-        // TODO Check a connection with a Database or something?
     }
 
     public static UserFactory getInstance() {
@@ -110,7 +109,6 @@ public class UserFactory {
         return sb.toString();
     }
 
-
     public boolean loadUsersFromFile(String filename) {
         File file = new File(filename);
         return loadUsersFromFile(file);
@@ -127,7 +125,19 @@ public class UserFactory {
             e.printStackTrace();
             retval = false;
         }
+        Long highestID = getHighestID();
+        IDManager.getInstance().setLastAddedID(HalboID.Prefix.USR, highestID);
         return retval;
+    }
+
+    private Long getHighestID() {
+        Long highest = 0L;
+        for (User u : users ) {
+            if (u.getId().getId() > highest) {
+                highest = u.getId().getId();
+            }
+        }
+        return highest;
     }
 
     public boolean storeUsersInFile(String filename) {
@@ -148,7 +158,5 @@ public class UserFactory {
         }
         return retval;
     }
-
-
 
 }
