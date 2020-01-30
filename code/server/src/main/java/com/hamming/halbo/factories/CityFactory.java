@@ -36,4 +36,17 @@ public class CityFactory {
         city.setOwner(creator);
         return city;
     }
+
+    public void removeCity(City toDeleteCity) {
+        cities.remove(toDeleteCity);
+    }
+
+
+    public String getCitiesAsString() {
+        StringBuilder sb = new StringBuilder();
+        for (City c : cities){
+            sb.append(c + "\n");
+        }
+        return sb.toString();
+    }
 }

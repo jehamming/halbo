@@ -2,6 +2,7 @@ package com.hamming.halbo;
 
 import com.hamming.halbo.datamodel.City;
 import com.hamming.halbo.datamodel.User;
+import com.hamming.halbo.factories.CityFactory;
 import com.hamming.halbo.factories.ContinentFactory;
 import com.hamming.halbo.factories.UserFactory;
 
@@ -43,6 +44,11 @@ public class ServerCLI {
             case 3:
                 showContinentMenu();
                 break;
+
+
+            case 4:
+                showCitiesMenu();
+                break;
                 
             default:
                 System.out.println("Please fill in a valid number from the menu selection");
@@ -50,9 +56,52 @@ public class ServerCLI {
         }
     }
 
+    private void showCitiesMenu() {
+        while(runMenu){
+            System.out.println("----- Welcome to the Halbo Cities Menu! -----");
+            System.out.println("1. Create a city");
+            System.out.println("2. Search a city by City name");
+            System.out.println("3. Delete a city by City name");
+            System.out.println("4. Show the list of cities");
+            System.out.println("9. Exit the menu");
+            int selection = getUserInput();
+            selectionCitiesMenu(selection);
+        }
+    }
+
+    private void selectionCitiesMenu(int selection) {
+        switch (selection){
+
+            case 1: //Create a city.
+                createCity();
+                break;
+
+            case 2: //Search a city by name.
+                System.out.println(searchCityByName());
+                break;
+
+            case 3: //Remove a city.
+                City toDeleteCity = searchCityByName();
+                ContinentFactory.getInstance().removeCity(toDeleteCity);
+                CityFactory.getInstance().removeCity(toDeleteCity);
+                break;
+
+            case 4: //Prints out all the cities.
+                System.out.println(CityFactory.getInstance().getCitiesAsString());
+                break;
+
+            case 9: //Stop the menu
+                runMenu = false;
+                break;
+            default:
+                System.out.println("Please choose a valid selection from the menu");
+                break;
+        }
+    }
+
     private void showContinentMenu() {
         while(runMenu){
-            System.out.println("----- Welcome to the Halbo User Menu! -----");
+            System.out.println("----- Welcome to the Halbo Continent Menu! -----");
             System.out.println("1. Add a city to a continent");
             System.out.println("2. Search a city by City name");
             System.out.println("3. Delete a city by City name");
@@ -114,6 +163,7 @@ public class ServerCLI {
         String cityName = userInput.nextLine();
         User creator = searchUserByUsername();
         ContinentFactory.getInstance().addCity(cityName,creator);
+        CityFactory.getInstance().createCity(cityName,creator);
     }
 
 
