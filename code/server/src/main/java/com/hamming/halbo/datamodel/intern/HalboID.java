@@ -1,4 +1,4 @@
-package com.hamming.halbo.datamodel;
+package com.hamming.halbo.datamodel.intern;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -17,6 +17,7 @@ public class HalboID implements Serializable  {
         BPL, // Baseplate
         BLK, // Block
         CTN, // Construction
+        CNT, // Continent
         USR, // User
         SYS  // System
     }
@@ -41,7 +42,16 @@ public class HalboID implements Serializable  {
         final HalboID hid = new HalboID(prefix,id);
         return hid;
     }
-    
+
+    public static HalboID valueOf(String aString) {
+        String strPrefix = aString.substring(0,3);
+        Prefix prefix = Prefix.valueOf(strPrefix);
+        String strID = aString.substring(3);
+        Long id = Long.valueOf(strID);
+        final HalboID hid = new HalboID(prefix,id);
+        return hid;
+    }
+
 
     @Override
     public boolean equals(Object o) {

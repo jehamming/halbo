@@ -1,9 +1,8 @@
 package com.hamming.test;
 
-import com.hamming.halbo.ContinentServer;
-import com.hamming.halbo.datamodel.Baseplate;
-import com.hamming.halbo.datamodel.City;
-import com.hamming.halbo.datamodel.User;
+import com.hamming.halbo.CityServer;
+import com.hamming.halbo.datamodel.intern.City;
+import com.hamming.halbo.datamodel.intern.User;
 import com.hamming.halbo.factories.UserFactory;
 
 public class TestContinentServer {
@@ -13,9 +12,9 @@ public class TestContinentServer {
         User user = UserFactory.getInstance().addUser("Longname", "username", "password");
         System.out.println("User : " + user);
 
-        ContinentServer cs = new ContinentServer();
-        City city = cs.addCity("City01", user);
-        System.out.println("City : " + city);
+        //CityServer cs = new CityServer();
+        //City city = cs.addCity("City01", user);
+        //System.out.println("City : " + city);
 
     }
 

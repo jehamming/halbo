@@ -1,15 +1,11 @@
 package com.hamming.test.factories;
 
-import com.hamming.halbo.datamodel.User;
+import com.hamming.halbo.datamodel.intern.User;
 import com.hamming.halbo.factories.UserFactory;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
-
-import static org.junit.Assert.*;
 
 public class TestUserFactory {
 

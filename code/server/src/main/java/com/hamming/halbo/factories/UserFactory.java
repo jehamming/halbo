@@ -1,17 +1,16 @@
 package com.hamming.halbo.factories;
 
 import com.hamming.halbo.IDManager;
-import com.hamming.halbo.datamodel.HalboID;
-import com.hamming.halbo.datamodel.User;
+import com.hamming.halbo.datamodel.intern.HalboID;
+import com.hamming.halbo.datamodel.intern.User;
 
 import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
-public class UserFactory {
+public class UserFactory extends AbstractFactory {
     private static UserFactory instance;
     private User systemUser;
     private List<User> users;
@@ -22,7 +21,7 @@ public class UserFactory {
 
     private void initialize() {
         HalboID id = IDManager.getInstance().getNextID(HalboID.Prefix.SYS);
-        systemUser = new User(id);
+        systemUser = new User(id.toString());
         systemUser.setFullName("SYSTEM");
         users = new ArrayList<User>();
     }
@@ -44,7 +43,7 @@ public class UserFactory {
 
     public User addUser(String fullName, String username, String password) {
         HalboID id = IDManager.getInstance().getNextID(HalboID.Prefix.USR);
-        User u = new User(id);
+        User u = new User(id.toString());
         u.setFullName(fullName);
         u.setUsername(username);
         u.setPassword(hashPassword(password));
@@ -109,6 +108,26 @@ public class UserFactory {
         return sb.toString();
     }
 
+    private Long getHighestID() {
+        Long highest = 0L;
+        for (User u : users ) {
+            long id = HalboID.valueOf(u.getId()).getId();
+            if (id > highest) {
+                highest = id;
+            }
+        }
+        return highest;
+    }
+
+    public boolean storeUsersInFile(String filename) {
+        return storeInFile(users, filename);
+    }
+
+    public boolean storeUsersInFile(File file) {
+        return storeInFile(users, file);
+    }
+
+
     public boolean loadUsersFromFile(String filename) {
         File file = new File(filename);
         return loadUsersFromFile(file);
@@ -116,47 +135,14 @@ public class UserFactory {
 
     public boolean loadUsersFromFile(File file) {
         boolean retval = true;
-        try {
-            FileInputStream fis = new FileInputStream(file);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            users = (ArrayList<User>) ois.readObject();
-            ois.close();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            retval = false;
-        }
-        Long highestID = getHighestID();
-        IDManager.getInstance().setLastAddedID(HalboID.Prefix.USR, highestID);
-        return retval;
-    }
-
-    private Long getHighestID() {
-        Long highest = 0L;
-        for (User u : users ) {
-            if (u.getId().getId() > highest) {
-                highest = u.getId().getId();
-            }
-        }
-        return highest;
-    }
-
-    public boolean storeUsersInFile(String filename) {
-        File file = new File(filename);
-        return storeUsersInFile(file);
-    }
-
-    public boolean storeUsersInFile(File file) {
-        boolean retval = true;
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(users);
-            oos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            retval = false;
+        List<User> loadUsers = (ArrayList<User>) loadFromFile(file);
+        if ( loadUsers != null ) {
+            users = loadUsers;
+            Long highestID = getHighestID();
+            IDManager.getInstance().setLastAddedID(HalboID.Prefix.USR, highestID);
         }
         return retval;
     }
+
 
 }

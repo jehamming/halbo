@@ -1,33 +1,70 @@
-package com.hamming.halbo.datamodel;
+package com.hamming.halbo.datamodel.intern;
+
+import com.hamming.halbo.factories.CityFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 // A Continent exists of a set of cities
 // TODO How to position or connect cities in an continent?
-public class Continent extends BasicObject{
+public class Continent extends BasicObject {
 
-    private User senator;
+    private String senatorID;
+    private Map<String, String> cities;
+    private String name;
 
-    public Continent(HalboID id) {
+    public Continent(String id, String name) {
         super(id);
+        setName(name);
+        cities = new HashMap<String, String>();
     }
 
-    public boolean addCity( City c) {
-        //TODO Implement
+    public boolean addCity(City city) {
+        cities.put(city.getId(), city.getName());
         return true;
     }
 
 
-    public User getSenator() {
-        return senator;
+    public String getSenatorID() {
+        return senatorID;
     }
 
-    public void setSenator(User senator) {
-        this.senator = senator;
+    public void setSenatorID(String senatorID) {
+        this.senatorID = senatorID;
     }
+
+    public Map<String, String> getCities() {
+        return cities;
+    }
+
+    public City addCity(String name, User creator) {
+        City city = CityFactory.getInstance().addCity(name, creator.toString());
+        cities.put(city.getId(), name);
+        return city;
+    }
+
+
+
+    public void removeCity(City city) {
+        cities.remove(city.getId());
+    }
+
+    public String getCitiesAsString() {
+        StringBuilder sb = new StringBuilder();
+        for (String cityId : cities.keySet()){
+            City city = CityFactory.getInstance().findCityByID(cityId);
+            sb.append(city + "\n");
+        }
+        return sb.toString();
+    }
+
 
     @Override
     public String toString() {
         return "Continent{" +
-                "senator=" + senator +
+                "senator=" + senatorID +
                 super.toString() +
                 '}';
     }

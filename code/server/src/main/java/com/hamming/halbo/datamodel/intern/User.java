@@ -1,4 +1,4 @@
-package com.hamming.halbo.datamodel;
+package com.hamming.halbo.datamodel.intern;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -8,9 +8,12 @@ public class User implements Serializable {
     private String fullName;
     private String username;
     private String password;
-    private HalboID id;
+    private String id;
 
-    public User( HalboID id) {
+    //TODO Luuk : toevoegen van emailadres!
+    //TODO Luuk : veranderen van password!
+
+    public User( String id) {
         this.id = id;
     }
 
@@ -39,11 +42,11 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public HalboID getId() {
+    public String getId() {
         return id;
     }
 
-    public static User valueOf( HalboID id, String fullName, String username, String password ) {
+    public static User valueOf( String id, String fullName, String username, String password ) {
         final User u = new User(id);
         u.setPassword(password);
         u.setFullName(fullName);
