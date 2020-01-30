@@ -41,7 +41,7 @@ public class HalboID implements Serializable  {
         final HalboID hid = new HalboID(prefix,id);
         return hid;
     }
-
+    
 
     @Override
     public boolean equals(Object o) {
