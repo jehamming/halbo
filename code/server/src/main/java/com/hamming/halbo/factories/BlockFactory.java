@@ -1,9 +1,9 @@
 package com.hamming.halbo.factories;
 
 import com.hamming.halbo.IDManager;
-import com.hamming.halbo.datamodel.Block;
-import com.hamming.halbo.datamodel.HalboID;
-import com.hamming.halbo.datamodel.RectangleBlock;
+import com.hamming.halbo.datamodel.intern.Block;
+import com.hamming.halbo.datamodel.intern.HalboID;
+import com.hamming.halbo.datamodel.intern.RectangleBlock;
 
 import java.util.ArrayList;
 import java.util.List;

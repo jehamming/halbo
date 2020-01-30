@@ -1,15 +1,14 @@
 package com.hamming.halbo.factories;
 
 import com.hamming.halbo.IDManager;
-import com.hamming.halbo.datamodel.HalboID;
-import com.hamming.halbo.datamodel.User;
+import com.hamming.halbo.datamodel.intern.HalboID;
+import com.hamming.halbo.datamodel.intern.User;
 
 import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 public class UserFactory {
     private static UserFactory instance;

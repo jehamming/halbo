@@ -1,9 +1,9 @@
 package com.hamming.halbo.factories;
 
 import com.hamming.halbo.IDManager;
-import com.hamming.halbo.datamodel.City;
-import com.hamming.halbo.datamodel.HalboID;
-import com.hamming.halbo.datamodel.User;
+import com.hamming.halbo.datamodel.intern.City;
+import com.hamming.halbo.datamodel.intern.HalboID;
+import com.hamming.halbo.datamodel.intern.User;
 
 import java.util.ArrayList;
 import java.util.List;

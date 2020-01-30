@@ -1,4 +1,4 @@
-package com.hamming.halbo.datamodel;
+package com.hamming.halbo.datamodel.intern;
 
 import java.io.Serializable;
 import java.util.Objects;

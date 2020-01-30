@@ -1,9 +1,8 @@
 package com.hamming.test;
 
 import com.hamming.halbo.ContinentServer;
-import com.hamming.halbo.datamodel.Baseplate;
-import com.hamming.halbo.datamodel.City;
-import com.hamming.halbo.datamodel.User;
+import com.hamming.halbo.datamodel.intern.City;
+import com.hamming.halbo.datamodel.intern.User;
 import com.hamming.halbo.factories.UserFactory;
 
 public class TestContinentServer {

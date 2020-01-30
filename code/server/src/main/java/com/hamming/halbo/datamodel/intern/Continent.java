@@ -1,4 +1,4 @@
-package com.hamming.halbo.datamodel;
+package com.hamming.halbo.datamodel.intern;
 
 // A Continent exists of a set of cities
 // TODO How to position or connect cities in an continent?

@@ -1,4 +1,4 @@
-package com.hamming.halbo.datamodel;
+package com.hamming.halbo.datamodel.intern;
 
 // The Main World class. In this world users can work with each other
 // A world consists of Continents, which contain cities.

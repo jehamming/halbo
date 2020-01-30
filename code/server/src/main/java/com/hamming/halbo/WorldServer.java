@@ -1,6 +1,6 @@
 package com.hamming.halbo;
 
-import com.hamming.halbo.datamodel.World;
+import com.hamming.halbo.datamodel.intern.World;
 
 public class WorldServer extends Server {
 
