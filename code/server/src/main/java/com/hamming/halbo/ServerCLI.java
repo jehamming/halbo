@@ -1,10 +1,12 @@
 package com.hamming.halbo;
 
-import com.hamming.halbo.datamodel.City;
-import com.hamming.halbo.datamodel.User;
+
+import com.hamming.halbo.datamodel.intern.City;
+import com.hamming.halbo.datamodel.intern.User;
 import com.hamming.halbo.factories.CityFactory;
 import com.hamming.halbo.factories.ContinentFactory;
 import com.hamming.halbo.factories.UserFactory;
+import com.hamming.halbo.factories.WorldFactory;
 
 import java.util.Scanner;
 
@@ -26,6 +28,8 @@ public class ServerCLI {
             System.out.println("2. Worlds Options");
             System.out.println("3. Continents Options");
             System.out.println("4. Cities Options");
+            System.out.println("5. Load everything from files");
+            System.out.println("6. Store everything to files");
             int selection = getUserInput();
             menuSelection(selection);
         }
@@ -49,7 +53,15 @@ public class ServerCLI {
             case 4:
                 showCitiesMenu();
                 break;
-                
+
+            case 5:
+                loadEverything();
+                break;
+
+            case 6:
+                storeEverything();
+                break;
+
             default:
                 System.out.println("Please fill in a valid number from the menu selection");
                 break;
@@ -82,8 +94,7 @@ public class ServerCLI {
 
             case 3: //Remove a city.
                 City toDeleteCity = searchCityByName();
-                ContinentFactory.getInstance().removeCity(toDeleteCity);
-                CityFactory.getInstance().removeCity(toDeleteCity);
+                CityFactory.getInstance().deleteCity(toDeleteCity);
                 break;
 
             case 4: //Prints out all the cities.
@@ -126,11 +137,11 @@ public class ServerCLI {
 
             case 3://Delete a city
                 City toDeleteCity = searchCityByName();
-                ContinentFactory.getInstance().removeCity(toDeleteCity);
+                CityFactory.getInstance().deleteCity(toDeleteCity);
                 break;
 
             case 4: //Return a list of cities on the continent
-                System.out.println(ContinentFactory.getInstance().getCitiesAsString());
+                System.out.println(CityFactory.getInstance().getCitiesAsString());
                 break;
 
             case 9: //Stop the menu
@@ -147,7 +158,7 @@ public class ServerCLI {
         Scanner userInput = new Scanner(System.in);
         System.out.println("What is the name of the city?");
         String cityName = userInput.nextLine();
-        City toSearchCity = ContinentFactory.getInstance().findCityByName(cityName);
+        City toSearchCity = CityFactory.getInstance().findCityByName(cityName);
         if(toSearchCity != null){
             //It has found an city.
             return toSearchCity;
@@ -162,8 +173,9 @@ public class ServerCLI {
         System.out.println("What will the name of the city be?");
         String cityName = userInput.nextLine();
         User creator = searchUserByUsername();
-        ContinentFactory.getInstance().addCity(cityName,creator);
-        CityFactory.getInstance().createCity(cityName,creator);
+        if ( creator != null ) {
+            CityFactory.getInstance().addCity(cityName, creator.toString());
+        }
     }
 
 
@@ -225,6 +237,24 @@ public class ServerCLI {
         }
     }
 
+    public void loadEverything() {
+        // Load Config
+        ServerConfig config = ServerConfig.getInstance();
+        // Load Data
+        UserFactory.getInstance().loadUsersFromFile(config.getUsersDataFile());
+        WorldFactory.getInstance().loadWorldsFromFile(config.getWorldsDataFile());
+        CityFactory.getInstance().loadCitiesFromFile(config.getCitiesDataFile());
+        System.out.println("Loaded Users, Worlds, Cities");
+    }
+
+    public void storeEverything() {
+        ServerConfig config = ServerConfig.getInstance();
+        UserFactory.getInstance().storeUsersInFile(config.getUsersDataFile());
+        WorldFactory.getInstance().storeWorldsInFile(config.getWorldsDataFile());
+        CityFactory.getInstance().storeCitiesInFile(config.getCitiesDataFile());
+        System.out.println("Stored Users, Worlds, Cities");
+    }
+
     private void changeUserPassword(User toUpdateUser) {
         Scanner userInput = new Scanner(System.in);
         System.out.println("What will the new password be for the user");
@@ -255,7 +285,8 @@ public class ServerCLI {
             //It has found an user.
             return searchedUser;
         }else {
-            //It has not found a user.
+            //It has not found a user
+            System.out.println("User with username '" + username + "' not found!");
             return null;
         }
     }

@@ -17,6 +17,7 @@ public class HalboID implements Serializable  {
         BPL, // Baseplate
         BLK, // Block
         CTN, // Construction
+        CNT, // Continent
         USR, // User
         SYS  // System
     }

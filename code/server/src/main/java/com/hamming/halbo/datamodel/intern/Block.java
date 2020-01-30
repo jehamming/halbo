@@ -6,7 +6,7 @@ public class Block extends BasicObject {
 
     private Color color = Color.WHITE;
 
-    public Block(HalboID id) {
+    public Block(String id) {
         super(id);
     }
 

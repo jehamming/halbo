@@ -4,13 +4,8 @@ package com.hamming.halbo.datamodel.intern;
 // TODO How to position each block??
 public class Construction extends BasicObject {
 
-    public Construction(HalboID id) {
+    public Construction(String id) {
         super(id);
-    }
-
-    public boolean addBlock(Block b) {
-        //TODO Implement
-        return true;
     }
 
 

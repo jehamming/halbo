@@ -8,7 +8,7 @@ public class RectangleBlock extends Block {
     private int length;
 
 
-    public RectangleBlock( HalboID id,  int width, int length) {
+    public RectangleBlock( String id,  int width, int length) {
         super(id);
         this.width = width;
         this.length = length;

@@ -1,14 +1,18 @@
 package com.hamming.halbo.factories;
 
-import com.hamming.halbo.datamodel.City;
-import com.hamming.halbo.datamodel.User;
+import com.hamming.halbo.IDManager;
+import com.hamming.halbo.datamodel.intern.City;
+import com.hamming.halbo.datamodel.intern.Continent;
+import com.hamming.halbo.datamodel.intern.HalboID;
+import com.hamming.halbo.datamodel.intern.User;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContinentFactory {
+public class ContinentFactory extends AbstractFactory{
 
-    private List<City> cities;
+    private List<Continent> continents;
     private static ContinentFactory instance;
 
     private ContinentFactory() {
@@ -16,7 +20,7 @@ public class ContinentFactory {
     };
 
     private void initialize() {
-        cities = new ArrayList<City>();
+        continents = new ArrayList<Continent>();
     }
 
     public static ContinentFactory getInstance() {
@@ -26,47 +30,17 @@ public class ContinentFactory {
         return instance;
     }
 
-    public City addCity(String name, User creator) {
-        City city = CityFactory.getInstance().createCity(name, creator);
-        cities.add(city);
-        return city;
-    }
-
-    public City addCity(City city) {
-        cities.add(city);
-        return city;
-    }
-
-    public City removeCityByName(String name) {
-        City city = findCityByName(name);
-        if ( city == null ) {
-            cities.remove(city);
-        }
-        return city;
-    }
-
-    public City findCityByName(String name) {
-        City retVal = null;
-        for (City city : cities) {
-            if (city.getName().equals(name)) {
-                retVal = city;
-                break;
-            }
-        }
-        return retVal;
+    public Continent createContinent(String name, String creatorID) {
+        HalboID id = IDManager.getInstance().getNextID(HalboID.Prefix.CNT);
+        Continent c = new Continent(id.toString(), name);
+        c.setCreatorID(creatorID);
+        c.setOwnerID(creatorID);
+        continents.add(c);
+        return c;
     }
 
 
-    public void removeCity(City city) {
-        cities.remove(city);
-    }
 
-    public String getCitiesAsString() {
-        StringBuilder sb = new StringBuilder();
-        for (City c : cities){
-            sb.append(c + "\n");
-        }
-        return sb.toString();
-    }
+
 
 }

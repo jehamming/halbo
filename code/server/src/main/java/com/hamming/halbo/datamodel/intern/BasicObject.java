@@ -5,33 +5,37 @@ import java.io.Serializable;
 // Everything extends a BasicObject
 public class BasicObject implements Serializable {
 
-    private HalboID id;
-    private User creator;
-    private User owner;
+    private String id;
+    private String creatorID;
+    private String ownerID;
     private String name;
 
-    public BasicObject(HalboID id) {
+    public BasicObject(String id) {
         this.id = id;
     }
 
-    public HalboID getId() {
+    public String getId() {
         return id;
     }
 
-    public User getCreator() {
-        return creator;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setCreator(User creator) {
-        this.creator = creator;
+    public String getCreatorID() {
+        return creatorID;
     }
 
-    public User getOwner() {
-        return owner;
+    public void setCreatorID(String creatorID) {
+        this.creatorID = creatorID;
     }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public String getOwnerID() {
+        return ownerID;
+    }
+
+    public void setOwnerID(String ownerID) {
+        this.ownerID = ownerID;
     }
 
     public String getName() {
@@ -45,8 +49,8 @@ public class BasicObject implements Serializable {
     @Override
     public String toString() {
         return  ", id=" + id +
-                ", creator=" + creator +
-                ", owner=" + owner +
+                ", creator=" + creatorID +
+                ", owner=" + ownerID +
                 ", name='" + name;
     }
 }
