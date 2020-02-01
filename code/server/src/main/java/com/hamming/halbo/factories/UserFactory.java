@@ -3,6 +3,7 @@ package com.hamming.halbo.factories;
 import com.hamming.halbo.IDManager;
 import com.hamming.halbo.datamodel.intern.HalboID;
 import com.hamming.halbo.datamodel.intern.User;
+import com.hamming.halbo.util.StringUtils;
 
 import java.io.*;
 import java.security.MessageDigest;
@@ -46,7 +47,7 @@ public class UserFactory extends AbstractFactory {
         User u = new User(id.toString());
         u.setFullName(fullName);
         u.setUsername(username);
-        u.setPassword(hashPassword(password));
+        u.setPassword(StringUtils.hashPassword(password));
         users.add(u);
         return u;
     }
@@ -55,38 +56,14 @@ public class UserFactory extends AbstractFactory {
         return (users.remove(user));
     }
 
-    public User validateUser(String username, String password) {
+    // NOTE this methods expect a HASHED password!
+    public User validateUser(String username, String hashedPassword) {
         User u = findUserByUsername(username);
-        if (!u.getPassword().equals(hashPassword(password))) {
+        if (!u.getPassword().equals(hashedPassword) ) {
             // Wrong password!
             u = null;
         }
         return u;
-    }
-
-    private String hashPassword(String password) {
-        // Create MessageDigest instance for MD5
-        MessageDigest md = null;
-        String hashedPassword = null;
-        try {
-            md = MessageDigest.getInstance("MD5");
-            //Add password bytes to digest
-            md.update(password.getBytes());
-            //Get the hash's bytes
-            byte[] bytes = md.digest();
-            //This bytes[] has bytes in decimal format;
-            //Convert it to hexadecimal format
-            StringBuilder sb = new StringBuilder();
-            for(int i=0; i< bytes.length ;i++)
-            {
-                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-            }
-            //Get complete hashed password in hex format
-            hashedPassword = sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return hashedPassword;
     }
 
     public User findUserByUsername( String username ) {

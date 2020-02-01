@@ -22,6 +22,12 @@
   </repositories>
 
   <dependencies>
+
+    <dependency>
+      <groupId>com.hamming.halbo</groupId>
+      <artifactId>common</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
     <dependency>
       <groupId>${jme3_g}</groupId>
       <artifactId>jme3-core</artifactId>

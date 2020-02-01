@@ -21,6 +21,10 @@ public class HALBOServer extends Server {
     private List<WorldServer> worldServers;
     private int port = 3131;
 
+    public HALBOServer() {
+        super("HALBO");
+    }
+
     public void initialize() {
         // Load Config
         ServerConfig config = ServerConfig.getInstance();
@@ -35,8 +39,6 @@ public class HALBOServer extends Server {
 
         startWorldServers();
         startCityServers();
-
-
     }
 
     private void startCityServers() {
@@ -69,24 +71,21 @@ public class HALBOServer extends Server {
 
     public void startServer() {
         startServer(port);
+        System.out.println("Started main HALBO Server, port:"+port);
     }
-
 
 
     @Override
     protected ClientInstance clientConnected(Socket s, BufferedReader in, PrintWriter out) {
+        System.out.println("Client connected");
         return null;
     }
 
-
     public static void main(String[] args) {
-
         HALBOServer server = new HALBOServer();
         server.initialize();
         server.startServer();
-
     }
-
 
 
 }
