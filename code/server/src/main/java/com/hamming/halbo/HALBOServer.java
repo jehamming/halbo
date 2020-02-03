@@ -5,6 +5,7 @@ import com.hamming.halbo.datamodel.intern.World;
 import com.hamming.halbo.factories.CityFactory;
 import com.hamming.halbo.factories.UserFactory;
 import com.hamming.halbo.factories.WorldFactory;
+import com.hamming.halbo.game.GameController;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -17,9 +18,8 @@ import java.util.List;
 // CLients connect to this server and login
 public class HALBOServer extends Server {
 
-    private List<CityServer> cityServers;
-    private List<WorldServer> worldServers;
     private int port = 3131;
+    private GameController controller;
 
     public HALBOServer() {
         super("HALBO");
@@ -33,41 +33,17 @@ public class HALBOServer extends Server {
         UserFactory.getInstance().loadUsersFromFile(config.getUsersDataFile());
         WorldFactory.getInstance().loadWorldsFromFile(config.getWorldsDataFile());
         CityFactory.getInstance().loadCitiesFromFile(config.getCitiesDataFile());
+        System.out.println("Data loaded");
 
-        cityServers = new ArrayList<CityServer>();
-        worldServers = new ArrayList<WorldServer>();
-
-        startWorldServers();
-        startCityServers();
+        // Start GameController
+        controller = new GameController();
+        Thread controllerThread = new Thread(controller);
+        controllerThread.setDaemon(true);
+        controllerThread.setName("GameController");
+        controllerThread.start();
+        System.out.println("GameController started");
     }
 
-    private void startCityServers() {
-        for (City city : CityFactory.getInstance().getCities()) {
-            // Start a new Server thread
-            CityServer cityServer = new CityServer(city);
-            Thread clientThread = new Thread(cityServer);
-            clientThread.setDaemon(true);
-            clientThread.setName("CityServer-"+city.getName());
-            clientThread.start();
-            System.out.println("Started CityServer-"+city.getName());
-            // Register the thread
-            cityServers.add(cityServer);
-        }
-    }
-
-    private void startWorldServers() {
-        for (World world: WorldFactory.getInstance().getWorlds()) {
-            // Start a new Server thread
-            WorldServer worldServer = new WorldServer(world);
-            Thread clientThread = new Thread(worldServer);
-            clientThread.setDaemon(true);
-            clientThread.setName("WorldServer-"+world.getName());
-            clientThread.start();
-            System.out.println("Started WorldServer-"+world.getName());
-            // Register the thread
-            worldServers.add(worldServer);
-        }
-    }
 
     public void startServer() {
         startServer(port);
@@ -76,9 +52,17 @@ public class HALBOServer extends Server {
 
 
     @Override
-    protected ClientInstance clientConnected(Socket s, BufferedReader in, PrintWriter out) {
-        System.out.println("Client connected");
-        return null;
+    protected void clientConnected(Socket s, BufferedReader in, PrintWriter out) {
+        try {
+            HALBOClient client = new HALBOClient(s, in, out, controller);
+            Thread clientThread = new Thread(client);
+            clientThread.setDaemon(true);
+            clientThread.setName("Client " + s.getInetAddress().toString());
+            clientThread.start();
+            System.out.println("Client " + s.getInetAddress().toString() + ", ClientThread started");
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

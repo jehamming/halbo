@@ -1,8 +1,5 @@
 package com.hamming.halbo.net;
 
-import com.hamming.halbo.net.cmd.AbstractCommand;
-
-import javax.management.relation.RoleUnresolved;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,6 +11,11 @@ public class NetClient implements Runnable {
     private BufferedReader in;
     private PrintWriter out;
     private boolean open = true;
+    private DataReceiver receiver;
+
+    public NetClient(DataReceiver receiver) {
+        this.receiver = receiver;
+    }
 
     public boolean connect(String ip, int port) {
         boolean retval = true;
@@ -38,25 +40,10 @@ public class NetClient implements Runnable {
         while (open) {
             try {
                 String s = in.readLine();
-                if (s == null) {
-                    open = false;
-                    try {
-                        if (socket != null) socket.close();
-                    } catch (Exception exception) {
-                        exception.printStackTrace();
-                    }
-                    try {
-                        if (in != null) in.close();
-                    } catch (Exception exception) {
-                        exception.printStackTrace();
-                    }
-                    try {
-                        if (out != null) out.close();
-                    } catch (Exception exception) {
-                        exception.printStackTrace();
-                    }
-                    return;
+                if (s != null) {
+                    handleIncoming(s);
                 }
+
             } catch (IOException exception) {
                 open = false;
                 try {
@@ -79,7 +66,14 @@ public class NetClient implements Runnable {
                 exception.printStackTrace();
             }
         }
+    }
 
+    public void send(String s) {
+        out.println(s);
+    }
+
+    public void handleIncoming(String s) {
+        receiver.receive(s);
     }
 
 
@@ -99,9 +93,6 @@ public class NetClient implements Runnable {
         }
     }
 
-    public void send(AbstractCommand command) {
-        if (open) out.println(command.toNETCode());
-    }
 
     public boolean isConnected() {
         return open;
