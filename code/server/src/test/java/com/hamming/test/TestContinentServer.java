@@ -1,7 +1,5 @@
 package com.hamming.test;
 
-import com.hamming.halbo.CityServer;
-import com.hamming.halbo.datamodel.intern.City;
 import com.hamming.halbo.datamodel.intern.User;
 import com.hamming.halbo.factories.UserFactory;
 
