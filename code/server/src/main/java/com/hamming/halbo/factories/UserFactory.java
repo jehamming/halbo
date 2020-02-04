@@ -59,7 +59,7 @@ public class UserFactory extends AbstractFactory {
     // NOTE this methods expect a HASHED password!
     public User validateUser(String username, String hashedPassword) {
         User u = findUserByUsername(username);
-        if (!u.getPassword().equals(hashedPassword) ) {
+        if (u != null && !u.getPassword().equals(hashedPassword) ) {
             // Wrong password!
             u = null;
         }

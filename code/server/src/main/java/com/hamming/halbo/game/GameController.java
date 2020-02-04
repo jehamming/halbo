@@ -1,20 +1,19 @@
 package com.hamming.halbo.game;
 
-import com.hamming.halbo.game.cmd.ProtocolCommand;
+import com.hamming.halbo.game.cmd.Action;
 
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Queue;
 
 public class GameController implements Runnable {
-    private Deque<ProtocolCommand> commandsQueue;
+    private Deque<Action> actionQueue;
     private boolean running = true;
 
     @Override
     public void run() {
-        commandsQueue = new LinkedList<ProtocolCommand>();
+        actionQueue = new LinkedList<Action>();
         while (running) {
-            if (commandsQueue.isEmpty()) {
+            if (actionQueue.isEmpty()) {
                 try {
                     synchronized (this) {
                         this.wait();
@@ -23,16 +22,16 @@ public class GameController implements Runnable {
                     System.out.println("Exception : method wait was interrupted!");
                 }
             }
-            while (!commandsQueue.isEmpty()) {
-                ProtocolCommand cmd = commandsQueue.removeFirst();
+            while (!actionQueue.isEmpty()) {
+                Action cmd = actionQueue.removeFirst();
                 cmd.execute();
             }
         }
     }
 
 
-    public void addCommand(ProtocolCommand cmd) {
-        commandsQueue.addLast(cmd);
+    public void addCommand(Action cmd) {
+        actionQueue.addLast(cmd);
         synchronized (this) {
             this.notify();
         }
