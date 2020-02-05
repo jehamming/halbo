@@ -2,7 +2,6 @@ package com.hamming.halbo.factories;
 
 import com.hamming.halbo.IDManager;
 import com.hamming.halbo.datamodel.intern.HalboID;
-import com.hamming.halbo.datamodel.intern.User;
 import com.hamming.halbo.datamodel.intern.World;
 
 import java.io.File;
@@ -73,6 +72,22 @@ public class WorldFactory extends AbstractFactory {
     }
 
 
+    public World getWorldByName(String worldName) {
+        World foundWorld = null;
+        for (World w : worlds){
+            if(w.getName().equalsIgnoreCase(worldName)){
+                //It has found the world
+                foundWorld = w;
+            }
+        }
+        return foundWorld;
+    }
 
-
+    public String getWorldsAsString() {
+        StringBuilder sb = new StringBuilder();
+        for (World w : worlds){
+            sb.append(w + "\n");
+        }
+        return sb.toString();
+    }
 }

@@ -1,6 +1,6 @@
 package com.hamming.halbo.game.cmd;
 
-public interface ProtocolCommand {
+public interface Action {
 
     public void execute();
 

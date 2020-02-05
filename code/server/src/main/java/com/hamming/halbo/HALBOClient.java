@@ -2,11 +2,9 @@ package com.hamming.halbo;
 
 
 import com.hamming.halbo.datamodel.intern.User;
-import com.hamming.halbo.factories.UserFactory;
 import com.hamming.halbo.game.GameController;
-import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
-import com.hamming.halbo.game.cmd.ProtocolCommand;
+import com.hamming.halbo.game.cmd.Action;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,14 +37,15 @@ public class HALBOClient implements Runnable {
                 if ( s != null ) {
                     handleInput(s);
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
+                running = false;
                 e.printStackTrace();
             }
         }
     }
 
     private void handleInput(String s) {
-        ProtocolCommand cmd = protocolHandler.parseCommandString(s);
+        Action cmd = protocolHandler.parseCommandString(s);
         gameController.addCommand(cmd);
     }
 

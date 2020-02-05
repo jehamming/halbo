@@ -3,16 +3,18 @@ package com.hamming.halbo;
 
 import com.hamming.halbo.datamodel.intern.City;
 import com.hamming.halbo.datamodel.intern.User;
+import com.hamming.halbo.datamodel.intern.World;
 import com.hamming.halbo.factories.CityFactory;
 import com.hamming.halbo.factories.ContinentFactory;
 import com.hamming.halbo.factories.UserFactory;
 import com.hamming.halbo.factories.WorldFactory;
+import com.hamming.halbo.forms.serverAdminWindow;
 
 import java.util.Scanner;
 
 public class ServerCLI {
 
-    boolean runMenu = true;
+    private boolean runMenu = true;
 
     //                  Create Read Update Delete.
     //TODO Write methods to CRUD :
@@ -30,6 +32,7 @@ public class ServerCLI {
             System.out.println("4. Cities Options");
             System.out.println("5. Load everything from files");
             System.out.println("6. Store everything to files");
+            System.out.println("7. Start server window");
             int selection = getUserInput();
             menuSelection(selection);
         }
@@ -42,13 +45,12 @@ public class ServerCLI {
                 break;
 
             case 2:
-                System.out.println("Not yet implemented.");
+                showWorldsMenu();
                 break;
             
             case 3:
                 showContinentMenu();
                 break;
-
 
             case 4:
                 showCitiesMenu();
@@ -62,10 +64,80 @@ public class ServerCLI {
                 storeEverything();
                 break;
 
+            case 7:
+                startTestGUI();
+                break;
+
             default:
                 System.out.println("Please fill in a valid number from the menu selection");
                 break;
         }
+    }
+
+    private void startTestGUI() {
+        serverAdminWindow gui = new serverAdminWindow();
+        gui.run();
+    }
+
+    private void showWorldsMenu() {
+        while(runMenu){
+            System.out.println("----- Welcome to the Halbo Worlds Menu! -----");
+            System.out.println("1. Create a world");
+            System.out.println("2. Search a world by World name");
+            System.out.println("3. Delete a world by World name");
+            System.out.println("4. Show the list of Worlds");
+            System.out.println("9. Exit the menu");
+            int selection = getUserInput();
+            selectionWorldsMenu(selection);
+        }
+    }
+
+    private void selectionWorldsMenu(int selection) {
+        switch (selection){
+            case 1: //Create a world
+                createWorld();
+                break;
+
+            case 2: //Search a world by world name
+                System.out.println(searchWorldByName());
+                break;
+
+            case 3: //Delete a world
+                World toDeleteWorld = searchWorldByName();
+                WorldFactory.getInstance().deleteWorld(toDeleteWorld);
+                break;
+
+            case 4:
+                System.out.println(WorldFactory.getInstance().getWorldsAsString());
+                break;
+
+            case 9:
+                runMenu = false;
+                break;
+
+                default:
+                    System.out.println("Please choose a valid selection from the menu");
+                    break;
+        }
+    }
+
+    private World searchWorldByName() {
+        Scanner userInput = new Scanner(System.in);
+        System.out.println("What is the name of the world?");
+        String worldName = userInput.nextLine();
+
+        return WorldFactory.getInstance().getWorldByName(worldName);
+    }
+
+    private void createWorld() {
+        Scanner userInput = new Scanner(System.in);
+        System.out.println("Who will the creator be of the world?");
+        User creator = searchUserByUsername();
+        System.out.println("Who will the owner be of the world?");
+        User owner = searchUserByUsername();
+        System.out.println("What will the name be of the world?");
+        String worldName = userInput.nextLine();
+        WorldFactory.getInstance().addWorld(creator.getId(),owner.getId(),worldName);
     }
 
     private void showCitiesMenu() {
@@ -80,6 +152,8 @@ public class ServerCLI {
             selectionCitiesMenu(selection);
         }
     }
+
+
 
     private void selectionCitiesMenu(int selection) {
         switch (selection){
@@ -113,10 +187,8 @@ public class ServerCLI {
     private void showContinentMenu() {
         while(runMenu){
             System.out.println("----- Welcome to the Halbo Continent Menu! -----");
-            System.out.println("1. Add a city to a continent");
-            System.out.println("2. Search a city by City name");
-            System.out.println("3. Delete a city by City name");
-            System.out.println("4. Show the list of cities");
+            System.out.println("1. Create a continent");
+            System.out.println("2. Show the list of continents");
             System.out.println("9. Exit the menu");
             int selection = getUserInput();
             selectionContinentMenu(selection);
@@ -125,23 +197,12 @@ public class ServerCLI {
 
     private void selectionContinentMenu(int selection) {
         switch (selection){
-            case 1: //Create a city
-                createCity();
+            case 1: //Create a continent
+                createContinent();
                 break;
 
-
-            case 2: //Search a city by city name
-                System.out.println(searchCityByName());
-                break;
-
-
-            case 3://Delete a city
-                City toDeleteCity = searchCityByName();
-                CityFactory.getInstance().deleteCity(toDeleteCity);
-                break;
-
-            case 4: //Return a list of cities on the continent
-                System.out.println(CityFactory.getInstance().getCitiesAsString());
+            case 2: //Return a list of cities on the continent
+                System.out.println(ContinentFactory.getInstance().getContinentsAsString());
                 break;
 
             case 9: //Stop the menu
@@ -152,6 +213,10 @@ public class ServerCLI {
                     System.out.println("Please choose a valid selection from the menu.");
                     break;
         }
+    }
+
+    private void createContinent() {
+
     }
 
     private City searchCityByName() {
@@ -244,6 +309,7 @@ public class ServerCLI {
         UserFactory.getInstance().loadUsersFromFile(config.getUsersDataFile());
         WorldFactory.getInstance().loadWorldsFromFile(config.getWorldsDataFile());
         CityFactory.getInstance().loadCitiesFromFile(config.getCitiesDataFile());
+        ContinentFactory.getInstance().loadContinentsFromFile(config.getContinentsDataFile());
         System.out.println("Loaded Users, Worlds, Cities");
     }
 
@@ -252,6 +318,7 @@ public class ServerCLI {
         UserFactory.getInstance().storeUsersInFile(config.getUsersDataFile());
         WorldFactory.getInstance().storeWorldsInFile(config.getWorldsDataFile());
         CityFactory.getInstance().storeCitiesInFile(config.getCitiesDataFile());
+        ContinentFactory.getInstance().storeContinentsInFile(config.getContinentsDataFile());
         System.out.println("Stored Users, Worlds, Cities");
     }
 
@@ -299,7 +366,9 @@ public class ServerCLI {
         String username = userInput.nextLine();
         System.out.println("What is their password?");
         String password = userInput.nextLine();
-        UserFactory.getInstance().addUser(fullname, username, password);
+        System.out.println("What is their Email address?");
+        String email = userInput.nextLine();
+        UserFactory.getInstance().addUser(fullname, username, password, email);
         System.out.println("Succes!");
     }
 
@@ -340,6 +409,5 @@ public class ServerCLI {
     public static void main(String[] args) {
         ServerCLI menu = new ServerCLI();
         menu.run();
-        // UserFactory.getInstance().addUser(); creates an user.
     }
 }

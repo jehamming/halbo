@@ -9,6 +9,7 @@ public class User implements Serializable {
     private String username;
     private String password;
     private String id;
+    private String email;
 
     //TODO Luuk : toevoegen van emailadres!
     //TODO Luuk : veranderen van password!
@@ -42,15 +43,21 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    public String getEmail(){return this.email;}
+
+    public void setEmail(String email) {this.email = email;}
+
+
     public String getId() {
         return id;
     }
 
-    public static User valueOf( String id, String fullName, String username, String password ) {
+    public static User valueOf( String id, String fullName, String username, String password, String email ) {
         final User u = new User(id);
         u.setPassword(password);
         u.setFullName(fullName);
         u.setUsername(username);
+        u.setEmail(email);
         return u;
     }
 

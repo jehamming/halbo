@@ -7,14 +7,14 @@ import com.hamming.halbo.game.GameController;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.util.StringUtils;
 
-public class LoginCommand implements ProtocolCommand {
+public class LoginAction implements Action {
     private GameController controller;
     private HALBOClient client;
 
     private String username;
     private String password;
 
-    public LoginCommand(GameController controller, HALBOClient client) {
+    public LoginAction(GameController controller, HALBOClient client) {
         this.controller = controller;
         this.client = client;
     }
@@ -23,9 +23,9 @@ public class LoginCommand implements ProtocolCommand {
     public void execute() {
         User u = UserFactory.getInstance().validateUser(username,password);
         if ( u != null ) {
-            client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + "SUCCESS");
+            client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + Protocol.SUCCESS);
         } else {
-            client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + "FAILED");
+            client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + Protocol.FAILED);
         }
     }
 

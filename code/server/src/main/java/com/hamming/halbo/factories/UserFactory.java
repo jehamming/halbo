@@ -42,6 +42,13 @@ public class UserFactory extends AbstractFactory {
         return users;
     }
 
+    //This add user has an email within the constructor.
+    public User addUser(String fullName, String username, String password, String email) {
+        User u = addUser(fullName, username, password);
+        u.setEmail(email);
+        return u;
+    }
+
     public User addUser(String fullName, String username, String password) {
         HalboID id = IDManager.getInstance().getNextID(HalboID.Prefix.USR);
         User u = new User(id.toString());
@@ -59,7 +66,7 @@ public class UserFactory extends AbstractFactory {
     // NOTE this methods expect a HASHED password!
     public User validateUser(String username, String hashedPassword) {
         User u = findUserByUsername(username);
-        if (!u.getPassword().equals(hashedPassword) ) {
+        if (u != null && !u.getPassword().equals(hashedPassword) ) {
             // Wrong password!
             u = null;
         }
