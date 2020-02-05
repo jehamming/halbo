@@ -1,7 +1,5 @@
 package com.hamming.halbo;
 
-import com.hamming.halbo.factories.LDrawFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -14,6 +12,7 @@ public class ServerConfig {
     private final static String USERSFILE   = "usersfile";
     private final static String WORLDSFILE  = "worldsfile";
     private final static String CITIESFILE  = "citiesfile";
+    private final static String CONTINENTSFILE  = "continentsfile";
 
     // Properties file location
     private final static String propertiesFile = "server.properties";
@@ -24,6 +23,7 @@ public class ServerConfig {
     private String worldsDataFile = "Worlds.dat";
     private String citiesDataFile = "Cities.dat";
     private String usersDataFile = "Users.dat";
+    private String continentsDataFile = "Continents.dat";
 
 
     private static ServerConfig instance;
@@ -51,6 +51,7 @@ public class ServerConfig {
             setWorldsDataFile(p.getProperty(WORLDSFILE));
             setCitiesDataFile(p.getProperty(CITIESFILE));
             setUsersDataFile(p.getProperty(USERSFILE));
+            setContinentsDataFile(p.getProperty(CONTINENTSFILE));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -95,5 +96,13 @@ public class ServerConfig {
 
     public void setServerPort(int serverPort) {
         this.serverPort = serverPort;
+    }
+
+    public void setContinentsDataFile(String continentsDataFile) {
+        this.continentsDataFile = continentsDataFile;
+    }
+
+    public String getContinentsDataFile() {
+        return continentsDataFile;
     }
 }

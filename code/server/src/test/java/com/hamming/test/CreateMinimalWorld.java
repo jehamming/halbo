@@ -13,8 +13,8 @@ import com.hamming.halbo.factories.WorldFactory;
 public class CreateMinimalWorld {
 
     public void createMinimalWorld() {
-        User u1 = UserFactory.getInstance().addUser("Luuk Hamming", "lhhamming", "lhhamming");
-        User u2 = UserFactory.getInstance().addUser("Jan-Egbert Hamming", "jehamming", "jehamming");
+        User u1 = UserFactory.getInstance().addUser("Luuk Hamming", "lhhamming", "lhhamming", "luuk.hamming@gmail.com");
+        User u2 = UserFactory.getInstance().addUser("Jan-Egbert Hamming", "jehamming", "jehamming", "janneman@hotmail.com");
         World w1 = WorldFactory.getInstance().addWorld(u1.getId().toString(), u1.getId().toString(),"World001");
         Continent c = ContinentFactory.getInstance().createContinent("Continent001", u2.toString());
         w1.addContinent(c);
@@ -29,7 +29,8 @@ public class CreateMinimalWorld {
         UserFactory.getInstance().storeUsersInFile(config.getUsersDataFile());
         WorldFactory.getInstance().storeWorldsInFile(config.getWorldsDataFile());
         CityFactory.getInstance().storeCitiesInFile(config.getCitiesDataFile());
-        System.out.println("Stored Users, Worlds, Cities");
+        ContinentFactory.getInstance().storeContinentsInFile(config.getContinentsDataFile());
+        System.out.println("Stored Users, Worlds, Cities, Continents");
     }
 
     public static void main(String[] args) {

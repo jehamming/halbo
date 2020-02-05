@@ -13,7 +13,6 @@ public class Continent extends BasicObject {
 
     private String senatorID;
     private Map<String, String> cities;
-    private String name;
 
     public Continent(String id, String name) {
         super(id);
@@ -25,7 +24,6 @@ public class Continent extends BasicObject {
         cities.put(city.getId(), city.getName());
         return true;
     }
-
 
     public String getSenatorID() {
         return senatorID;

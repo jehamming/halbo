@@ -37,7 +37,8 @@ public class HALBOClient implements Runnable {
                 if ( s != null ) {
                     handleInput(s);
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
+                running = false;
                 e.printStackTrace();
             }
         }

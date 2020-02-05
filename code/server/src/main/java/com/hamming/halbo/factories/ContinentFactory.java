@@ -4,7 +4,6 @@ import com.hamming.halbo.IDManager;
 import com.hamming.halbo.datamodel.intern.City;
 import com.hamming.halbo.datamodel.intern.Continent;
 import com.hamming.halbo.datamodel.intern.HalboID;
-import com.hamming.halbo.datamodel.intern.User;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -39,8 +38,38 @@ public class ContinentFactory extends AbstractFactory{
         return c;
     }
 
+    public List<Continent> getContinents() {
+        return continents;
+    }
 
+    public String getContinentsAsString() {
+        StringBuilder sb = new StringBuilder();
+        for (Continent c : continents) {
+            sb.append(c + "\n");
+        }
+        return sb.toString();
+    }
 
+    public boolean loadContinentsFromFile(String filename) {
+        File file = new File(filename);
+        return loadContinentsFromFile(file);
+    }
 
+    public boolean loadContinentsFromFile(File file) {
+        boolean retval = true;
+        List<Continent> loadContinents = (ArrayList<Continent>) loadFromFile(file);
+        if (loadContinents != null) {
+            continents = loadContinents;
+        }
+        return retval;
+    }
+
+    public boolean storeContinentsInFile(String filename) {
+        return storeInFile(continents, filename);
+    }
+
+    public boolean storeContinentsInFile(File file) {
+        return storeInFile(continents, file);
+    }
 
 }

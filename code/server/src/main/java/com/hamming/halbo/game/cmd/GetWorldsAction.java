@@ -25,7 +25,6 @@ public class GetWorldsAction implements Action {
     public void execute() {
         for (World w : WorldFactory.getInstance().getWorlds() ) {
             String txtWorld = w.getId()
-                    + StringUtils.delimiter + w.getId()
                     + StringUtils.delimiter + w.getName()
                     + StringUtils.delimiter + w.getCreatorID()
                     + StringUtils.delimiter + w.getOwnerID() ;
