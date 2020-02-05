@@ -1,4 +1,4 @@
-package com.hamming.halbo.datamodel.intern;
+package com.hamming.halbo.model.dto.intern;
 
 // A construction is a set of blocks where each block has a specific position
 // TODO How to position each block??

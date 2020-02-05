@@ -1,4 +1,4 @@
-package com.hamming.halbo.datamodel.intern;
+package com.hamming.halbo.model.dto.intern;
 
 // This is a specific block : the rectangular block.
 // it has a width and length. a squareblock is also an RectangleBlock

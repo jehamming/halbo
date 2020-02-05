@@ -1,10 +1,8 @@
-package com.hamming.halbo.datamodel.intern;
+package com.hamming.halbo.model.dto.intern;
 
 import com.hamming.halbo.factories.CityFactory;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 // A Continent exists of a set of cities

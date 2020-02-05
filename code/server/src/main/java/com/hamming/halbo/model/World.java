@@ -1,8 +1,6 @@
-package com.hamming.halbo.datamodel.intern;
+package com.hamming.halbo.model.dto.intern;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 // The Main World class. In this world users can work with each other

@@ -1,13 +1,12 @@
 package com.hamming.halbo;
 
 
-import com.hamming.halbo.datamodel.intern.User;
+import com.hamming.halbo.model.User;
 import com.hamming.halbo.game.GameController;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.game.cmd.Action;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 
