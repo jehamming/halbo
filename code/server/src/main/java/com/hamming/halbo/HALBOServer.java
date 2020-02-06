@@ -1,18 +1,13 @@
 package com.hamming.halbo;
 
-import com.hamming.halbo.datamodel.intern.City;
-import com.hamming.halbo.datamodel.intern.World;
 import com.hamming.halbo.factories.CityFactory;
 import com.hamming.halbo.factories.UserFactory;
 import com.hamming.halbo.factories.WorldFactory;
 import com.hamming.halbo.game.GameController;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
 // This is the main Server for HALBO.
 // CLients connect to this server and login
@@ -54,7 +49,7 @@ public class HALBOServer extends Server {
     @Override
     protected void clientConnected(Socket s, BufferedReader in, PrintWriter out) {
         try {
-            HALBOClient client = new HALBOClient(s, in, out, controller);
+            ClientConnection client = new ClientConnection(s, in, out, controller);
             Thread clientThread = new Thread(client);
             clientThread.setDaemon(true);
             clientThread.setName("Client " + s.getInetAddress().toString());

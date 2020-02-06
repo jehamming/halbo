@@ -1,6 +1,6 @@
 package com.hamming.test;
 
-import com.hamming.halbo.datamodel.intern.User;
+import com.hamming.halbo.model.User;
 import com.hamming.halbo.factories.UserFactory;
 
 public class TestContinentServer {

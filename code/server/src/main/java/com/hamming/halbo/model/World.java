@@ -1,4 +1,4 @@
-package com.hamming.halbo.datamodel.intern;
+package com.hamming.halbo.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,20 +10,20 @@ import java.util.Map;
 //
 public class World extends BasicObject {
 
-    private Map<String, Continent> continents;
+    private List<Continent> continents;
 
-    public World(String id) {
+    public World(HalboID id) {
         super(id);
-        continents = new HashMap<String, Continent>();
+        continents = new ArrayList<Continent>();
     }
 
     public boolean addContinent( Continent c ) {
         // TODO How to place a continent in the world ??
-        continents.put(c.getName(), c);
+        continents.add(c);
         return true;
     }
 
-
-
-
+    public List<Continent> getContinents() {
+        return continents;
+    }
 }

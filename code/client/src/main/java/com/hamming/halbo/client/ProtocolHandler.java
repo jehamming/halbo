@@ -18,9 +18,18 @@ public class ProtocolHandler implements Protocol {
         return cmd;
     }
 
+    public String getGetContinentsCommand(String worldId) {
+        String cmd = Command.GETCONTINENTS.ordinal() + StringUtils.delimiter + worldId;
+        return cmd;
+    }
+
+    public String getGetCitiesCommand(String continentId) {
+        String cmd = Command.GETCITIES.ordinal() + StringUtils.delimiter + continentId;
+        return cmd;
+    }
+
 
     public Command parseCommandString(String s) {
- //       System.out.println("ParseCommand:" + s);
         String[] sArr = s.split(StringUtils.delimiter);
         String strId = sArr[0];
         Command cmd = Command.values()[Integer.valueOf(strId)];

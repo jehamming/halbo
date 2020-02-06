@@ -1,6 +1,6 @@
 package com.hamming.test.factories;
 
-import com.hamming.halbo.datamodel.intern.User;
+import com.hamming.halbo.model.User;
 import com.hamming.halbo.factories.UserFactory;
 import org.junit.Test;
 

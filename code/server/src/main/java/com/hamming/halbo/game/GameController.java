@@ -1,6 +1,6 @@
 package com.hamming.halbo.game;
 
-import com.hamming.halbo.game.cmd.Action;
+import com.hamming.halbo.game.action.Action;
 
 import java.util.Deque;
 import java.util.LinkedList;

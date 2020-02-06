@@ -1,4 +1,4 @@
-package com.hamming.halbo.game.cmd;
+package com.hamming.halbo.game.action;
 
 public interface Action {
 

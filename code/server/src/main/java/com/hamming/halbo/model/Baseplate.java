@@ -1,17 +1,15 @@
-package com.hamming.halbo.datamodel.intern;
-
-import java.util.List;
+package com.hamming.halbo.model;
 
 // A baseplate is like a lego baseplate. There are several types of plates, with grass or with road parts, etc.
 public class Baseplate extends BasicObject   {
 
     private BaseplateType type ;
 
-    public Baseplate(String id) {
+    public Baseplate(HalboID id) {
         super(id);
     }
 
-    public boolean addConstruction(String constructionID) {
+    public boolean addConstruction(Construction c) {
         // TODO Implement - How to position Contructionss ?
         return true;
     }

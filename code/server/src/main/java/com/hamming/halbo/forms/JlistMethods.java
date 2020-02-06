@@ -1,7 +1,7 @@
 package com.hamming.halbo.forms;
 
-import com.hamming.halbo.datamodel.intern.Continent;
-import com.hamming.halbo.datamodel.intern.User;
+import com.hamming.halbo.model.Continent;
+import com.hamming.halbo.model.User;
 import com.hamming.halbo.factories.ContinentFactory;
 import com.hamming.halbo.factories.UserFactory;
 

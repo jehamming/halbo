@@ -1,9 +1,9 @@
 package com.hamming.halbo;
 
 
-import com.hamming.halbo.datamodel.intern.City;
-import com.hamming.halbo.datamodel.intern.User;
-import com.hamming.halbo.datamodel.intern.World;
+import com.hamming.halbo.model.City;
+import com.hamming.halbo.model.User;
+import com.hamming.halbo.model.World;
 import com.hamming.halbo.factories.CityFactory;
 import com.hamming.halbo.factories.ContinentFactory;
 import com.hamming.halbo.factories.UserFactory;
@@ -133,11 +133,9 @@ public class ServerCLI {
         Scanner userInput = new Scanner(System.in);
         System.out.println("Who will the creator be of the world?");
         User creator = searchUserByUsername();
-        System.out.println("Who will the owner be of the world?");
-        User owner = searchUserByUsername();
         System.out.println("What will the name be of the world?");
         String worldName = userInput.nextLine();
-        WorldFactory.getInstance().addWorld(creator.getId(),owner.getId(),worldName);
+        WorldFactory.getInstance().createWorld(creator,worldName);
     }
 
     private void showCitiesMenu() {
@@ -239,7 +237,7 @@ public class ServerCLI {
         String cityName = userInput.nextLine();
         User creator = searchUserByUsername();
         if ( creator != null ) {
-            CityFactory.getInstance().addCity(cityName, creator.toString());
+            CityFactory.getInstance().addCity(cityName, creator);
         }
     }
 

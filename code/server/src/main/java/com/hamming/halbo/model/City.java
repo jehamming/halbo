@@ -1,4 +1,4 @@
-package com.hamming.halbo.datamodel.intern;
+package com.hamming.halbo.model;
 
 import java.util.List;
 
@@ -8,16 +8,16 @@ import java.util.List;
 //
 public class City extends BasicObject {
 
-    private String mayorID;
-    private List<String> baseplates;
+    private User mayor;
+    private List<Baseplate> baseplates;
 
-    public City(String id, String name) {
+    public City(HalboID id, String name) {
         super(id);
         setName(name);
     }
 
-    public boolean addBaseplate(String baseplateID, long x, long y) {
-        baseplates.add(baseplateID);
+    public boolean addBaseplate(Baseplate baseplate, long x, long y) {
+        baseplates.add(baseplate);
         return true;
     }
 
@@ -31,19 +31,26 @@ public class City extends BasicObject {
         return 0;
     }
 
-    public String getMayorID() {
-        return mayorID;
-    }
-
-    public List<String> getBaseplates() {
+    public List<Baseplate> getBaseplates() {
         return baseplates;
     }
+
+
+    public User getMayor() {
+        return mayor;
+    }
+
+    public void setMayor(User mayor) {
+        this.mayor = mayor;
+    }
+
 
     @Override
     public String toString() {
         return "City{" +
-                "mayor=" + mayorID +
+                "mayor=" + mayor +
                 super.toString() +
                 '}';
     }
+
 }

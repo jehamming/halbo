@@ -16,6 +16,7 @@ public class ServerConfig {
 
     // Properties file location
     private final static String propertiesFile = "server.properties";
+    private Properties properties;
 
     // Defaults
     private String dataDirectory = "data";
@@ -41,20 +42,28 @@ public class ServerConfig {
 
     public void loadProperties() {
         // Load properties file
-        Properties p = new Properties();
+        properties = new Properties();
         try {
             File configFile = new File(propertiesFile);
             FileInputStream fis = new FileInputStream(configFile);
-            p.load(fis);
-            setDataDirectory(p.getProperty(DATADIR));
-            setServerPort(Integer.valueOf(p.getProperty(SERVERPORT)));
-            setWorldsDataFile(p.getProperty(WORLDSFILE));
-            setCitiesDataFile(p.getProperty(CITIESFILE));
-            setUsersDataFile(p.getProperty(USERSFILE));
-            setContinentsDataFile(p.getProperty(CONTINENTSFILE));
+            properties.load(fis);
+            setDataDirectory(loadProperty(DATADIR));
+            setServerPort(Integer.valueOf(loadProperty(SERVERPORT)));
+            setWorldsDataFile(loadProperty(WORLDSFILE));
+            setCitiesDataFile(loadProperty(CITIESFILE));
+            setUsersDataFile(loadProperty(USERSFILE));
+            setContinentsDataFile(loadProperty(CONTINENTSFILE));
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String loadProperty( String name ) {
+        String value = properties.getProperty(name);
+        if (value == null) {
+            System.out.println("Error loading property '" + name +"', no value found!");
+        }
+        return value;
     }
 
 

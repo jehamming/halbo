@@ -1,4 +1,4 @@
-package com.hamming.halbo.datamodel.intern;
+package com.hamming.halbo.model;
 
 import java.awt.*;
 
@@ -6,7 +6,7 @@ public class Block extends BasicObject {
 
     private Color color = Color.WHITE;
 
-    public Block(String id) {
+    public Block(HalboID id) {
         super(id);
     }
 

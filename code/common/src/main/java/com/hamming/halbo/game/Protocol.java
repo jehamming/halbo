@@ -16,6 +16,8 @@ public interface Protocol {
         GETCITYDETAILS,
         GETBASEPLATES,
         GETBASEPLATE,
-        GETCONSTUCTION
+        GETCONSTUCTION,
+        GETLOCATION,
+        MOVE
     }
 }

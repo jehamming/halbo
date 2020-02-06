@@ -1,7 +1,13 @@
 package com.hamming.halbo.client;
 
 
+import com.hamming.halbo.client.panels.CitiesPanel;
+import com.hamming.halbo.client.panels.ContinentsPanel;
+import com.hamming.halbo.client.panels.LoginPanel;
+import com.hamming.halbo.client.panels.WorldsPanel;
 import com.hamming.halbo.game.Protocol;
+import com.hamming.halbo.model.dto.ContinentDto;
+import com.hamming.halbo.model.dto.WorldDto;
 import com.hamming.halbo.net.DataReceiver;
 import com.hamming.halbo.net.NetClient;
 
@@ -13,6 +19,8 @@ public class HALBOClientWindow extends JFrame implements DataReceiver {
     private ProtocolHandler handler;
     private NetClient client;
     private WorldsPanel worldsPanel;
+    private CitiesPanel citiesPanel;
+    private ContinentsPanel continentsPanel;
 
     public HALBOClientWindow() {
         init();
@@ -39,11 +47,21 @@ public class HALBOClientWindow extends JFrame implements DataReceiver {
         mainPanel.add(loginPanel);
         worldsPanel = new WorldsPanel(this);
         mainPanel.add(worldsPanel);
-        mainPanel.add(new CitiesPanel());
+        continentsPanel = new ContinentsPanel(this);
+        mainPanel.add(continentsPanel);
+        citiesPanel = new CitiesPanel(this);
+        mainPanel.add(citiesPanel);
         return mainPanel;
     }
 
+    public void emptyPanels() {
+        worldsPanel.empty();
+        continentsPanel.empty();
+        citiesPanel.empty();
+    }
+
     public void connect(String serverip, int port, String username, String password) {
+        emptyPanels();
         client = new NetClient(this);
         client.connect(serverip, port);
         String s = handler.getLoginCommand(username,password);
@@ -52,7 +70,6 @@ public class HALBOClientWindow extends JFrame implements DataReceiver {
 
     public void getWorlds() {
         String s = handler.getWorldsCommand();
-        System.out.println("getWorlds-send:" + s);
         client.send(s);
     }
 
@@ -65,11 +82,11 @@ public class HALBOClientWindow extends JFrame implements DataReceiver {
             loginPanel.receive(s.substring(2));
         } else if (cmd == Protocol.Command.GETWORLDS) {
             worldsPanel.receive(s.substring(2));
+        } else if (cmd == Protocol.Command.GETCONTINENTS) {
+            continentsPanel.receive(s.substring(2));
         }
 
     }
-
-
 
 
 
@@ -94,5 +111,17 @@ public class HALBOClientWindow extends JFrame implements DataReceiver {
     }
 
 
+    public void continentSelected(ContinentDto continent) {
+        citiesPanel.empty();
+        String s = handler.getGetContinentsCommand(continent.getId());
+        client.send(s);
+    }
 
+
+    public void worldSelected(WorldDto world) {
+        continentsPanel.empty();
+        citiesPanel.empty();
+        String s = handler.getGetContinentsCommand(world.getId());
+        client.send(s);
+    }
 }
