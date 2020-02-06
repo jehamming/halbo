@@ -34,6 +34,18 @@ public class HALBOClientWindow extends JFrame {
         pack();
         setVisible(true);
         setLocation(50, 50);
+
+        /*Some piece of code*/
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                if (client != null && client.isConnected()) {
+                    client.dispose();
+                }
+                System.exit(0);
+            }
+        });
+
     }
 
     private void registerCommandReceivers() {

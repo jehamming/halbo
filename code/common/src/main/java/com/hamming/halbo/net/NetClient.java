@@ -92,9 +92,9 @@ public class NetClient implements Runnable {
         try {
             if (open) {
                 open = false;
+                //in.close();
+                //out.close();
                 socket.close();
-                in.close();
-                out.close();
             }
             socket = null;
             in = null;

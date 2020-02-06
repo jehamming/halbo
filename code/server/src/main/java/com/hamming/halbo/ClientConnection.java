@@ -5,6 +5,7 @@ import com.hamming.halbo.model.User;
 import com.hamming.halbo.game.GameController;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.game.action.Action;
+import com.hamming.halbo.model.UserLocation;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
@@ -13,6 +14,7 @@ import java.net.Socket;
 public class ClientConnection implements Runnable {
 
     private User user;
+    private UserLocation userLocation;
     private Socket socket;
     private BufferedReader in;
     private PrintWriter out;
