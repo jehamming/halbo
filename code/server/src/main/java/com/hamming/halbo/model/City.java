@@ -1,5 +1,6 @@
 package com.hamming.halbo.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // A City is a collection of connected baseplates
@@ -14,6 +15,7 @@ public class City extends BasicObject {
     public City(HalboID id, String name) {
         super(id);
         setName(name);
+        baseplates = new ArrayList<Baseplate>();
     }
 
     public boolean addBaseplate(Baseplate baseplate, long x, long y) {

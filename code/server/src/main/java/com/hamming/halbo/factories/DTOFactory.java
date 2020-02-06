@@ -1,7 +1,11 @@
 package com.hamming.halbo.factories;
 
+import com.hamming.halbo.model.Baseplate;
+import com.hamming.halbo.model.City;
 import com.hamming.halbo.model.Continent;
 import com.hamming.halbo.model.World;
+import com.hamming.halbo.model.dto.BaseplateDto;
+import com.hamming.halbo.model.dto.CityDto;
 import com.hamming.halbo.model.dto.ContinentDto;
 import com.hamming.halbo.model.dto.WorldDto;
 
@@ -38,6 +42,23 @@ public class DTOFactory {
         }
         return dto;
     }
+
+    public CityDto getCityDto(City c) {
+        CityDto dto;
+        if (c.getMayor() == null ) {
+            dto = new CityDto(c.getId().toString(), c.getName(), c.getCreator().getId().toString(), c.getOwner().getId().toString(), null);
+        } else {
+            dto = new CityDto(c.getId().toString(), c.getName(), c.getCreator().getId().toString(), c.getOwner().getId().toString(), c.getMayor().getId().toString());
+        }
+        return dto;
+    }
+
+
+    public BaseplateDto getBaseplateDto(Baseplate b) {
+        BaseplateDto dto = new BaseplateDto(b.getId().toString(), b.getName(), b.getCreator().getId().toString(), b.getOwner().getId().toString());
+        return dto;
+    }
+
 
 
 

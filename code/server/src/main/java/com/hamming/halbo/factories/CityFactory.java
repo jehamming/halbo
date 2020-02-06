@@ -32,8 +32,9 @@ public class CityFactory extends AbstractFactory {
         return cities;
     }
 
-    public City findCityByID(String id) {
+    public City findCityByID(String strId) {
         City found = null;
+        HalboID id = HalboID.valueOf(strId);
         for (City c: cities) {
             if ( c.getId().equals(id) ) {
                 found = c;

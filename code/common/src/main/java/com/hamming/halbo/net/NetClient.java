@@ -1,24 +1,34 @@
 package com.hamming.halbo.net;
 
+import com.hamming.halbo.game.Protocol;
+import com.hamming.halbo.game.ProtocolHandler;
+import com.hamming.halbo.util.StringUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class NetClient implements Runnable {
     private Socket socket;
     private BufferedReader in;
     private PrintWriter out;
     private boolean open = true;
-    private DataReceiver receiver;
+    private Map<Protocol.Command, List<CommandReceiver>> receivers;
+    private ProtocolHandler protocolHandler;
 
-    public NetClient(DataReceiver receiver) {
-        this.receiver = receiver;
+    public NetClient() {
+        receivers = new HashMap<Protocol.Command, List<CommandReceiver>>();
+        protocolHandler = new ProtocolHandler();
     }
 
-    public boolean connect(String ip, int port) {
-        boolean retval = true;
+    public String connect(String ip, int port) {
+        String retval = null;
         try {
             socket = new Socket(ip, port);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -27,9 +37,10 @@ public class NetClient implements Runnable {
             clientThread.setName("Client Connection");
             clientThread.setDaemon(true);
             clientThread.start();
+            open = true;
         } catch (IOException e) {
-            retval = false;
             System.out.println("ERROR:"+e.getMessage());
+            retval = e.getMessage();
             //e.printStackTrace();
         }
         return retval;
@@ -41,29 +52,10 @@ public class NetClient implements Runnable {
             try {
                 String s = in.readLine();
                 if (s != null) {
-                    handleIncoming(s);
+                    received(s);
                 }
-
-            } catch (IOException exception) {
-                open = false;
-                try {
-                    socket.close();
-                } catch (Exception exception1) {
-                    exception.printStackTrace();
-                }
-                try {
-                    in.close();
-                } catch (Exception exception1) {
-                    exception.printStackTrace();
-                }
-                try {
-                    out.close();
-                } catch (Exception exception1) {
-                    exception.printStackTrace();
-                }
-                return;
             } catch (Exception exception) {
-                exception.printStackTrace();
+                dispose();
             }
         }
     }
@@ -72,9 +64,28 @@ public class NetClient implements Runnable {
         out.println(s);
     }
 
-    public void handleIncoming(String s) {
-        receiver.receive(s);
+    public void received(String s) {
+        System.out.println("Received:" + s);
+        Protocol.Command cmd = protocolHandler.parseCommandString(s);
+        String[] data = s.substring(2).split(StringUtils.delimiter);
+        List<CommandReceiver> listReceivers = receivers.get(cmd);
+        if ( listReceivers != null ) {
+            for (CommandReceiver c: listReceivers) {
+                c.receiveCommand(cmd, data);
+            }
+        }
     }
+
+    public void registerReceiver(Protocol.Command cmd, CommandReceiver receiver) {
+        List<CommandReceiver> listReceivers = receivers.get(cmd);
+        if ( listReceivers == null ) {
+            listReceivers = new ArrayList<CommandReceiver>();
+        }
+        listReceivers.add(receiver);
+        receivers.put(cmd, listReceivers);
+    }
+
+
 
 
     public void dispose() {

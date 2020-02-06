@@ -13,6 +13,7 @@ public class ServerConfig {
     private final static String WORLDSFILE  = "worldsfile";
     private final static String CITIESFILE  = "citiesfile";
     private final static String CONTINENTSFILE  = "continentsfile";
+    private final static String BASEPLATESFILE  = "baseplatesfile";
 
     // Properties file location
     private final static String propertiesFile = "server.properties";
@@ -25,6 +26,7 @@ public class ServerConfig {
     private String citiesDataFile = "Cities.dat";
     private String usersDataFile = "Users.dat";
     private String continentsDataFile = "Continents.dat";
+    private String baseplatesDataFile = "Baseplates.dat";
 
 
     private static ServerConfig instance;
@@ -53,6 +55,7 @@ public class ServerConfig {
             setCitiesDataFile(loadProperty(CITIESFILE));
             setUsersDataFile(loadProperty(USERSFILE));
             setContinentsDataFile(loadProperty(CONTINENTSFILE));
+            setBaseplatesDataFile(loadProperty(BASEPLATESFILE));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -113,5 +116,13 @@ public class ServerConfig {
 
     public String getContinentsDataFile() {
         return continentsDataFile;
+    }
+
+    public String getBaseplatesDataFile() {
+        return baseplatesDataFile;
+    }
+
+    public void setBaseplatesDataFile(String baseplatesDataFile) {
+        this.baseplatesDataFile = baseplatesDataFile;
     }
 }
