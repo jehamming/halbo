@@ -1,6 +1,6 @@
 package com.hamming.halbo.forms.WorldForms;
 
-import com.hamming.halbo.datamodel.intern.User;
+import com.hamming.halbo.model.User;
 import com.hamming.halbo.factories.UserFactory;
 import com.hamming.halbo.factories.WorldFactory;
 
@@ -13,12 +13,10 @@ public class createWorld {
     public JPanel mainpanel;
     private JTextField worldNameTextfield;
     private JTextField creatorUsernameField;
-    private JTextField ownerUsernameField;
 
     private JButton createWorldButton;
 
     private JList selectionCreator;
-    private JList selectionOwner;
     private JButton closeButton;
 
     private JFrame thisFrame;
@@ -33,13 +31,6 @@ public class createWorld {
             public void actionPerformed(ActionEvent e) {
                 selectionCreator.setModel(fillJlist(creatorUsernameField));
                 actionPerformedArray[0] = true;
-            }
-        });
-        ownerUsernameField.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectionOwner.setModel(fillJlist(ownerUsernameField));
-                actionPerformedArray[1] = true;
             }
         });
         createWorldButton.addActionListener(new ActionListener() {
@@ -72,10 +63,8 @@ public class createWorld {
     private void actionCreateWorld() {
         String creatorUsername = selectionCreator.getSelectedValue().toString();
         User creator = UserFactory.getInstance().findUserByUsername(creatorUsername);
-        String ownerUsername = selectionOwner.getSelectedValue().toString();
-        User owner = UserFactory.getInstance().findUserByUsername(ownerUsername);
         String worldName = worldNameTextfield.getText();
-        WorldFactory.getInstance().addWorld(creator.getId(),owner.getId(),worldName);
+        WorldFactory.getInstance().createWorld(creator,worldName);
     }
 
 

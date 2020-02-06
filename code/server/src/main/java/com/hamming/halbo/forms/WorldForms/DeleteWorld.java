@@ -1,7 +1,7 @@
 package com.hamming.halbo.forms.WorldForms;
 
-import com.hamming.halbo.datamodel.intern.World;
-import com.hamming.halbo.datamodel.intern.User;
+import com.hamming.halbo.model.World;
+import com.hamming.halbo.model.User;
 import com.hamming.halbo.factories.UserFactory;
 import com.hamming.halbo.factories.WorldFactory;
 

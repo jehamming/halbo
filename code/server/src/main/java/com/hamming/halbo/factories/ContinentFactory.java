@@ -1,9 +1,9 @@
 package com.hamming.halbo.factories;
 
 import com.hamming.halbo.IDManager;
-import com.hamming.halbo.datamodel.intern.City;
-import com.hamming.halbo.datamodel.intern.Continent;
-import com.hamming.halbo.datamodel.intern.HalboID;
+import com.hamming.halbo.model.Continent;
+import com.hamming.halbo.model.HalboID;
+import com.hamming.halbo.model.User;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,11 +29,11 @@ public class ContinentFactory extends AbstractFactory{
         return instance;
     }
 
-    public Continent createContinent(String name, String creatorID) {
+    public Continent createContinent(String name, User creator) {
         HalboID id = IDManager.getInstance().getNextID(HalboID.Prefix.CNT);
-        Continent c = new Continent(id.toString(), name);
-        c.setCreatorID(creatorID);
-        c.setOwnerID(creatorID);
+        Continent c = new Continent(id, name);
+        c.setCreator(creator);
+        c.setOwner(creator);
         continents.add(c);
         return c;
     }

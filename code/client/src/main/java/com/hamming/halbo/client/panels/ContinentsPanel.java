@@ -1,7 +1,7 @@
 package com.hamming.halbo.client.panels;
 
 import com.hamming.halbo.client.HALBOClientWindow;
-import com.hamming.halbo.game.Protocol;
+import com.hamming.halbo.model.dto.ContinentDto;
 import com.hamming.halbo.model.dto.WorldDto;
 import com.hamming.halbo.util.StringUtils;
 
@@ -11,13 +11,13 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
-public class WorldsPanel extends JPanel {
+public class ContinentsPanel extends JPanel {
 
     private HALBOClientWindow client;
-    private JList<WorldDto> listOfWorlds;
+    private JList<ContinentDto> listOfContinents;
     private DefaultListModel listModel;
 
-    public WorldsPanel(HALBOClientWindow client) {
+    public ContinentsPanel(HALBOClientWindow client) {
         this.client = client;
         createPanel();
     }
@@ -25,26 +25,26 @@ public class WorldsPanel extends JPanel {
     private void createPanel() {
         setBorder(new TitledBorder("Worlds"));
         listModel = new DefaultListModel();
-        listOfWorlds = new JList<WorldDto>(listModel);
-        listOfWorlds.addListSelectionListener(new ListSelectionListener() {
+        listOfContinents = new JList<ContinentDto>(listModel);
+        listOfContinents.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                WorldDto world = listOfWorlds.getSelectedValue();
-                if (world != null ) {
-                    client.worldSelected(world);
+                ContinentDto c = listOfContinents.getSelectedValue();
+                if (c != null ) {
+                    client.continentSelected(c);
                 }
             }
         });
-        listOfWorlds.setPreferredSize(new Dimension(200,60));
-        JScrollPane scrollPane = new JScrollPane(listOfWorlds);
+        listOfContinents.setPreferredSize(new Dimension(200,60));
+        JScrollPane scrollPane = new JScrollPane(listOfContinents);
         add(scrollPane);
     }
 
     public void receive( String s) {
         String[] arr = s.split(StringUtils.delimiter);
-        WorldDto world = new WorldDto();
-        world.setValues(arr);
-        listModel.addElement(world);
+        ContinentDto c = new ContinentDto();
+        c.setValues(arr);
+        listModel.addElement(c);
     }
 
 

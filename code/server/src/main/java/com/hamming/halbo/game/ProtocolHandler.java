@@ -1,9 +1,10 @@
 package com.hamming.halbo.game;
 
-import com.hamming.halbo.HALBOClient;
-import com.hamming.halbo.game.cmd.GetWorldsAction;
-import com.hamming.halbo.game.cmd.LoginAction;
-import com.hamming.halbo.game.cmd.Action;
+import com.hamming.halbo.ClientConnection;
+import com.hamming.halbo.game.action.GetContinentAction;
+import com.hamming.halbo.game.action.GetWorldsAction;
+import com.hamming.halbo.game.action.LoginAction;
+import com.hamming.halbo.game.action.Action;
 import com.hamming.halbo.util.StringUtils;
 
 import java.util.Arrays;
@@ -13,10 +14,10 @@ import java.util.Map;
 public class ProtocolHandler implements Protocol {
 
     private GameController controller;
-    private HALBOClient client;
+    private ClientConnection client;
     private Map<Command, Action> commands;
 
-    public ProtocolHandler(GameController controller, HALBOClient client) {
+    public ProtocolHandler(GameController controller, ClientConnection client) {
         this.controller = controller;
         this.client = client;
         registerCommands();
@@ -26,16 +27,20 @@ public class ProtocolHandler implements Protocol {
         commands = new HashMap<Command, Action>();
         commands.put(Command.LOGIN, new LoginAction(controller, client));
         commands.put(Command.GETWORLDS, new GetWorldsAction(controller, client));
+        commands.put(Command.GETCONTINENTS, new GetContinentAction(controller,client));
     }
 
     public Action parseCommandString(String s) {
-        System.out.println("ParseCommand:" + s);
+        System.out.println("ParseIncomingCommand:" + s);
         String[] sArr = s.split(StringUtils.delimiter);
         String strId = sArr[0];
         Command cmd = Command.values()[Integer.valueOf(strId)];
+        System.out.println("IncomingCommand=" + cmd);
         Action pCMD = commands.get(cmd);
         if ( pCMD != null ) {
             pCMD.setValues(Arrays.copyOfRange(sArr, 1, sArr.length));
+        } else {
+            System.out.println("Unhandled command: " + cmd);
         }
         return pCMD;
     }

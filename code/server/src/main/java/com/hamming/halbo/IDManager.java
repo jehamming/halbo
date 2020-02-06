@@ -1,6 +1,6 @@
 package com.hamming.halbo;
 
-import com.hamming.halbo.datamodel.intern.HalboID;
+import com.hamming.halbo.model.HalboID;
 
 import java.util.HashMap;
 import java.util.Map;

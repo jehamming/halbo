@@ -1,4 +1,4 @@
-package com.hamming.halbo.model.dto.intern;
+package com.hamming.halbo.model;
 
 // This is a specific block : the rectangular block.
 // it has a width and length. a squareblock is also an RectangleBlock
@@ -8,7 +8,7 @@ public class RectangleBlock extends Block {
     private int length;
 
 
-    public RectangleBlock( String id,  int width, int length) {
+    public RectangleBlock( HalboID id,  int width, int length) {
         super(id);
         this.width = width;
         this.length = length;

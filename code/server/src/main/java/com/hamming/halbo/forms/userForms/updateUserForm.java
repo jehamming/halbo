@@ -1,6 +1,6 @@
 package com.hamming.halbo.forms.userForms;
 
-import com.hamming.halbo.datamodel.intern.User;
+import com.hamming.halbo.model.User;
 import com.hamming.halbo.factories.UserFactory;
 import com.hamming.halbo.util.StringUtils;
 

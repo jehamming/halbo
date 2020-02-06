@@ -1,8 +1,8 @@
 package com.hamming.test.factories;
 
-import com.hamming.halbo.datamodel.intern.User;
-import com.hamming.halbo.datamodel.intern.World;
 import com.hamming.halbo.factories.UserFactory;
+import com.hamming.halbo.model.User;
+import com.hamming.halbo.model.World;
 import com.hamming.halbo.factories.WorldFactory;
 import org.junit.Test;
 
@@ -12,10 +12,12 @@ import java.io.IOException;
 public class TestWorldFactory {
 
     @Test
-    public void testStoreAndLoad() {
+    public void testStoreAndLoad(){
         deleteAllWorlds();
-        World w1 = WorldFactory.getInstance().addWorld("USR1", "USR1", "World1");
-        World w2 = WorldFactory.getInstance().addWorld("USR2", "USR2", "World2");
+        User u1 = UserFactory.getInstance().addUser("Luuk Hamming", "lhhamming", "lhhamming", "luuk.hamming@gmail.com");
+        User u2 = UserFactory.getInstance().addUser("Jan-Egbert Hamming", "jehamming", "jehamming", "janneman@hotmail.com");
+        World w1 = WorldFactory.getInstance().createWorld(u1, "World1");
+        World w2 = WorldFactory.getInstance().createWorld(u2, "World2");
         File tmpFile = null;
         try {
             tmpFile = File.createTempFile("HALBO","TST");

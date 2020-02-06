@@ -1,8 +1,9 @@
 package com.hamming.halbo.factories;
 
 import com.hamming.halbo.IDManager;
-import com.hamming.halbo.datamodel.intern.HalboID;
-import com.hamming.halbo.datamodel.intern.World;
+import com.hamming.halbo.model.HalboID;
+import com.hamming.halbo.model.User;
+import com.hamming.halbo.model.World;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,12 +31,12 @@ public class WorldFactory extends AbstractFactory {
     }
 
 
-    public World addWorld(String creatorID, String ownerID, String name) {
+    public World createWorld(User creator, String name) {
         HalboID newID = IDManager.getInstance().getNextID(HalboID.Prefix.WLD);
-        World w = new World(newID.toString());
-        w.setCreatorID(creatorID);
+        World w = new World(newID);
+        w.setCreator(creator);
+        w.setOwner(creator);
         w.setName(name);
-        w.setOwnerID(ownerID);
         worlds.add(w);
         return w;
     }
@@ -43,6 +44,18 @@ public class WorldFactory extends AbstractFactory {
     public World deleteWorld(World w) {
         worlds.remove(w);
         return w;
+    }
+
+    public World findWorldById( String strId ) {
+        World retval = null;
+        HalboID id = HalboID.valueOf(strId);
+        for( World w : worlds) {
+            if ( w.getId().equals(id)) {
+                retval = w;
+                break;
+            }
+        }
+        return retval;
     }
 
     public List<World> getWorlds() {

@@ -1,7 +1,6 @@
 package com.hamming.halbo.forms.ContinentsForms;
 
-import com.hamming.halbo.datamodel.intern.Continent;
-import com.hamming.halbo.datamodel.intern.User;
+import com.hamming.halbo.model.User;
 import com.hamming.halbo.factories.ContinentFactory;
 import com.hamming.halbo.factories.UserFactory;
 import com.hamming.halbo.forms.JlistMethods;
@@ -11,7 +10,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 
 public class CreateContinent {
     public JPanel mainpanel;
@@ -56,7 +54,7 @@ public class CreateContinent {
         String creatorUsernameString = creatorUsername.getText();
         User creator = UserFactory.getInstance().findUserByUsername(creatorUsernameString);
         String continentName = continentNameField.getText();
-        ContinentFactory.getInstance().createContinent(continentName,creator.getId());
+        ContinentFactory.getInstance().createContinent(continentName,creator);
         JOptionPane.showMessageDialog(null,"Created the continent!");
     }
 }

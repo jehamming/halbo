@@ -1,4 +1,4 @@
-package com.hamming.halbo.game.cmd;
+package com.hamming.halbo.game.action;
 
 import com.hamming.halbo.ClientConnection;
 import com.hamming.halbo.model.User;

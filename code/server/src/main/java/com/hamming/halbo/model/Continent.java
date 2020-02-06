@@ -1,46 +1,29 @@
-package com.hamming.halbo.model.dto.intern;
+package com.hamming.halbo.model;
 
 import com.hamming.halbo.factories.CityFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 // A Continent exists of a set of cities
 // TODO How to position or connect cities in an continent?
 public class Continent extends BasicObject {
 
-    private String senatorID;
-    private Map<String, String> cities;
+    private User senator;
+    private List<City> cities;
 
-    public Continent(String id, String name) {
+    public Continent(HalboID id, String name) {
         super(id);
         setName(name);
-        cities = new HashMap<String, String>();
+        cities = new ArrayList<City>();
     }
 
     public boolean addCity(City city) {
-        cities.put(city.getId(), city.getName());
+        cities.add(city);
         return true;
     }
-
-    public String getSenatorID() {
-        return senatorID;
-    }
-
-    public void setSenatorID(String senatorID) {
-        this.senatorID = senatorID;
-    }
-
-    public Map<String, String> getCities() {
-        return cities;
-    }
-
-    public City addCity(String name, User creator) {
-        City city = CityFactory.getInstance().addCity(name, creator.toString());
-        cities.put(city.getId(), name);
-        return city;
-    }
-
 
 
     public void removeCity(City city) {
@@ -49,18 +32,32 @@ public class Continent extends BasicObject {
 
     public String getCitiesAsString() {
         StringBuilder sb = new StringBuilder();
-        for (String cityId : cities.keySet()){
-            City city = CityFactory.getInstance().findCityByID(cityId);
+        for (City city : cities){
             sb.append(city + "\n");
         }
         return sb.toString();
     }
 
+    public User getSenator() {
+        return senator;
+    }
+
+    public void setSenator(User senator) {
+        this.senator = senator;
+    }
+
+    public List<City> getCities() {
+        return cities;
+    }
+
+    public void setCities(List<City> cities) {
+        this.cities = cities;
+    }
 
     @Override
     public String toString() {
         return "Continent{" +
-                "senator=" + senatorID +
+                "senator=" + senator +
                 super.toString() +
                 '}';
     }

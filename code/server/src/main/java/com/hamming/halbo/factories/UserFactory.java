@@ -1,19 +1,16 @@
 package com.hamming.halbo.factories;
 
 import com.hamming.halbo.IDManager;
-import com.hamming.halbo.datamodel.intern.HalboID;
-import com.hamming.halbo.datamodel.intern.User;
+import com.hamming.halbo.model.HalboID;
+import com.hamming.halbo.model.User;
 import com.hamming.halbo.util.StringUtils;
 
 import java.io.*;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserFactory extends AbstractFactory {
     private static UserFactory instance;
-    private User systemUser;
     private List<User> users;
 
     private UserFactory() {
@@ -22,8 +19,6 @@ public class UserFactory extends AbstractFactory {
 
     private void initialize() {
         HalboID id = IDManager.getInstance().getNextID(HalboID.Prefix.SYS);
-        systemUser = new User(id.toString());
-        systemUser.setFullName("SYSTEM");
         users = new ArrayList<User>();
     }
 
@@ -32,10 +27,6 @@ public class UserFactory extends AbstractFactory {
             instance = new UserFactory();
         }
         return instance;
-    }
-
-    public User getSystemUser() {
-        return systemUser;
     }
 
     public List<User> getUsers() {
@@ -51,7 +42,7 @@ public class UserFactory extends AbstractFactory {
 
     public User addUser(String fullName, String username, String password) {
         HalboID id = IDManager.getInstance().getNextID(HalboID.Prefix.USR);
-        User u = new User(id.toString());
+        User u = new User(id);
         u.setFullName(fullName);
         u.setUsername(username);
         u.setPassword(StringUtils.hashPassword(password));
@@ -95,7 +86,7 @@ public class UserFactory extends AbstractFactory {
     private Long getHighestID() {
         Long highest = 0L;
         for (User u : users ) {
-            long id = HalboID.valueOf(u.getId()).getId();
+            long id = u.getId().getId();
             if (id > highest) {
                 highest = id;
             }

@@ -1,6 +1,6 @@
 package com.hamming.test.model;
 
-import com.hamming.halbo.datamodel.intern.HalboID;
+import com.hamming.halbo.model.HalboID;
 import org.junit.Test;
 
 public class TestHalboID {

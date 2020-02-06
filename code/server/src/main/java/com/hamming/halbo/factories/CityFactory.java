@@ -1,10 +1,9 @@
 package com.hamming.halbo.factories;
 
 import com.hamming.halbo.IDManager;
-import com.hamming.halbo.datamodel.intern.City;
-import com.hamming.halbo.datamodel.intern.HalboID;
-import com.hamming.halbo.datamodel.intern.User;
-import com.hamming.halbo.datamodel.intern.World;
+import com.hamming.halbo.model.City;
+import com.hamming.halbo.model.HalboID;
+import com.hamming.halbo.model.User;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -56,11 +55,11 @@ public class CityFactory extends AbstractFactory {
     }
 
 
-    public City addCity(String name, String creatorID) {
+    public City addCity(String name, User creator) {
         HalboID id = IDManager.getInstance().getNextID(HalboID.Prefix.CTY);
-        City city = new City(id.toString(), name);
-        city.setCreatorID(creatorID);
-        city.setOwnerID(creatorID);
+        City city = new City(id, name);
+        city.setCreator(creator);
+        city.setOwner(creator);
         cities.add(city);
         return city;
     }

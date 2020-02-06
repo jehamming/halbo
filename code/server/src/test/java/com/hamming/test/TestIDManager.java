@@ -1,7 +1,7 @@
 package com.hamming.test;
 
 import com.hamming.halbo.IDManager;
-import com.hamming.halbo.datamodel.intern.HalboID;
+import com.hamming.halbo.model.HalboID;
 import org.junit.Test;
 
 public class TestIDManager {

@@ -1,5 +1,6 @@
-package com.hamming.halbo.client;
+package com.hamming.halbo.client.panels;
 
+import com.hamming.halbo.client.HALBOClientWindow;
 import com.hamming.halbo.game.Protocol;
 
 import javax.swing.*;
@@ -13,7 +14,7 @@ public class LoginPanel extends JPanel {
     private JTextField txtServer;
     JTextField txtPort;
     JTextField txtUsername;
-    JTextField txtPassword;
+    JPasswordField txtPassword;
     JLabel lblStatus;
     HALBOClientWindow client;
 
@@ -39,7 +40,7 @@ public class LoginPanel extends JPanel {
         add(txtUsername);
 
         add(new JLabel("Password:"));
-        txtPassword = new JTextField();
+        txtPassword = new JPasswordField();
         add(txtPassword);
 
         lblStatus = new JLabel();
@@ -59,7 +60,7 @@ public class LoginPanel extends JPanel {
         String strPort = txtPort.getText().trim();
         Integer port = Integer.valueOf(strPort);
         String username = txtUsername.getText().trim();
-        String password = txtPassword.getText().trim();
+        String password = String.valueOf(txtPassword.getPassword());
         client.connect(server,port,username,password);
     }
 

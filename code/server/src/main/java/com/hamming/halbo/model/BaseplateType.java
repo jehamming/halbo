@@ -1,4 +1,4 @@
-package com.hamming.halbo.model.dto.intern;
+package com.hamming.halbo.model;
 
 // A type of baseplate
 // TODO Implement

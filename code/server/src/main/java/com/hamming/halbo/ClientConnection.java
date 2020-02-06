@@ -4,13 +4,13 @@ package com.hamming.halbo;
 import com.hamming.halbo.model.User;
 import com.hamming.halbo.game.GameController;
 import com.hamming.halbo.game.ProtocolHandler;
-import com.hamming.halbo.game.cmd.Action;
+import com.hamming.halbo.game.action.Action;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class HALBOClient implements Runnable {
+public class ClientConnection implements Runnable {
 
     private User user;
     private Socket socket;
@@ -20,7 +20,7 @@ public class HALBOClient implements Runnable {
     private GameController gameController;
     private ProtocolHandler protocolHandler;
 
-    public HALBOClient(Socket s, BufferedReader in, PrintWriter out, GameController controller) {
+    public ClientConnection(Socket s, BufferedReader in, PrintWriter out, GameController controller) {
         this.socket = s;
         this.in = in;
         this.out = out;
@@ -45,11 +45,21 @@ public class HALBOClient implements Runnable {
 
     private void handleInput(String s) {
         Action cmd = protocolHandler.parseCommandString(s);
-        gameController.addCommand(cmd);
+        if (cmd != null ) {
+            gameController.addCommand(cmd);
+        }
     }
 
     public void send(String s) {
         System.out.println("HALBOCLIENT-SEND:" + s);
         out.println(s);
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

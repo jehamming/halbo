@@ -2,25 +2,25 @@ package com.hamming.halbo.model.dto;
 
 import com.hamming.halbo.util.StringUtils;
 
-public class CityDto implements DTO {
+public class ContinentDto implements DTO {
 
     private String id;
     private String name;
     private String creatorID;
     private String ownerID;
 
-    private String mayorID;
+    private String senatorID;
 
-    public CityDto(){
+    public ContinentDto(){
 
     }
 
-    public CityDto(String id, String name, String creatorID, String ownerID, String mayorID){
+    public ContinentDto(String id, String name, String creatorID, String ownerID, String senatorID){
         this.id = id;
         this.name = name;
         this.creatorID = creatorID;
         this.ownerID = ownerID;
-        this.mayorID = mayorID;
+        this.senatorID = senatorID;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class CityDto implements DTO {
                 + name + StringUtils.delimiter
                 + creatorID + StringUtils.delimiter
                 + ownerID + StringUtils.delimiter
-                + mayorID;
+                + senatorID;
         return data;
     }
 
@@ -40,10 +40,13 @@ public class CityDto implements DTO {
             name = values[1];
             creatorID = values[2];
             ownerID = values[3];
-            mayorID = values[4];
+            senatorID = values[4];
         }
     }
 
+    public String getSenatorID() {
+        return senatorID;
+    }
 
     public String getId() {
         return id;

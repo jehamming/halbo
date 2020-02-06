@@ -1,7 +1,9 @@
 package com.hamming.test.factories;
 
-import com.hamming.halbo.datamodel.intern.City;
+import com.hamming.halbo.factories.UserFactory;
+import com.hamming.halbo.model.City;
 import com.hamming.halbo.factories.CityFactory;
+import com.hamming.halbo.model.User;
 import org.junit.Test;
 
 import java.io.File;
@@ -12,8 +14,10 @@ public class TestCityFactory {
     @Test
     public void testStoreAndLoad() {
         deleteAllCities();
-        City w1 = CityFactory.getInstance().addCity("City1", "USR1");
-        City w2 = CityFactory.getInstance().addCity("City2", "USR2");
+        User u1 = UserFactory.getInstance().addUser("Luuk Hamming", "lhhamming", "lhhamming", "luuk.hamming@gmail.com");
+        User u2 = UserFactory.getInstance().addUser("Jan-Egbert Hamming", "jehamming", "jehamming", "janneman@hotmail.com");
+        City w1 = CityFactory.getInstance().addCity("City1", u1);
+        City w2 = CityFactory.getInstance().addCity("City2", u2);
         File tmpFile = null;
         try {
             tmpFile = File.createTempFile("HALBO","TST");

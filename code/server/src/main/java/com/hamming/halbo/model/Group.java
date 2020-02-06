@@ -1,14 +1,7 @@
-package com.hamming.halbo.model.dto.intern;
+package com.hamming.halbo.model;
 
-public class Group {
-
-    private String name;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+public class Group extends BasicObject {
+    public Group(HalboID id) {
+        super(id);
     }
 }
