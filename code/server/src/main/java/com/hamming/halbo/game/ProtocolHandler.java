@@ -1,10 +1,7 @@
 package com.hamming.halbo.game;
 
 import com.hamming.halbo.ClientConnection;
-import com.hamming.halbo.game.action.GetContinentAction;
-import com.hamming.halbo.game.action.GetWorldsAction;
-import com.hamming.halbo.game.action.LoginAction;
-import com.hamming.halbo.game.action.Action;
+import com.hamming.halbo.game.action.*;
 import com.hamming.halbo.util.StringUtils;
 
 import java.util.Arrays;
@@ -28,6 +25,8 @@ public class ProtocolHandler implements Protocol {
         commands.put(Command.LOGIN, new LoginAction(controller, client));
         commands.put(Command.GETWORLDS, new GetWorldsAction(controller, client));
         commands.put(Command.GETCONTINENTS, new GetContinentAction(controller,client));
+        commands.put(Command.GETCITIES, new GetCitiesAction(controller,client));
+        commands.put(Command.GETBASEPLATES, new GetBaseplatesAction(controller,client));
     }
 
     public Action parseCommandString(String s) {

@@ -1,8 +1,6 @@
 package com.hamming.halbo;
 
-import com.hamming.halbo.factories.CityFactory;
-import com.hamming.halbo.factories.UserFactory;
-import com.hamming.halbo.factories.WorldFactory;
+import com.hamming.halbo.factories.*;
 import com.hamming.halbo.game.GameController;
 
 import java.io.BufferedReader;
@@ -27,7 +25,9 @@ public class HALBOServer extends Server {
         // Load Data
         UserFactory.getInstance().loadUsersFromFile(config.getUsersDataFile());
         WorldFactory.getInstance().loadWorldsFromFile(config.getWorldsDataFile());
+        ContinentFactory.getInstance().loadContinentsFromFile(config.getContinentsDataFile());
         CityFactory.getInstance().loadCitiesFromFile(config.getCitiesDataFile());
+        BaseplateFactory.getInstance().loadBaseplatesFromFile(config.getBaseplatesDataFile());
         System.out.println("Data loaded");
 
         // Start GameController

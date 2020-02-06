@@ -1,13 +1,10 @@
 package com.hamming.halbo;
 
 
+import com.hamming.halbo.factories.*;
 import com.hamming.halbo.model.City;
 import com.hamming.halbo.model.User;
 import com.hamming.halbo.model.World;
-import com.hamming.halbo.factories.CityFactory;
-import com.hamming.halbo.factories.ContinentFactory;
-import com.hamming.halbo.factories.UserFactory;
-import com.hamming.halbo.factories.WorldFactory;
 import com.hamming.halbo.forms.serverAdminWindow;
 
 import java.util.Scanner;
@@ -308,7 +305,8 @@ public class ServerCLI {
         WorldFactory.getInstance().loadWorldsFromFile(config.getWorldsDataFile());
         CityFactory.getInstance().loadCitiesFromFile(config.getCitiesDataFile());
         ContinentFactory.getInstance().loadContinentsFromFile(config.getContinentsDataFile());
-        System.out.println("Loaded Users, Worlds, Cities");
+        BaseplateFactory.getInstance().loadBaseplatesFromFile(config.getBaseplatesDataFile());
+        System.out.println("Loaded Users, Worlds, Cities, Baseplates");
     }
 
     public void storeEverything() {
@@ -317,7 +315,8 @@ public class ServerCLI {
         WorldFactory.getInstance().storeWorldsInFile(config.getWorldsDataFile());
         CityFactory.getInstance().storeCitiesInFile(config.getCitiesDataFile());
         ContinentFactory.getInstance().storeContinentsInFile(config.getContinentsDataFile());
-        System.out.println("Stored Users, Worlds, Cities");
+        BaseplateFactory.getInstance().storeBaseplatesInFile(config.getBaseplatesDataFile());
+        System.out.println("Stored Users, Worlds, Cities, Baseplates");
     }
 
     private void changeUserPassword(User toUpdateUser) {

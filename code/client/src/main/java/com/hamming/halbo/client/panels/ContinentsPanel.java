@@ -1,8 +1,11 @@
 package com.hamming.halbo.client.panels;
 
 import com.hamming.halbo.client.HALBOClientWindow;
+import com.hamming.halbo.game.Protocol;
+import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.ContinentDto;
 import com.hamming.halbo.model.dto.WorldDto;
+import com.hamming.halbo.net.CommandReceiver;
 import com.hamming.halbo.util.StringUtils;
 
 import javax.swing.*;
@@ -11,27 +14,31 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
-public class ContinentsPanel extends JPanel {
+public class ContinentsPanel extends JPanel implements CommandReceiver {
 
     private HALBOClientWindow client;
     private JList<ContinentDto> listOfContinents;
     private DefaultListModel listModel;
+    private ProtocolHandler protocolHandler;
 
     public ContinentsPanel(HALBOClientWindow client) {
         this.client = client;
+        protocolHandler = new ProtocolHandler();
         createPanel();
     }
 
     private void createPanel() {
-        setBorder(new TitledBorder("Worlds"));
+        setBorder(new TitledBorder("Continents"));
         listModel = new DefaultListModel();
         listOfContinents = new JList<ContinentDto>(listModel);
         listOfContinents.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                ContinentDto c = listOfContinents.getSelectedValue();
-                if (c != null ) {
-                    client.continentSelected(c);
+                if ( !e.getValueIsAdjusting() ) { //Else this is called twice!
+                    ContinentDto c = listOfContinents.getSelectedValue();
+                    if (c != null) {
+                        continentSelected(c);
+                    }
                 }
             }
         });
@@ -39,14 +46,21 @@ public class ContinentsPanel extends JPanel {
         JScrollPane scrollPane = new JScrollPane(listOfContinents);
         add(scrollPane);
     }
-
-    public void receive( String s) {
-        String[] arr = s.split(StringUtils.delimiter);
-        ContinentDto c = new ContinentDto();
-        c.setValues(arr);
-        listModel.addElement(c);
+    public void continentSelected(ContinentDto continent) {
+        client.getCitiesPanel().empty();
+        client.getBaseplatesPanel().empty();
+        String s = protocolHandler.getGetCitiesCommand(continent.getId());
+        client.send(s);
     }
 
+    @Override
+    public void receiveCommand(Protocol.Command cmd, String[] data) {
+        if (cmd.equals(Protocol.Command.GETCONTINENTS)) {
+            ContinentDto c = new ContinentDto();
+            c.setValues(data);
+            listModel.addElement(c);
+        }
+    }
 
 
     public void empty() {

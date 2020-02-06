@@ -1,14 +1,8 @@
 package com.hamming.test;
 
 import com.hamming.halbo.ServerConfig;
-import com.hamming.halbo.model.City;
-import com.hamming.halbo.model.Continent;
-import com.hamming.halbo.model.User;
-import com.hamming.halbo.model.World;
-import com.hamming.halbo.factories.CityFactory;
-import com.hamming.halbo.factories.ContinentFactory;
-import com.hamming.halbo.factories.UserFactory;
-import com.hamming.halbo.factories.WorldFactory;
+import com.hamming.halbo.factories.*;
+import com.hamming.halbo.model.*;
 
 public class CreateMinimalWorld {
 
@@ -20,6 +14,8 @@ public class CreateMinimalWorld {
         w1.addContinent(c);
         City c1 = CityFactory.getInstance().addCity("City001", u1);
         c.addCity(c1);
+        Baseplate b = BaseplateFactory.getInstance().createBaseplate("Baseplate01", u1);
+        c1.addBaseplate(b,0,0);
         storeEverything();
     }
 
@@ -29,8 +25,9 @@ public class CreateMinimalWorld {
         UserFactory.getInstance().storeUsersInFile(config.getUsersDataFile());
         WorldFactory.getInstance().storeWorldsInFile(config.getWorldsDataFile());
         CityFactory.getInstance().storeCitiesInFile(config.getCitiesDataFile());
+        BaseplateFactory.getInstance().storeBaseplatesInFile(config.getBaseplatesDataFile());
         ContinentFactory.getInstance().storeContinentsInFile(config.getContinentsDataFile());
-        System.out.println("Stored Users, Worlds, Cities, Continents");
+        System.out.println("Stored Users, Worlds, Cities, Continents, Baseplates");
     }
 
     public static void main(String[] args) {

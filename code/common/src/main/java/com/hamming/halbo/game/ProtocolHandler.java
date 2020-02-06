@@ -1,4 +1,4 @@
-package com.hamming.halbo.client;
+package com.hamming.halbo.game;
 
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.util.StringUtils;
@@ -25,6 +25,11 @@ public class ProtocolHandler implements Protocol {
 
     public String getGetCitiesCommand(String continentId) {
         String cmd = Command.GETCITIES.ordinal() + StringUtils.delimiter + continentId;
+        return cmd;
+    }
+
+    public String getGetBaseplatesCommand(String cityId) {
+        String cmd = Command.GETBASEPLATES.ordinal() + StringUtils.delimiter + cityId;
         return cmd;
     }
 

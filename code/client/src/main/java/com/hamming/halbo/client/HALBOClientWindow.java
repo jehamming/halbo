@@ -1,30 +1,27 @@
 package com.hamming.halbo.client;
 
 
-import com.hamming.halbo.client.panels.CitiesPanel;
-import com.hamming.halbo.client.panels.ContinentsPanel;
-import com.hamming.halbo.client.panels.LoginPanel;
-import com.hamming.halbo.client.panels.WorldsPanel;
+import com.hamming.halbo.client.panels.*;
 import com.hamming.halbo.game.Protocol;
+import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.ContinentDto;
 import com.hamming.halbo.model.dto.WorldDto;
-import com.hamming.halbo.net.DataReceiver;
+import com.hamming.halbo.net.CommandReceiver;
 import com.hamming.halbo.net.NetClient;
 
 import javax.swing.*;
 
-public class HALBOClientWindow extends JFrame implements DataReceiver {
+public class HALBOClientWindow extends JFrame {
 
     private LoginPanel loginPanel;
-    private ProtocolHandler handler;
     private NetClient client;
     private WorldsPanel worldsPanel;
     private CitiesPanel citiesPanel;
     private ContinentsPanel continentsPanel;
+    private BaseplatesPanel baseplatesPanel;
 
     public HALBOClientWindow() {
         init();
-        handler = new ProtocolHandler();
     }
 
     private void init() {
@@ -36,7 +33,27 @@ public class HALBOClientWindow extends JFrame implements DataReceiver {
         //Display the window.
         pack();
         setVisible(true);
-        setLocation(50,50);
+        setLocation(50, 50);
+
+        /*Some piece of code*/
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                if (client != null && client.isConnected()) {
+                    client.dispose();
+                }
+                System.exit(0);
+            }
+        });
+
+    }
+
+    private void registerCommandReceivers() {
+        client.registerReceiver(Protocol.Command.LOGIN, loginPanel);
+        client.registerReceiver(Protocol.Command.GETWORLDS, worldsPanel);
+        client.registerReceiver(Protocol.Command.GETCONTINENTS, continentsPanel);
+        client.registerReceiver(Protocol.Command.GETCITIES, citiesPanel);
+        client.registerReceiver(Protocol.Command.GETBASEPLATES, baseplatesPanel);
     }
 
 
@@ -45,12 +62,18 @@ public class HALBOClientWindow extends JFrame implements DataReceiver {
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         loginPanel = new LoginPanel(this);
         mainPanel.add(loginPanel);
+
         worldsPanel = new WorldsPanel(this);
         mainPanel.add(worldsPanel);
+
         continentsPanel = new ContinentsPanel(this);
         mainPanel.add(continentsPanel);
+
         citiesPanel = new CitiesPanel(this);
         mainPanel.add(citiesPanel);
+
+        baseplatesPanel = new BaseplatesPanel(this);
+        mainPanel.add(baseplatesPanel);
         return mainPanel;
     }
 
@@ -60,35 +83,27 @@ public class HALBOClientWindow extends JFrame implements DataReceiver {
         citiesPanel.empty();
     }
 
-    public void connect(String serverip, int port, String username, String password) {
+    public boolean connect(String serverip, int port) {
+        boolean success = true;
         emptyPanels();
-        client = new NetClient(this);
-        client.connect(serverip, port);
-        String s = handler.getLoginCommand(username,password);
-        client.send(s);
-    }
-
-    public void getWorlds() {
-        String s = handler.getWorldsCommand();
-        client.send(s);
-    }
-
-
-    @Override
-    public void receive(String s) {
-        System.out.println("Received:" + s);
-        Protocol.Command cmd = handler.parseCommandString(s);
-        if (cmd == Protocol.Command.LOGIN) {
-            loginPanel.receive(s.substring(2));
-        } else if (cmd == Protocol.Command.GETWORLDS) {
-            worldsPanel.receive(s.substring(2));
-        } else if (cmd == Protocol.Command.GETCONTINENTS) {
-            continentsPanel.receive(s.substring(2));
+        if (client != null && !client.isConnected() ) {
+            client.dispose();
         }
-
+        client = new NetClient();
+        // Register Data Receivers
+        registerCommandReceivers();
+        String result = client.connect(serverip, port);
+        if (result != null) {
+            System.out.println("Something went wrong connecting to the server");
+            JOptionPane.showMessageDialog(loginPanel, result);
+            success = false;
+        }
+        return success;
     }
 
-
+    public void send(String s) {
+        client.send(s);
+    }
 
     /**
      * Create the GUI and show it.  For thread safety,
@@ -100,6 +115,27 @@ public class HALBOClientWindow extends JFrame implements DataReceiver {
         HALBOClientWindow clientWindow = new HALBOClientWindow();
     }
 
+
+    public LoginPanel getLoginPanel() {
+        return loginPanel;
+    }
+
+    public WorldsPanel getWorldsPanel() {
+        return worldsPanel;
+    }
+
+    public CitiesPanel getCitiesPanel() {
+        return citiesPanel;
+    }
+
+    public ContinentsPanel getContinentsPanel() {
+        return continentsPanel;
+    }
+
+    public BaseplatesPanel getBaseplatesPanel() {
+        return baseplatesPanel;
+    }
+
     public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
@@ -109,19 +145,5 @@ public class HALBOClientWindow extends JFrame implements DataReceiver {
             }
         });
     }
-
-
-    public void continentSelected(ContinentDto continent) {
-        citiesPanel.empty();
-        String s = handler.getGetContinentsCommand(continent.getId());
-        client.send(s);
-    }
-
-
-    public void worldSelected(WorldDto world) {
-        continentsPanel.empty();
-        citiesPanel.empty();
-        String s = handler.getGetContinentsCommand(world.getId());
-        client.send(s);
-    }
 }
+

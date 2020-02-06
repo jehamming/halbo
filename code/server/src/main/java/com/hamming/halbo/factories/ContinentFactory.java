@@ -38,6 +38,18 @@ public class ContinentFactory extends AbstractFactory{
         return c;
     }
 
+    public Continent findContinentById(String strId) {
+        Continent found = null;
+        HalboID id = HalboID.valueOf(strId);
+        for (Continent c: continents) {
+            if ( c.getId().equals(id)) {
+                found = c;
+                break;
+            }
+        }
+        return found;
+    }
+
     public List<Continent> getContinents() {
         return continents;
     }
