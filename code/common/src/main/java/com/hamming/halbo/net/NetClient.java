@@ -39,7 +39,7 @@ public class NetClient implements Runnable {
             clientThread.start();
             open = true;
         } catch (IOException e) {
-            System.out.println("ERROR:"+e.getMessage());
+            System.out.println("ERROR:" + e.getMessage());
             retval = e.getMessage();
             //e.printStackTrace();
         }
@@ -54,10 +54,18 @@ public class NetClient implements Runnable {
                 if (s != null) {
                     received(s);
                 }
-            } catch (Exception exception) {
-                dispose();
+            } catch (Exception e) {
+                open = false;
+                System.out.println("Error:" + e.getMessage());
             }
         }
+        if ( socket != null ) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+            }
+        }
+        System.out.println("NetClient finished");
     }
 
     public void send(String s) {
@@ -69,8 +77,8 @@ public class NetClient implements Runnable {
         Protocol.Command cmd = protocolHandler.parseCommandString(s);
         String[] data = s.substring(2).split(StringUtils.delimiter);
         List<CommandReceiver> listReceivers = receivers.get(cmd);
-        if ( listReceivers != null ) {
-            for (CommandReceiver c: listReceivers) {
+        if (listReceivers != null) {
+            for (CommandReceiver c : listReceivers) {
                 c.receiveCommand(cmd, data);
             }
         }
@@ -78,7 +86,7 @@ public class NetClient implements Runnable {
 
     public void registerReceiver(Protocol.Command cmd, CommandReceiver receiver) {
         List<CommandReceiver> listReceivers = receivers.get(cmd);
-        if ( listReceivers == null ) {
+        if (listReceivers == null) {
             listReceivers = new ArrayList<CommandReceiver>();
         }
         listReceivers.add(receiver);
@@ -86,15 +94,11 @@ public class NetClient implements Runnable {
     }
 
 
-
-
     public void dispose() {
         try {
             if (open) {
                 open = false;
-                //in.close();
-                //out.close();
-                socket.close();
+                closeConnection();
             }
             socket = null;
             in = null;
@@ -102,6 +106,19 @@ public class NetClient implements Runnable {
         } catch (Exception exception) {
             exception.printStackTrace();
         }
+    }
+
+    public void closeConnection() throws IOException {
+        try {
+            out.close();
+        } finally {
+            try {
+                in.close();
+            } finally {
+                socket.close();
+            }
+        }
+
     }
 
 

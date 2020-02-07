@@ -8,8 +8,10 @@ import com.hamming.halbo.game.action.Action;
 import com.hamming.halbo.model.UserLocation;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class ClientConnection implements Runnable {
 
@@ -32,17 +34,20 @@ public class ClientConnection implements Runnable {
 
     @Override
     public void run() {
-        while (running) {
+        Scanner scanner = new Scanner(in);
+        while (running && scanner.hasNextLine()) {
             try {
-                String s = in.readLine();
+                String s = scanner.nextLine();
                 if ( s != null ) {
                     handleInput(s);
                 }
             } catch (Exception e) {
                 running = false;
-                e.printStackTrace();
+                System.out.println("Error:" + e.getMessage());
             }
         }
+        try { socket.close(); } catch (IOException e) {}
+        System.out.println("Client Socket closed");
     }
 
     private void handleInput(String s) {
@@ -53,7 +58,7 @@ public class ClientConnection implements Runnable {
     }
 
     public void send(String s) {
-        System.out.println("HALBOCLIENT-SEND:" + s);
+        System.out.println("Client send:" + s);
         out.println(s);
     }
 

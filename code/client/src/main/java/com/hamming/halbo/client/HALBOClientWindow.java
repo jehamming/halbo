@@ -10,6 +10,7 @@ import com.hamming.halbo.net.CommandReceiver;
 import com.hamming.halbo.net.NetClient;
 
 import javax.swing.*;
+import java.io.IOException;
 
 public class HALBOClientWindow extends JFrame {
 
@@ -35,7 +36,6 @@ public class HALBOClientWindow extends JFrame {
         setVisible(true);
         setLocation(50, 50);
 
-        /*Some piece of code*/
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
@@ -99,6 +99,15 @@ public class HALBOClientWindow extends JFrame {
             success = false;
         }
         return success;
+    }
+
+    public void disConnect() {
+        try {
+            client.closeConnection();
+        } catch (IOException e) {
+            System.out.println("Error:" + e.getMessage());
+            //e.printStackTrace();
+        }
     }
 
     public void send(String s) {

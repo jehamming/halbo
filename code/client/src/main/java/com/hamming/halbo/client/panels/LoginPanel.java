@@ -21,6 +21,8 @@ public class LoginPanel extends JPanel implements CommandReceiver {
     JPasswordField txtPassword;
     JLabel lblStatus;
     HALBOClientWindow client;
+    JButton btnConnect;
+    JButton btnDisconnect;
     private ProtocolHandler protocolHandler;
 
     public LoginPanel(HALBOClientWindow client) {
@@ -66,16 +68,34 @@ public class LoginPanel extends JPanel implements CommandReceiver {
         });
         add(txtPassword);
 
-        lblStatus = new JLabel();
-        add(lblStatus);
-        JButton b = new JButton("Connect");
-        b.addActionListener(new ActionListener() {
+
+        btnDisconnect = new JButton("Disconnect");
+        btnDisconnect.setEnabled(false);
+        btnDisconnect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                disconnect();
+            }
+        });
+        add(btnDisconnect);
+
+
+        btnConnect = new JButton("Connect");
+        btnConnect.setEnabled(true);
+        btnConnect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 login();
             }
         });
-        add(b);
+        add(btnConnect);
+    }
+
+    private void disconnect() {
+        client.disConnect();
+        client.emptyPanels();
+        btnDisconnect.setEnabled(false);
+        btnConnect.setEnabled(true);
     }
 
     public void login() {
@@ -88,6 +108,8 @@ public class LoginPanel extends JPanel implements CommandReceiver {
         if (ok) {
             String s = protocolHandler.getLoginCommand(username, password);
             client.send(s);
+            btnDisconnect.setEnabled(true);
+            btnConnect.setEnabled(false);
         }
     }
 
