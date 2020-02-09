@@ -3,6 +3,7 @@ package com.hamming.halbo.client.panels;
 import com.hamming.halbo.client.HALBOClientWindow;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
+import com.hamming.halbo.model.dto.ContinentDto;
 import com.hamming.halbo.net.CommandReceiver;
 
 import javax.swing.*;
@@ -13,6 +14,10 @@ public class MovementPanel extends JPanel implements CommandReceiver {
     private HALBOClientWindow client;
     private DefaultListModel listModel;
     private ProtocolHandler protocolHandler;
+
+
+    private JLabel lblCurrentLocation;
+    private JLabel lblRequest;
 
 
     public MovementPanel(HALBOClientWindow clientWindow) {
@@ -30,8 +35,11 @@ public class MovementPanel extends JPanel implements CommandReceiver {
 
     @Override
     public void receiveCommand(Protocol.Command cmd, String[] data) {
-        //TODO IMplement
-        System.out.println("Not implemented yet");
+            if (cmd.equals(Protocol.Command.GETCONTINENTS)) {
+                ContinentDto c = new ContinentDto();
+                c.setValues(data);
+                listModel.addElement(c);
+            }
     }
 
 

@@ -49,6 +49,7 @@ public class ToolsWindow extends JFrame {
     public void registerReceivers() {
         clientWindow.getClient().registerReceiver(Protocol.Command.USERCONNECTED, usersPanel);
         clientWindow.getClient().registerReceiver(Protocol.Command.USERDISCONNECTED, usersPanel);
+        clientWindow.getClient().registerReceiver(Protocol.Command.MOVE, movementPanel);
     }
 
 
