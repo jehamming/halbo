@@ -10,6 +10,9 @@ public interface Protocol {
     public enum Command {
         VERSION,
         LOGIN,
+        USERCONNECTED,
+        USERDISCONNECTED,
+        GETUSER,
         GETWORLDS,
         GETCONTINENTS,
         GETCITIES,

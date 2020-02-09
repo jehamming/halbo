@@ -270,7 +270,7 @@ public class ServerCLI {
                     int userSelection = selectionUpdateUserMenu();
                     switch (userSelection){
                         case 1: //Change fullname
-                                changeUserFullname(toUpdateUser);
+                                changeUsername(toUpdateUser);
                             break;
 
                         case 2: //Change password
@@ -326,11 +326,11 @@ public class ServerCLI {
         toUpdateUser.setPassword(newPassword);
     }
 
-    private void changeUserFullname(User toUpdateUser) {
+    private void changeUsername(User toUpdateUser) {
         Scanner userInput = new Scanner(System.in);
-        System.out.println("What will the new fullname of the user be?");
+        System.out.println("What will the new name of the user be?");
         String newFullname = userInput.nextLine();
-        toUpdateUser.setFullName(newFullname);
+        toUpdateUser.setName(newFullname);
     }
 
     private int selectionUpdateUserMenu() {

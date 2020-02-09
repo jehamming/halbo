@@ -23,8 +23,8 @@ public class LoginAction implements Action {
     public void execute() {
         User u = UserFactory.getInstance().validateUser(username,password);
         if ( u != null ) {
-            client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + Protocol.SUCCESS);
             client.setUser(u);
+            client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + Protocol.SUCCESS);
         } else {
             client.setUser(null);
             client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + Protocol.FAILED);

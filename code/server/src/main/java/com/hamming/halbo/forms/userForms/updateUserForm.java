@@ -97,7 +97,7 @@ public class updateUserForm {
 
         for (User u : userList){
             if(u.getUsername().equalsIgnoreCase(userName.getText())) {
-                model.addElement(u.getFullName());
+                model.addElement(u.getName());
             }
         }
 
