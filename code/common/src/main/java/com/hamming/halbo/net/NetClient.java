@@ -77,11 +77,18 @@ public class NetClient implements Runnable {
         Protocol.Command cmd = protocolHandler.parseCommandString(s);
         String[] data = s.substring(2).split(StringUtils.delimiter);
         List<CommandReceiver> listReceivers = receivers.get(cmd);
+        boolean handled = false;
         if (listReceivers != null) {
             for (CommandReceiver c : listReceivers) {
                 c.receiveCommand(cmd, data);
+                handled = true;
             }
         }
+
+        if (!handled) {
+            System.out.println("Command " + cmd.toString() + " NOT handled");
+        }
+
     }
 
     public void registerReceiver(Protocol.Command cmd, CommandReceiver receiver) {

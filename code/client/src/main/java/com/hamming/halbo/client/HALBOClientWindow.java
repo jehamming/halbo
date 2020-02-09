@@ -20,6 +20,7 @@ public class HALBOClientWindow extends JFrame {
     private CitiesPanel citiesPanel;
     private ContinentsPanel continentsPanel;
     private BaseplatesPanel baseplatesPanel;
+    private ChatWindow chatWindow;
 
     public HALBOClientWindow() {
         init();
@@ -46,6 +47,9 @@ public class HALBOClientWindow extends JFrame {
             }
         });
 
+
+        chatWindow = new ChatWindow(this);
+
     }
 
     private void registerCommandReceivers() {
@@ -54,6 +58,7 @@ public class HALBOClientWindow extends JFrame {
         client.registerReceiver(Protocol.Command.GETCONTINENTS, continentsPanel);
         client.registerReceiver(Protocol.Command.GETCITIES, citiesPanel);
         client.registerReceiver(Protocol.Command.GETBASEPLATES, baseplatesPanel);
+        chatWindow.registerReceivers();
     }
 
 
@@ -120,10 +125,13 @@ public class HALBOClientWindow extends JFrame {
      * event-dispatching thread.
      */
     private static void createAndShowGUI() {
-        WorldOpenGLWindow openGLWindow = new WorldOpenGLWindow();
+//TODO Remove this remark        WorldOpenGLWindow openGLWindow = new WorldOpenGLWindow();
         HALBOClientWindow clientWindow = new HALBOClientWindow();
     }
 
+    public NetClient getClient() {
+        return client;
+    }
 
     public LoginPanel getLoginPanel() {
         return loginPanel;

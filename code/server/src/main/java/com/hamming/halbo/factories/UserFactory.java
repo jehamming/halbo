@@ -40,10 +40,10 @@ public class UserFactory extends AbstractFactory {
         return u;
     }
 
-    public User addUser(String fullName, String username, String password) {
+    public User addUser(String name, String username, String password) {
         HalboID id = IDManager.getInstance().getNextID(HalboID.Prefix.USR);
         User u = new User(id);
-        u.setFullName(fullName);
+        u.setName(name);
         u.setUsername(username);
         u.setPassword(StringUtils.hashPassword(password));
         users.add(u);
@@ -74,6 +74,20 @@ public class UserFactory extends AbstractFactory {
         }
         return returnValue;
     }
+
+    public User findUserById( String strId ) {
+        User returnValue = null;
+        HalboID id = HalboID.valueOf(strId);
+        for (User u : users ) {
+            if (u.getId().equals(id)) {
+                returnValue = u;
+                break;
+            }
+        }
+        return returnValue;
+    }
+
+
 
     public String getUsersAsAString() {
         StringBuilder sb = new StringBuilder();

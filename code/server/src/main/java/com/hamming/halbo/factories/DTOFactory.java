@@ -1,13 +1,7 @@
 package com.hamming.halbo.factories;
 
-import com.hamming.halbo.model.Baseplate;
-import com.hamming.halbo.model.City;
-import com.hamming.halbo.model.Continent;
-import com.hamming.halbo.model.World;
-import com.hamming.halbo.model.dto.BaseplateDto;
-import com.hamming.halbo.model.dto.CityDto;
-import com.hamming.halbo.model.dto.ContinentDto;
-import com.hamming.halbo.model.dto.WorldDto;
+import com.hamming.halbo.model.*;
+import com.hamming.halbo.model.dto.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +44,11 @@ public class DTOFactory {
         } else {
             dto = new CityDto(c.getId().toString(), c.getName(), c.getCreator().getId().toString(), c.getOwner().getId().toString(), c.getMayor().getId().toString());
         }
+        return dto;
+    }
+
+    public UserDto getUserDTO(User u) {
+        UserDto dto = new UserDto(u.getId().toString(), u.getName(), u.getEmail());
         return dto;
     }
 

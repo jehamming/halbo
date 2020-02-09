@@ -1,6 +1,10 @@
 package com.hamming.halbo;
 
 
+import com.hamming.halbo.game.GameStateEvent;
+import com.hamming.halbo.game.GameStateListener;
+import com.hamming.halbo.game.action.UserConnectedAction;
+import com.hamming.halbo.game.action.UserDisconnectedAction;
 import com.hamming.halbo.model.User;
 import com.hamming.halbo.game.GameController;
 import com.hamming.halbo.game.ProtocolHandler;
@@ -13,7 +17,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class ClientConnection implements Runnable {
+public class ClientConnection implements Runnable, GameStateListener {
 
     private User user;
     private UserLocation userLocation;
@@ -46,6 +50,7 @@ public class ClientConnection implements Runnable {
                 System.out.println("Error:" + e.getMessage());
             }
         }
+        gameController.removeGameStateListener(this);
         try { socket.close(); } catch (IOException e) {}
         System.out.println("Client Socket closed");
     }
@@ -68,5 +73,38 @@ public class ClientConnection implements Runnable {
 
     public void setUser(User user) {
         this.user = user;
+        if ( user != null ) {
+            gameController.userConnected(user);
+        }
     }
+
+
+    @Override
+    public void newGameState(GameStateEvent event) {
+        switch (event.getType()) {
+            case USERCONNECTED:
+                handleUserConnected((User) event.getObject());
+                break;
+            case USERDISCONNECTED:
+                handleUserDisconnected((User) event.getObject());
+                break;
+        }
+    }
+
+    private void handleUserConnected(User u) {
+        if (user != null && !user.equals(u)) {
+            UserConnectedAction action = new UserConnectedAction(gameController, this);
+            action.setUserId(u.getId().toString());
+            gameController.addCommand( action );
+        }
+    }
+
+    private void handleUserDisconnected(User u) {
+        if (user != null && !user.equals(u)) {
+            UserDisconnectedAction action = new UserDisconnectedAction(gameController, this);
+            action.setUserId(u.getId().toString());
+            gameController.addCommand( action );
+        }
+    }
+
 }
