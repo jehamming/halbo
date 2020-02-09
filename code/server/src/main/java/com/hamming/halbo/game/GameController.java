@@ -61,4 +61,7 @@ public class GameController implements Runnable {
         }
     }
 
+    public GameState getGameState() {
+        return gameState;
+    }
 }

@@ -75,7 +75,22 @@ public class ClientConnection implements Runnable, GameStateListener {
         this.user = user;
         if ( user != null ) {
             gameController.userConnected(user);
+            sendFullGameState();
         }
+    }
+
+    private void sendFullGameState() {
+        if (isLoggedIn()) {
+            for ( User u: gameController.getGameState().getOnlineUsers()) {
+                if (!u.getId().equals(user.getId())) {
+                    handleUserConnected(u);
+                }
+            }
+        }
+    }
+
+    public boolean isLoggedIn() {
+        return user != null;
     }
 
 

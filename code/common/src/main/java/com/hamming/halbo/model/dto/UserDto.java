@@ -15,6 +15,7 @@ public class UserDto implements DTO {
     public UserDto(String id, String name, String email){
         this.id = id;
         this.name = name;
+        this.email = email;
     }
 
     @Override

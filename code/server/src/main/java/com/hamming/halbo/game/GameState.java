@@ -45,6 +45,7 @@ public class GameState {
     }
 
 
-
-
+    public List<User> getOnlineUsers() {
+        return onlineUsers;
+    }
 }

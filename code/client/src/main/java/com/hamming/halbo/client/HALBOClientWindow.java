@@ -3,10 +3,6 @@ package com.hamming.halbo.client;
 
 import com.hamming.halbo.client.panels.*;
 import com.hamming.halbo.game.Protocol;
-import com.hamming.halbo.game.ProtocolHandler;
-import com.hamming.halbo.model.dto.ContinentDto;
-import com.hamming.halbo.model.dto.WorldDto;
-import com.hamming.halbo.net.CommandReceiver;
 import com.hamming.halbo.net.NetClient;
 
 import javax.swing.*;
@@ -20,7 +16,7 @@ public class HALBOClientWindow extends JFrame {
     private CitiesPanel citiesPanel;
     private ContinentsPanel continentsPanel;
     private BaseplatesPanel baseplatesPanel;
-    private ChatWindow chatWindow;
+    private ToolsWindow toolsWindow;
 
     public HALBOClientWindow() {
         init();
@@ -48,7 +44,7 @@ public class HALBOClientWindow extends JFrame {
         });
 
 
-        chatWindow = new ChatWindow(this);
+        toolsWindow = new ToolsWindow(this);
 
     }
 
@@ -58,7 +54,7 @@ public class HALBOClientWindow extends JFrame {
         client.registerReceiver(Protocol.Command.GETCONTINENTS, continentsPanel);
         client.registerReceiver(Protocol.Command.GETCITIES, citiesPanel);
         client.registerReceiver(Protocol.Command.GETBASEPLATES, baseplatesPanel);
-        chatWindow.registerReceivers();
+        toolsWindow.registerReceivers();
     }
 
 
@@ -86,6 +82,7 @@ public class HALBOClientWindow extends JFrame {
         worldsPanel.empty();
         continentsPanel.empty();
         citiesPanel.empty();
+        toolsWindow.emptyPanels();
     }
 
     public boolean connect(String serverip, int port) {

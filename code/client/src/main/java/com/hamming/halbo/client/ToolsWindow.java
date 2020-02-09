@@ -1,6 +1,8 @@
 package com.hamming.halbo.client;
 
 
+import com.hamming.halbo.client.panels.ChatPanel;
+import com.hamming.halbo.client.panels.MovementPanel;
 import com.hamming.halbo.client.panels.UsersPanel;
 import com.hamming.halbo.game.Protocol;
 
@@ -8,32 +10,34 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 
-public class ChatWindow extends JFrame {
+public class ToolsWindow extends JFrame {
 
     private UsersPanel usersPanel;
+    private ChatPanel chatPanel;
+    private MovementPanel movementPanel;
     private HALBOClientWindow clientWindow;
 
-    public ChatWindow(HALBOClientWindow clientWindow) {
+    public ToolsWindow(HALBOClientWindow clientWindow) {
         this.clientWindow = clientWindow;
         initWindow();
     }
 
     public void initWindow() {
-        setTitle("Users & Chat");
-        setPreferredSize(new Dimension(800,250));
+        setTitle("Tools");
+        setPreferredSize(new Dimension(800,170));
         setLocation(400,670);
 
         JPanel mainPainel = new JPanel();
-        mainPainel.setBorder(new TitledBorder("Login"));
-        mainPainel.setLayout(new GridLayout(1,2,5,5));
+        mainPainel.setLayout(new GridLayout(1,3,5,5));
 
         usersPanel = new UsersPanel(clientWindow);
         mainPainel.add(usersPanel);
 
-        JPanel chatPanel = new JPanel();
-        chatPanel.setPreferredSize(new Dimension(400,200));
+        chatPanel = new ChatPanel(clientWindow);
         mainPainel.add(chatPanel);
 
+        movementPanel = new MovementPanel(clientWindow);
+        mainPainel.add(movementPanel);
 
         getContentPane().add(mainPainel);
 
@@ -45,6 +49,13 @@ public class ChatWindow extends JFrame {
     public void registerReceivers() {
         clientWindow.getClient().registerReceiver(Protocol.Command.USERCONNECTED, usersPanel);
         clientWindow.getClient().registerReceiver(Protocol.Command.USERDISCONNECTED, usersPanel);
+    }
+
+
+    public void emptyPanels() {
+        usersPanel.empty();
+        chatPanel.empty();
+        movementPanel.empty();;
     }
 
 

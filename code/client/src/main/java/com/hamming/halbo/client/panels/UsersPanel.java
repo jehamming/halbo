@@ -11,12 +11,29 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.util.Enumeration;
 
 public class UsersPanel extends JPanel implements CommandReceiver {
 
     private HALBOClientWindow client;
     private DefaultListModel listModel;
     private ProtocolHandler protocolHandler;
+
+    private class ListItem {
+        private UserDto user;
+        public ListItem(UserDto usr) {
+            this.user = usr;
+        }
+
+        @Override
+        public String toString() {
+            return user.getName();
+        }
+
+        public UserDto getUser() {
+            return user;
+        }
+    }
 
 
     public UsersPanel(HALBOClientWindow clientWindow) {
@@ -40,8 +57,8 @@ public class UsersPanel extends JPanel implements CommandReceiver {
                 }
             }
         });
-        listOfUsers.setPreferredSize(new Dimension(200,50));
         JScrollPane scrollPane = new JScrollPane(listOfUsers);
+        scrollPane.setPreferredSize(new Dimension(220,90));
         add(scrollPane);
     }
 
@@ -55,13 +72,41 @@ public class UsersPanel extends JPanel implements CommandReceiver {
         user.setValues(data);
         switch (cmd) {
             case USERCONNECTED:
-                listModel.addElement(user);
+                addUser(user);
                 break;
             case USERDISCONNECTED:
-                listModel.removeElement(user);
+                removeUser(user);
                 break;
 
         }
+    }
+
+    private void addUser(UserDto user) {
+        if (!contains(user)) {
+            listModel.addElement(user);
+        }
+    }
+
+    private void removeUser(UserDto user) {
+        if (contains(user)) {
+            listModel.removeElement(user);
+        }
+    }
+
+    public boolean contains(UserDto dto) {
+        return findUser(dto) != null;
+    }
+
+    public UserDto findUser(UserDto dto) {
+        UserDto found=null;
+        Enumeration<ListItem> enumerator = listModel.elements();
+        while (enumerator.hasMoreElements()) {
+            ListItem item = enumerator.nextElement();
+            if (item.getUser().getId().equals(dto.getId())) {
+                found = item.getUser();
+            }
+        }
+        return found;
     }
 
 
