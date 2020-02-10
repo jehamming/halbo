@@ -1,53 +1,58 @@
 package com.hamming.halbo.model;
 
-public class UserLocation {
-    private String worldId;
-    private String continentId;
-    private String cityId;
-    private String baseplateId;
+public class UserLocation extends BasicObject{
+
+    private User user;
+    private World world;
+    private Continent continent;
+    private City city;
+    private Baseplate baseplate;
     private int x;
     private int y;
+    private int z;
 
-
-    public UserLocation(String worldId, String continentId, String cityId, String baseplateId, int x, int y){
-        this.worldId = worldId;
-        this.continentId = continentId;
-        this.cityId = cityId;
-        this.baseplateId = baseplateId;
-        this.x = x;
-        this.y = y;
+    public UserLocation(HalboID id) {
+        super(id);
     }
 
-    public String getWorldId() {
-        return worldId;
+    public User getUser() {
+        return user;
     }
 
-    public void setWorldId(String worldId) {
-        this.worldId = worldId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public String getContinentId() {
-        return continentId;
+    public World getWorld() {
+        return world;
     }
 
-    public void setContinentId(String continentId) {
-        this.continentId = continentId;
+    public void setWorld(World world) {
+        this.world = world;
     }
 
-    public String getCityId() {
-        return cityId;
+    public Continent getContinent() {
+        return continent;
     }
 
-    public void setCityId(String cityId) {
-        this.cityId = cityId;
+    public void setContinent(Continent continent) {
+        this.continent = continent;
     }
 
-    public String getBaseplateId() {
-        return baseplateId;
+    public City getCity() {
+        return city;
     }
 
-    public void setBaseplateId(String baseplateId) {
-        this.baseplateId = baseplateId;
+    public void setCity(City city) {
+        this.city = city;
+    }
+
+    public Baseplate getBaseplate() {
+        return baseplate;
+    }
+
+    public void setBaseplate(Baseplate baseplate) {
+        this.baseplate = baseplate;
     }
 
     public int getX() {
@@ -64,5 +69,13 @@ public class UserLocation {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public int getZ() {
+        return z;
+    }
+
+    public void setZ(int z) {
+        this.z = z;
     }
 }

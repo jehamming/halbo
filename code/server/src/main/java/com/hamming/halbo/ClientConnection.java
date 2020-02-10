@@ -1,15 +1,15 @@
 package com.hamming.halbo;
 
 
-import com.hamming.halbo.game.GameStateEvent;
-import com.hamming.halbo.game.GameStateListener;
+import com.hamming.halbo.factories.DTOFactory;
+import com.hamming.halbo.game.*;
 import com.hamming.halbo.game.action.UserConnectedAction;
 import com.hamming.halbo.game.action.UserDisconnectedAction;
 import com.hamming.halbo.model.User;
-import com.hamming.halbo.game.GameController;
-import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.game.action.Action;
 import com.hamming.halbo.model.UserLocation;
+import com.hamming.halbo.model.dto.UserLocationDto;
+import com.hamming.halbo.util.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -50,7 +50,7 @@ public class ClientConnection implements Runnable, GameStateListener {
                 System.out.println("Error:" + e.getMessage());
             }
         }
-        gameController.removeGameStateListener(this);
+        gameController.removeListener(this);
         try { socket.close(); } catch (IOException e) {}
         System.out.println("Client Socket closed");
     }
@@ -103,6 +103,19 @@ public class ClientConnection implements Runnable, GameStateListener {
             case USERDISCONNECTED:
                 handleUserDisconnected((User) event.getObject());
                 break;
+            case USERLOCATION:
+                handleUserLocation((UserLocation) event.getObject());
+        }
+    }
+
+    private void handleUserLocation(UserLocation loc) {
+        if (loc.getUser().equals(user)) {
+            // Location of this user!
+            userLocation = loc;
+        }
+        if (userLocation != null && loc.getCity().equals(userLocation.getCity())) {
+            UserLocationDto dto = DTOFactory.getInstance().getUserLocationDTO(loc);
+            send(Protocol.Command.LOCATION.ordinal() + StringUtils.delimiter + dto.toNetData());
         }
     }
 

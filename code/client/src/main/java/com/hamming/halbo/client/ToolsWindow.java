@@ -36,7 +36,7 @@ public class ToolsWindow extends JFrame {
         chatPanel = new ChatPanel(clientWindow);
         mainPainel.add(chatPanel);
 
-        movementPanel = new MovementPanel(clientWindow);
+        movementPanel = new MovementPanel(clientWindow, this);
         mainPainel.add(movementPanel);
 
         getContentPane().add(mainPainel);
@@ -50,6 +50,7 @@ public class ToolsWindow extends JFrame {
         clientWindow.getClient().registerReceiver(Protocol.Command.USERCONNECTED, usersPanel);
         clientWindow.getClient().registerReceiver(Protocol.Command.USERDISCONNECTED, usersPanel);
         clientWindow.getClient().registerReceiver(Protocol.Command.MOVE, movementPanel);
+        clientWindow.getClient().registerReceiver(Protocol.Command.LOCATION, movementPanel);
     }
 
 

@@ -68,4 +68,7 @@ public class WorldsPanel extends JPanel implements CommandReceiver {
         }
     }
 
+    public WorldDto getSelectedWorld() {
+        return listOfWorlds.getSelectedValue();
+    }
 }

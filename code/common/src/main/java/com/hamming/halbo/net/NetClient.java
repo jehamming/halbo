@@ -9,10 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class NetClient implements Runnable {
     private Socket socket;
@@ -75,7 +72,8 @@ public class NetClient implements Runnable {
     public void received(String s) {
         System.out.println("Received:" + s);
         Protocol.Command cmd = protocolHandler.parseCommandString(s);
-        String[] data = s.substring(2).split(StringUtils.delimiter);
+        String[] splitted = s.split(StringUtils.delimiter);
+        String[] data = Arrays.copyOfRange(splitted, 1, splitted.length);
         List<CommandReceiver> listReceivers = receivers.get(cmd);
         boolean handled = false;
         if (listReceivers != null) {

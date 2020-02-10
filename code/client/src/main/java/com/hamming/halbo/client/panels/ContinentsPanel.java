@@ -66,4 +66,8 @@ public class ContinentsPanel extends JPanel implements CommandReceiver {
     public void empty() {
         listModel.removeAllElements();
     }
+
+    public ContinentDto getSelectedContinent() {
+        return listOfContinents.getSelectedValue();
+    }
 }

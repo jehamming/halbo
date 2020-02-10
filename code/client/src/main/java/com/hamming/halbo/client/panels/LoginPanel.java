@@ -113,21 +113,27 @@ public class LoginPanel extends JPanel implements CommandReceiver {
         }
     }
 
-    public void checkLoginOk( String s) {
+    public void checkLoginOk( String s, String userId) {
         if (Protocol.SUCCESS.equals(s)) {
+            client.setUserId(userId);
             String newCommand = protocolHandler.getWorldsCommand();
             client.send(newCommand);
         } else {
             JOptionPane.showMessageDialog(this, "Login failed..");
             txtUsername.setText("");
             txtPassword.setText("");
+            client.setUserId(null);
         }
     }
 
     @Override
     public void receiveCommand(Protocol.Command cmd, String[] data) {
         if (cmd.equals(Protocol.Command.LOGIN)) {
-            checkLoginOk(data[0]);
+            if (data.length == 2) {
+                checkLoginOk(data[0], data[1]);
+            } else {
+                checkLoginOk(data[0], null);
+            }
         }
     }
 }

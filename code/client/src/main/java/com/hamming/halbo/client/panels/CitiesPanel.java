@@ -20,7 +20,7 @@ public class CitiesPanel extends JPanel implements CommandReceiver {
     private HALBOClientWindow client;
     private DefaultListModel listModel;
     private ProtocolHandler protocolHandler;
-
+    private JList<CityDto> listOfCities;
 
     public CitiesPanel(HALBOClientWindow clientWindow) {
         this.client = clientWindow;
@@ -31,7 +31,7 @@ public class CitiesPanel extends JPanel implements CommandReceiver {
     private void createPanel() {
         setBorder(new TitledBorder("Cities"));
         listModel = new DefaultListModel();
-        JList<CityDto> listOfCities = new JList<CityDto>(listModel);
+        listOfCities = new JList<CityDto>(listModel);
         listOfCities.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -69,4 +69,7 @@ public class CitiesPanel extends JPanel implements CommandReceiver {
     }
 
 
+    public CityDto getSelectedCity() {
+        return listOfCities.getSelectedValue();
+    }
 }

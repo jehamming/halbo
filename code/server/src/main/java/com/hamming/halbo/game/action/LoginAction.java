@@ -24,7 +24,7 @@ public class LoginAction implements Action {
         User u = UserFactory.getInstance().validateUser(username,password);
         if ( u != null ) {
             client.setUser(u);
-            client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + Protocol.SUCCESS);
+            client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + Protocol.SUCCESS + StringUtils.delimiter + u.getId().toString());
         } else {
             client.setUser(null);
             client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + Protocol.FAILED);
