@@ -3,12 +3,14 @@ package com.hamming.halbo.client;
 
 import com.hamming.halbo.client.panels.*;
 import com.hamming.halbo.game.Protocol;
+import com.hamming.halbo.game.ProtocolHandler;
+import com.hamming.halbo.model.dto.*;
 import com.hamming.halbo.net.NetClient;
 
 import javax.swing.*;
 import java.io.IOException;
 
-public class HALBOClientWindow extends JFrame {
+public class HALBOTestToollWindow extends JFrame {
 
     private LoginPanel loginPanel;
     private NetClient client;
@@ -17,8 +19,13 @@ public class HALBOClientWindow extends JFrame {
     private ContinentsPanel continentsPanel;
     private BaseplatesPanel baseplatesPanel;
     private ToolsWindow toolsWindow;
+    private UserDto user;
+    private UserLocationDto userLocation;
+    private ProtocolHandler protocolHandler;
 
-    public HALBOClientWindow() {
+
+    public HALBOTestToollWindow() {
+        protocolHandler = new ProtocolHandler();
         init();
     }
 
@@ -43,9 +50,7 @@ public class HALBOClientWindow extends JFrame {
             }
         });
 
-
         toolsWindow = new ToolsWindow(this);
-
     }
 
     private void registerCommandReceivers() {
@@ -82,6 +87,7 @@ public class HALBOClientWindow extends JFrame {
         worldsPanel.empty();
         continentsPanel.empty();
         citiesPanel.empty();
+        baseplatesPanel.empty();
         toolsWindow.emptyPanels();
     }
 
@@ -103,6 +109,11 @@ public class HALBOClientWindow extends JFrame {
         return success;
     }
 
+
+    public boolean isConnected() {
+        return client != null && client.isConnected();
+    }
+
     public void disConnect() {
         try {
             client.closeConnection();
@@ -122,8 +133,9 @@ public class HALBOClientWindow extends JFrame {
      * event-dispatching thread.
      */
     private static void createAndShowGUI() {
-//TODO Remove this remark        WorldOpenGLWindow openGLWindow = new WorldOpenGLWindow();
-        HALBOClientWindow clientWindow = new HALBOClientWindow();
+//TODO Remove this remark
+// WorldOpenGLWindow openGLWindow = new WorldOpenGLWindow();
+        HALBOTestToollWindow clientWindow = new HALBOTestToollWindow();
     }
 
     public NetClient getClient() {
@@ -158,6 +170,35 @@ public class HALBOClientWindow extends JFrame {
                 createAndShowGUI();
             }
         });
+    }
+
+    public void teleport() {
+        WorldDto world = worldsPanel.getSelectedWorld();
+        ContinentDto continent = continentsPanel.getSelectedContinent();
+        CityDto city = citiesPanel.getSelectedCity();
+        BaseplateDto baseplate = baseplatesPanel.getSelectedBaseplate();
+        if ( user != null && world != null && continent != null && city != null && baseplate != null)  {
+            String cmd = protocolHandler.getTeleportCommand(user.getId(), world, continent, city, baseplate);
+            send(cmd);
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a World, Continent, City and Baseplate to teleport to!");
+        }
+    }
+
+    public UserDto getUser() {
+        return user;
+    }
+
+    public void setUser(UserDto user) {
+        this.user = user;
+    }
+
+    public UserLocationDto getUserLocation() {
+        return userLocation;
+    }
+
+    public void setUserLocation(UserLocationDto userLocation) {
+        this.userLocation = userLocation;
     }
 }
 

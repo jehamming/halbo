@@ -51,7 +51,7 @@ public class HALBOServer extends Server {
         try {
             ClientConnection client = new ClientConnection(s, in, out, controller);
             Thread clientThread = new Thread(client);
-            controller.addGameStateListener(client);
+            controller.addListener(client);
             clientThread.setDaemon(true);
             clientThread.setName("Client " + s.getInetAddress().toString());
             clientThread.start();

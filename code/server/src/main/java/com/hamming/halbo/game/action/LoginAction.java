@@ -1,10 +1,13 @@
 package com.hamming.halbo.game.action;
 
 import com.hamming.halbo.ClientConnection;
+import com.hamming.halbo.factories.DTOFactory;
 import com.hamming.halbo.model.User;
 import com.hamming.halbo.factories.UserFactory;
 import com.hamming.halbo.game.GameController;
 import com.hamming.halbo.game.Protocol;
+import com.hamming.halbo.model.dto.UserDto;
+import com.hamming.halbo.model.dto.UserLocationDto;
 import com.hamming.halbo.util.StringUtils;
 
 public class LoginAction implements Action {
@@ -24,11 +27,14 @@ public class LoginAction implements Action {
         User u = UserFactory.getInstance().validateUser(username,password);
         if ( u != null ) {
             client.setUser(u);
-            client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + Protocol.SUCCESS);
+            UserDto dto = DTOFactory.getInstance().getUserDTO(u);
+            client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + Protocol.SUCCESS + StringUtils.delimiter + dto.toNetData());
         } else {
             client.setUser(null);
-            client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + Protocol.FAILED);
+            client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + Protocol.FAILED + StringUtils.delimiter + "Not a valid username/password combo");
         }
+        client.sendUserLocation();
+        client.sendFullGameState();
     }
 
     @Override

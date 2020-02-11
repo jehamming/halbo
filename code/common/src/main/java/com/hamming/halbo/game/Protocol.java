@@ -21,6 +21,8 @@ public interface Protocol {
         GETBASEPLATE,
         GETCONSTUCTION,
         GETLOCATION,
+        LOCATION,
+        TELEPORT,
         MOVE
     }
 }

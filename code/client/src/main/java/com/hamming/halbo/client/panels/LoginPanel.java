@@ -1,8 +1,9 @@
 package com.hamming.halbo.client.panels;
 
-import com.hamming.halbo.client.HALBOClientWindow;
+import com.hamming.halbo.client.HALBOTestToollWindow;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
+import com.hamming.halbo.model.dto.UserDto;
 import com.hamming.halbo.net.CommandReceiver;
 
 import javax.swing.*;
@@ -12,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Arrays;
 
 public class LoginPanel extends JPanel implements CommandReceiver {
 
@@ -20,12 +22,12 @@ public class LoginPanel extends JPanel implements CommandReceiver {
     JTextField txtUsername;
     JPasswordField txtPassword;
     JLabel lblStatus;
-    HALBOClientWindow client;
+    HALBOTestToollWindow client;
     JButton btnConnect;
     JButton btnDisconnect;
     private ProtocolHandler protocolHandler;
 
-    public LoginPanel(HALBOClientWindow client) {
+    public LoginPanel(HALBOTestToollWindow client) {
         createPanel();
         this.client = client;
         this.protocolHandler = new ProtocolHandler();
@@ -113,21 +115,28 @@ public class LoginPanel extends JPanel implements CommandReceiver {
         }
     }
 
-    public void checkLoginOk( String s) {
-        if (Protocol.SUCCESS.equals(s)) {
+    public void checkLoginOk( String[] data) {
+        String status = data[0];
+        String[] values = Arrays.copyOfRange(data, 1, data.length);
+        if (Protocol.SUCCESS.equals(status)) {
+            UserDto user = new UserDto();
+            user.setValues(values);
+            client.setUser(user);
             String newCommand = protocolHandler.getWorldsCommand();
             client.send(newCommand);
         } else {
-            JOptionPane.showMessageDialog(this, "Login failed..");
+            String msg = Arrays.toString(values);
+            JOptionPane.showMessageDialog(this, "Login failed : " + msg);
             txtUsername.setText("");
             txtPassword.setText("");
+            client.setUser(null);
         }
     }
 
     @Override
     public void receiveCommand(Protocol.Command cmd, String[] data) {
         if (cmd.equals(Protocol.Command.LOGIN)) {
-            checkLoginOk(data[0]);
+            checkLoginOk(data);
         }
     }
 }

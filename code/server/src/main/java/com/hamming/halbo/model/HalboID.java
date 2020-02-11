@@ -19,6 +19,7 @@ public class HalboID implements Serializable  {
         CTN, // Construction
         CNT, // Continent
         USR, // User
+        LOC, // User
         SYS  // System
     }
 

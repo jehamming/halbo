@@ -7,7 +7,6 @@ import com.hamming.halbo.client.panels.UsersPanel;
 import com.hamming.halbo.game.Protocol;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 
 public class ToolsWindow extends JFrame {
@@ -15,9 +14,9 @@ public class ToolsWindow extends JFrame {
     private UsersPanel usersPanel;
     private ChatPanel chatPanel;
     private MovementPanel movementPanel;
-    private HALBOClientWindow clientWindow;
+    private HALBOTestToollWindow clientWindow;
 
-    public ToolsWindow(HALBOClientWindow clientWindow) {
+    public ToolsWindow(HALBOTestToollWindow clientWindow) {
         this.clientWindow = clientWindow;
         initWindow();
     }
@@ -36,7 +35,7 @@ public class ToolsWindow extends JFrame {
         chatPanel = new ChatPanel(clientWindow);
         mainPainel.add(chatPanel);
 
-        movementPanel = new MovementPanel(clientWindow);
+        movementPanel = new MovementPanel(clientWindow, this);
         mainPainel.add(movementPanel);
 
         getContentPane().add(mainPainel);
@@ -49,6 +48,8 @@ public class ToolsWindow extends JFrame {
     public void registerReceivers() {
         clientWindow.getClient().registerReceiver(Protocol.Command.USERCONNECTED, usersPanel);
         clientWindow.getClient().registerReceiver(Protocol.Command.USERDISCONNECTED, usersPanel);
+        clientWindow.getClient().registerReceiver(Protocol.Command.MOVE, movementPanel);
+        clientWindow.getClient().registerReceiver(Protocol.Command.LOCATION, movementPanel);
         clientWindow.getClient().registerReceiver(Protocol.Command.MOVE, movementPanel);
     }
 
