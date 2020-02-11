@@ -109,7 +109,12 @@ public class GameController implements Runnable {
 
     private void fireGameStateEvent(GameStateEvent.Type type, BasicObject object) {
         for (GameStateListener l: listeners) {
-            l.newGameState(new GameStateEvent(type, object));
+            if ( l == null ) {
+                // Should not happen, stale client connection..
+                removeListener(l);
+            } else {
+                l.newGameState(new GameStateEvent(type, object));
+            }
         }
     }
 

@@ -39,7 +39,7 @@ public class ProtocolHandler implements Protocol {
 
 
     public String getMoveCommand(boolean forward, boolean back, boolean left, boolean right) {
-        String cmd = Command.MOVE + StringUtils.delimiter
+        String cmd = Command.MOVE.ordinal() + StringUtils.delimiter
                 + forward + StringUtils.delimiter
                 + back + StringUtils.delimiter
                 + left + StringUtils.delimiter

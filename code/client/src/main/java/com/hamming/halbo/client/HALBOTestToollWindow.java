@@ -10,7 +10,7 @@ import com.hamming.halbo.net.NetClient;
 import javax.swing.*;
 import java.io.IOException;
 
-public class HALBOClientWindow extends JFrame {
+public class HALBOTestToollWindow extends JFrame {
 
     private LoginPanel loginPanel;
     private NetClient client;
@@ -19,11 +19,12 @@ public class HALBOClientWindow extends JFrame {
     private ContinentsPanel continentsPanel;
     private BaseplatesPanel baseplatesPanel;
     private ToolsWindow toolsWindow;
-    private String userId;
+    private UserDto user;
+    private UserLocationDto userLocation;
     private ProtocolHandler protocolHandler;
 
 
-    public HALBOClientWindow() {
+    public HALBOTestToollWindow() {
         protocolHandler = new ProtocolHandler();
         init();
     }
@@ -49,9 +50,7 @@ public class HALBOClientWindow extends JFrame {
             }
         });
 
-
         toolsWindow = new ToolsWindow(this);
-
     }
 
     private void registerCommandReceivers() {
@@ -112,7 +111,7 @@ public class HALBOClientWindow extends JFrame {
 
 
     public boolean isConnected() {
-        return client.isConnected();
+        return client != null && client.isConnected();
     }
 
     public void disConnect() {
@@ -136,7 +135,7 @@ public class HALBOClientWindow extends JFrame {
     private static void createAndShowGUI() {
 //TODO Remove this remark
 // WorldOpenGLWindow openGLWindow = new WorldOpenGLWindow();
-        HALBOClientWindow clientWindow = new HALBOClientWindow();
+        HALBOTestToollWindow clientWindow = new HALBOTestToollWindow();
     }
 
     public NetClient getClient() {
@@ -178,16 +177,28 @@ public class HALBOClientWindow extends JFrame {
         ContinentDto continent = continentsPanel.getSelectedContinent();
         CityDto city = citiesPanel.getSelectedCity();
         BaseplateDto baseplate = baseplatesPanel.getSelectedBaseplate();
-        if ( world != null && continent != null && city != null && baseplate != null)  {
-            String cmd = protocolHandler.getTeleportCommand(userId, world, continent, city, baseplate);
+        if ( user != null && world != null && continent != null && city != null && baseplate != null)  {
+            String cmd = protocolHandler.getTeleportCommand(user.getId(), world, continent, city, baseplate);
             send(cmd);
         } else {
             JOptionPane.showMessageDialog(this, "Please select a World, Continent, City and Baseplate to teleport to!");
         }
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public UserDto getUser() {
+        return user;
+    }
+
+    public void setUser(UserDto user) {
+        this.user = user;
+    }
+
+    public UserLocationDto getUserLocation() {
+        return userLocation;
+    }
+
+    public void setUserLocation(UserLocationDto userLocation) {
+        this.userLocation = userLocation;
     }
 }
 

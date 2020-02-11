@@ -1,6 +1,6 @@
 package com.hamming.halbo.client.panels;
 
-import com.hamming.halbo.client.HALBOClientWindow;
+import com.hamming.halbo.client.HALBOTestToollWindow;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.UserDto;
@@ -12,10 +12,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.Enumeration;
+import java.util.List;
 
 public class UsersPanel extends JPanel implements CommandReceiver {
 
-    private HALBOClientWindow client;
+    private HALBOTestToollWindow client;
     private DefaultListModel listModel;
     private ProtocolHandler protocolHandler;
 
@@ -36,7 +37,7 @@ public class UsersPanel extends JPanel implements CommandReceiver {
     }
 
 
-    public UsersPanel(HALBOClientWindow clientWindow) {
+    public UsersPanel(HALBOTestToollWindow clientWindow) {
         this.client = clientWindow;
         protocolHandler = new ProtocolHandler();
         createPanel();
@@ -45,14 +46,14 @@ public class UsersPanel extends JPanel implements CommandReceiver {
     private void createPanel() {
         setBorder(new TitledBorder("Online Users"));
         listModel = new DefaultListModel();
-        JList<UserDto> listOfUsers = new JList<UserDto>(listModel);
+        JList<ListItem> listOfUsers = new JList<ListItem>(listModel);
         listOfUsers.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if ( !e.getValueIsAdjusting() ) { //Else this is called twice!
-                    UserDto dto = listOfUsers.getSelectedValue();
-                    if (dto != null) {
-                        userSelected(dto);
+                    ListItem item = listOfUsers.getSelectedValue();
+                    if (item != null && item.getUser()!= null) {
+                        userSelected(item.getUser());
                     }
                 }
             }
@@ -83,13 +84,15 @@ public class UsersPanel extends JPanel implements CommandReceiver {
 
     private void addUser(UserDto user) {
         if (!contains(user)) {
-            listModel.addElement(user);
+            ListItem item = new ListItem(user);
+            listModel.addElement(item);
         }
     }
 
     private void removeUser(UserDto user) {
         if (contains(user)) {
-            listModel.removeElement(user);
+            ListItem item = findListItemFor(user);
+            listModel.removeElement(item);
         }
     }
 
@@ -104,6 +107,18 @@ public class UsersPanel extends JPanel implements CommandReceiver {
             ListItem item = enumerator.nextElement();
             if (item.getUser().getId().equals(dto.getId())) {
                 found = item.getUser();
+            }
+        }
+        return found;
+    }
+
+    public ListItem findListItemFor(UserDto dto) {
+        ListItem found=null;
+        Enumeration<ListItem> enumerator = listModel.elements();
+        while (enumerator.hasMoreElements()) {
+            ListItem item = enumerator.nextElement();
+            if (item.getUser().getId().equals(dto.getId())) {
+                found = item;
             }
         }
         return found;

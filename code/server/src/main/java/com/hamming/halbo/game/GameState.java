@@ -22,6 +22,9 @@ public class GameState {
     public List<User> getOnlineUsers() {
         return onlineUsers;
     }
+    public Map<User, UserLocation> getUserLocations() {
+        return userLocations;
+    }
 
     public UserLocation getLocation(User u) {
         UserLocation loc = userLocations.get(u);

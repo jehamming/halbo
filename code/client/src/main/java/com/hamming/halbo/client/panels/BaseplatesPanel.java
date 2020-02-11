@@ -1,24 +1,20 @@
 package com.hamming.halbo.client.panels;
 
-import com.hamming.halbo.client.HALBOClientWindow;
+import com.hamming.halbo.client.HALBOTestToollWindow;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.BaseplateDto;
-import com.hamming.halbo.model.dto.UserDto;
-import com.hamming.halbo.model.dto.WorldDto;
 import com.hamming.halbo.net.CommandReceiver;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class BaseplatesPanel extends JPanel implements CommandReceiver {
 
-    private HALBOClientWindow client;
+    private HALBOTestToollWindow client;
     private JList<ListItem> listOfBaseplates;
     private DefaultListModel listModel;
     private ProtocolHandler protocolHandler;
@@ -41,7 +37,7 @@ public class BaseplatesPanel extends JPanel implements CommandReceiver {
     }
 
 
-    public BaseplatesPanel(HALBOClientWindow client) {
+    public BaseplatesPanel(HALBOTestToollWindow client) {
         this.client = client;
         protocolHandler = new ProtocolHandler();
         createPanel();
@@ -49,7 +45,6 @@ public class BaseplatesPanel extends JPanel implements CommandReceiver {
 
     private void createPanel() {
         setBorder(new TitledBorder("Baseplates"));
-        setLayout( new BoxLayout(this, BoxLayout.Y_AXIS));
         listModel = new DefaultListModel();
         listOfBaseplates = new JList<ListItem>(listModel);
         JScrollPane scrollPane = new JScrollPane(listOfBaseplates);
@@ -84,15 +79,19 @@ public class BaseplatesPanel extends JPanel implements CommandReceiver {
         return dto;
     }
 
-
-
     @Override
     public void receiveCommand(Protocol.Command cmd, String[] data) {
         if (cmd.equals(Protocol.Command.GETBASEPLATES)) {
-            BaseplateDto dto = new BaseplateDto();
-            dto.setValues(data);
-            ListItem item = new ListItem(dto);
-            listModel.addElement(item);
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    BaseplateDto dto = new BaseplateDto();
+                    dto.setValues(data);
+                    ListItem item = new ListItem(dto);
+                    listModel.addElement(item);
+                    System.out.println("Added item " + item);
+                }
+            });
         }
     }
 

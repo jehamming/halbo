@@ -27,7 +27,7 @@ public class ProtocolHandler implements Protocol {
         commands.put(Command.GETCONTINENTS, new GetContinentAction(controller,client));
         commands.put(Command.GETCITIES, new GetCitiesAction(controller,client));
         commands.put(Command.GETBASEPLATES, new GetBaseplatesAction(controller,client));
-        commands.put(Command.MOVE, new GetBaseplatesAction(controller,client));
+        commands.put(Command.MOVE, new MoveAction(controller,client));
         commands.put(Command.TELEPORT, new TeleportAction(controller,client));
     }
 

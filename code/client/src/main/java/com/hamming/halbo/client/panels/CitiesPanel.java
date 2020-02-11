@@ -1,13 +1,10 @@
 package com.hamming.halbo.client.panels;
 
-import com.hamming.halbo.client.HALBOClientWindow;
+import com.hamming.halbo.client.HALBOTestToollWindow;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.CityDto;
-import com.hamming.halbo.model.dto.ContinentDto;
-import com.hamming.halbo.model.dto.WorldDto;
 import com.hamming.halbo.net.CommandReceiver;
-import com.hamming.halbo.util.StringUtils;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -17,12 +14,12 @@ import java.awt.*;
 
 public class CitiesPanel extends JPanel implements CommandReceiver {
 
-    private HALBOClientWindow client;
+    private HALBOTestToollWindow client;
     private DefaultListModel listModel;
     private ProtocolHandler protocolHandler;
     private JList<CityDto> listOfCities;
 
-    public CitiesPanel(HALBOClientWindow clientWindow) {
+    public CitiesPanel(HALBOTestToollWindow clientWindow) {
         this.client = clientWindow;
         protocolHandler = new ProtocolHandler();
         createPanel();

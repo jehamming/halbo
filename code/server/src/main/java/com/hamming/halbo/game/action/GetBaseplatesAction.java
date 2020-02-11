@@ -14,6 +14,8 @@ import com.hamming.halbo.model.dto.BaseplateDto;
 import com.hamming.halbo.model.dto.ContinentDto;
 import com.hamming.halbo.util.StringUtils;
 
+import java.util.Arrays;
+
 public class GetBaseplatesAction implements Action {
     private GameController controller;
     private ClientConnection client;
@@ -43,7 +45,7 @@ public class GetBaseplatesAction implements Action {
         if (values.length == 1 ) {
             cityId = values[0];
         } else {
-            System.out.println("Error at "+getClass().getName()+", size not ok of: "+values);
+            System.out.println("Error at "+getClass().getName()+", size not ok of: "+ Arrays.toString(values));
         }
     }
 }

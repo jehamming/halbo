@@ -75,16 +75,20 @@ public class ClientConnection implements Runnable, GameStateListener {
         this.user = user;
         if ( user != null ) {
             gameController.userConnected(user);
-            sendFullGameState();
         }
     }
 
-    private void sendFullGameState() {
+    public void sendFullGameState() {
         if (isLoggedIn()) {
+            // Logged in Users;
             for ( User u: gameController.getGameState().getOnlineUsers()) {
                 if (!u.getId().equals(user.getId())) {
                     handleUserConnected(u);
                 }
+            }
+            // UserLocations
+            for (UserLocation loc : gameController.getGameState().getUserLocations().values()) {
+                handleUserLocation(loc);
             }
         }
     }
@@ -135,4 +139,11 @@ public class ClientConnection implements Runnable, GameStateListener {
         }
     }
 
+    public void sendUserLocation() {
+        userLocation = gameController.getGameState().getLocation(user);
+        if (userLocation != null ) {
+            UserLocationDto dto = DTOFactory.getInstance().getUserLocationDTO(userLocation);
+            send(Protocol.Command.LOCATION.ordinal() + StringUtils.delimiter + dto.toNetData());
+        }
+    }
 }
