@@ -33,7 +33,7 @@ public class TeleportAction implements Action {
             cityId = values[3];
             baseplateId = values[4];
         } else {
-            System.out.println("Error at "+getClass().getName()+", size not ok of: "+values);
+            System.out.println(this.getClass().getName() + ":" + "Error at "+getClass().getName()+", size not ok of: "+values);
         }
     }
 }

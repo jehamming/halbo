@@ -30,7 +30,7 @@ public class ChatPanel extends JPanel implements CommandReceiver {
     @Override
     public void receiveCommand(Protocol.Command cmd, String[] data) {
         //TODO IMplement
-        System.out.println("Not implemented yet");
+        System.out.println(this.getClass().getName() + ":" + "Not implemented yet");
     }
 
 

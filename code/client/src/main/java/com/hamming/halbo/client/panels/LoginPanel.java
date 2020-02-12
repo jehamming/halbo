@@ -130,6 +130,8 @@ public class LoginPanel extends JPanel implements CommandReceiver {
             txtUsername.setText("");
             txtPassword.setText("");
             client.setUser(null);
+            btnDisconnect.setEnabled(false);
+            btnConnect.setEnabled(true);
         }
     }
 

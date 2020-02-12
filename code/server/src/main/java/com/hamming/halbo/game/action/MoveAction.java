@@ -33,7 +33,7 @@ public class MoveAction implements Action {
             left = Boolean.valueOf(values[2]);
             right = Boolean.valueOf(values[3]);
         } else {
-            System.out.println("Error at "+getClass().getName()+", size not ok of: "+values);
+            System.out.println(this.getClass().getName() + ":" + "Error at "+getClass().getName()+", size not ok of: "+values);
         }
     }
 }

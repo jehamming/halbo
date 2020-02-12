@@ -31,7 +31,7 @@ public class GameController implements Runnable {
                         this.wait();
                     }
                 } catch (InterruptedException e) {
-                    System.out.println("Exception : method wait was interrupted!");
+                    System.out.println(this.getClass().getName() + ":" + "Exception : method wait was interrupted!");
                 }
             }
             while (!actionQueue.isEmpty()) {

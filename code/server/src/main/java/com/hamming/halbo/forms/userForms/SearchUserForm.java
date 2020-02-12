@@ -22,7 +22,7 @@ public class SearchUserForm {
         userName.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Searching users.");
+                System.out.println(this.getClass().getName() + ":" + "Searching users.");
                 loadUserInAList();
             }
         });

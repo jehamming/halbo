@@ -61,9 +61,14 @@ public class WorldsPanel extends JPanel implements CommandReceiver {
     @Override
     public void receiveCommand(Protocol.Command cmd, String[] data) {
         if (cmd.equals(Protocol.Command.GETWORLDS)) {
-            WorldDto world = new WorldDto();
-            world.setValues(data);
-            listModel.addElement(world);
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    WorldDto world = new WorldDto();
+                    world.setValues(data);
+                    listModel.addElement(world);
+                }
+            });
         }
     }
 

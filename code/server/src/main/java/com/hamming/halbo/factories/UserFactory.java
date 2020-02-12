@@ -97,16 +97,6 @@ public class UserFactory extends AbstractFactory {
         return sb.toString();
     }
 
-    private Long getHighestID() {
-        Long highest = 0L;
-        for (User u : users ) {
-            long id = u.getId().getId();
-            if (id > highest) {
-                highest = id;
-            }
-        }
-        return highest;
-    }
 
     public boolean storeUsersInFile(String filename) {
         return storeInFile(users, filename);
@@ -127,7 +117,7 @@ public class UserFactory extends AbstractFactory {
         List<User> loadUsers = (ArrayList<User>) loadFromFile(file);
         if ( loadUsers != null ) {
             users = loadUsers;
-            Long highestID = getHighestID();
+            Long highestID = getHighestID(users);
             IDManager.getInstance().setLastAddedID(HalboID.Prefix.USR, highestID);
         }
         return retval;

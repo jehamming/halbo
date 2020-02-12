@@ -47,12 +47,15 @@ public class ClientConnection implements Runnable, GameStateListener {
                 }
             } catch (Exception e) {
                 running = false;
-                System.out.println("Error:" + e.getMessage());
+                System.out.println(this.getClass().getName() + ":" + "Error:" + e.getMessage());
             }
         }
         gameController.removeListener(this);
+        if (user != null ) {
+            gameController.userDisconnected(user);
+        }
         try { socket.close(); } catch (IOException e) {}
-        System.out.println("Client Socket closed");
+        System.out.println(this.getClass().getName() + ":" + "Client Socket closed");
     }
 
     private void handleInput(String s) {
@@ -63,7 +66,7 @@ public class ClientConnection implements Runnable, GameStateListener {
     }
 
     public void send(String s) {
-        System.out.println("Client send:" + s);
+        System.out.println(this.getClass().getName() + ":" + "Client send:" + s);
         out.println(s);
     }
 
@@ -145,5 +148,9 @@ public class ClientConnection implements Runnable, GameStateListener {
             UserLocationDto dto = DTOFactory.getInstance().getUserLocationDTO(userLocation);
             send(Protocol.Command.LOCATION.ordinal() + StringUtils.delimiter + dto.toNetData());
         }
+    }
+
+    public ProtocolHandler getProtocolHandler() {
+        return protocolHandler;
     }
 }

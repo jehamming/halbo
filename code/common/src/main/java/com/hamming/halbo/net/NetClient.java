@@ -30,17 +30,38 @@ public class NetClient implements Runnable {
             socket = new Socket(ip, port);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
+
+            // Do Protocol handshake
+            doProtocolHandshake();
+
             Thread clientThread = new Thread(this);
             clientThread.setName("Client Connection");
             clientThread.setDaemon(true);
             clientThread.start();
             open = true;
         } catch (IOException e) {
-            System.out.println("ERROR:" + e.getMessage());
+            System.out.println(this.getClass().getName() + ":" + "ERROR:" + e.getMessage());
             retval = e.getMessage();
             //e.printStackTrace();
         }
         return retval;
+    }
+
+    private void doProtocolHandshake() throws IOException {
+        send(protocolHandler.getVersionCommand() + StringUtils.delimiter + Protocol.version);
+        String response = in.readLine();
+        if (response != null) {
+            Protocol.Command cmd = protocolHandler.parseCommandString(response);
+            if (cmd != null && cmd.equals(Protocol.Command.VERSION)) {
+                String[] splitted = response.split(StringUtils.delimiter);
+                String[] data = Arrays.copyOfRange(splitted, 1, splitted.length);
+                String status = Arrays.toString(data);
+                if (Protocol.FAILED.equals(status)) {
+                    String failure = data[1];
+                    throw new IOException(failure);
+                }
+            }
+        }
     }
 
     @Override
@@ -53,7 +74,7 @@ public class NetClient implements Runnable {
                 }
             } catch (Exception e) {
                 open = false;
-                System.out.println("Error:" + e.getMessage());
+                System.out.println(this.getClass().getName() + ":" + "Error:" + e.getMessage());
             }
         }
         if ( socket != null ) {
@@ -62,7 +83,7 @@ public class NetClient implements Runnable {
             } catch (IOException e) {
             }
         }
-        System.out.println("NetClient finished");
+        System.out.println(this.getClass().getName() + ":" + "NetClient finished");
     }
 
     public void send(String s) {
@@ -70,7 +91,7 @@ public class NetClient implements Runnable {
     }
 
     public void received(String s) {
-        System.out.println("Received:" + s);
+        System.out.println(this.getClass().getName() + ":" + "Received:" + s);
         Protocol.Command cmd = protocolHandler.parseCommandString(s);
         String[] splitted = s.split(StringUtils.delimiter);
         String[] data = Arrays.copyOfRange(splitted, 1, splitted.length);
@@ -84,7 +105,7 @@ public class NetClient implements Runnable {
         }
 
         if (!handled) {
-            System.out.println("Command " + cmd.toString() + " NOT handled");
+            System.out.println(this.getClass().getName() + ":" + "Command " + cmd.toString() + " NOT handled");
         }
 
     }

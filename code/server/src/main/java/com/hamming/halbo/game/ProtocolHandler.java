@@ -17,12 +17,16 @@ public class ProtocolHandler implements Protocol {
     public ProtocolHandler(GameController controller, ClientConnection client) {
         this.controller = controller;
         this.client = client;
-        registerCommands();
+        commands = new HashMap<Command, Action>();
+        commands.put(Command.VERSION, new ProtocolVersionAction(controller, client));
     }
 
-    private void registerCommands() {
-        commands = new HashMap<Command, Action>();
+    public void protocolVersionCompatible() {
+        emptyCommands();
         commands.put(Command.LOGIN, new LoginAction(controller, client));
+    }
+
+    public void LoggedIn() {
         commands.put(Command.GETWORLDS, new GetWorldsAction(controller, client));
         commands.put(Command.GETCONTINENTS, new GetContinentAction(controller,client));
         commands.put(Command.GETCITIES, new GetCitiesAction(controller,client));
@@ -31,17 +35,31 @@ public class ProtocolHandler implements Protocol {
         commands.put(Command.TELEPORT, new TeleportAction(controller,client));
     }
 
+
+    private void emptyCommands() {
+        for (Command c : commands.keySet() ) {
+            commands.remove(c);
+        }
+    }
+
+    public void reset() {
+        emptyCommands();
+        commands.put(Command.VERSION, new ProtocolVersionAction(controller, client));
+    }
+
+
+
     public Action parseCommandString(String s) {
-        System.out.println("ParseIncomingCommand:" + s);
+        System.out.println(this.getClass().getName() + ":" + "ParseIncomingCommand:" + s);
         String[] sArr = s.split(StringUtils.delimiter);
         String strId = sArr[0];
         Command cmd = Command.values()[Integer.valueOf(strId)];
-        System.out.println("IncomingCommand=" + cmd);
+        System.out.println(this.getClass().getName() + ":" + "IncomingCommand=" + cmd);
         Action pCMD = commands.get(cmd);
         if ( pCMD != null ) {
             pCMD.setValues(Arrays.copyOfRange(sArr, 1, sArr.length));
         } else {
-            System.out.println("Unhandled command: " + cmd);
+            System.out.println(this.getClass().getName() + ":" + "Unhandled command: " + cmd);
         }
         return pCMD;
     }

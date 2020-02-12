@@ -45,7 +45,7 @@ public class GetBaseplatesAction implements Action {
         if (values.length == 1 ) {
             cityId = values[0];
         } else {
-            System.out.println("Error at "+getClass().getName()+", size not ok of: "+ Arrays.toString(values));
+            System.out.println(this.getClass().getName() + ":" + "Error at "+getClass().getName()+", size not ok of: "+ Arrays.toString(values));
         }
     }
 }

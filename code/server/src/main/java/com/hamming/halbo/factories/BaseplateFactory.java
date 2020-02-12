@@ -66,9 +66,12 @@ public class BaseplateFactory extends AbstractFactory {
         List<Baseplate> loadBaseplates = (ArrayList<Baseplate>) loadFromFile(file);
         if (loadBaseplates != null) {
             baseplateList = loadBaseplates;
+            Long highestID = getHighestID(baseplateList);
+            IDManager.getInstance().setLastAddedID(HalboID.Prefix.BPL, highestID);
         }
         return retval;
     }
+
 
     public boolean storeBaseplatesInFile(String filename) {
         return storeInFile(baseplateList, filename);

@@ -41,7 +41,7 @@ public class CreateMinimalWorld {
         CityFactory.getInstance().storeCitiesInFile(config.getCitiesDataFile());
         BaseplateFactory.getInstance().storeBaseplatesInFile(config.getBaseplatesDataFile());
         ContinentFactory.getInstance().storeContinentsInFile(config.getContinentsDataFile());
-        System.out.println("Stored Users, Worlds, Cities, Continents, Baseplates");
+        System.out.println(this.getClass().getName() + ":" + "Stored Users, Worlds, Cities, Continents, Baseplates");
     }
 
     public static void main(String[] args) {

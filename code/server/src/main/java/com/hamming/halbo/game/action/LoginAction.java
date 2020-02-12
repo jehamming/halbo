@@ -26,15 +26,24 @@ public class LoginAction implements Action {
     public void execute() {
         User u = UserFactory.getInstance().validateUser(username,password);
         if ( u != null ) {
-            client.setUser(u);
-            UserDto dto = DTOFactory.getInstance().getUserDTO(u);
-            client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + Protocol.SUCCESS + StringUtils.delimiter + dto.toNetData());
+            if (controller.getGameState().getOnlineUsers().contains(u)) {
+                // Already online
+                client.setUser(null);
+                client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + Protocol.FAILED + StringUtils.delimiter + "You are already logged in!");
+            } else {
+                // Connected!
+                client.setUser(u);
+                client.getProtocolHandler().LoggedIn();
+                UserDto dto = DTOFactory.getInstance().getUserDTO(u);
+                client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + Protocol.SUCCESS + StringUtils.delimiter + dto.toNetData());
+                client.sendUserLocation();
+                client.sendFullGameState();
+            }
         } else {
+            // Invalid user/password
             client.setUser(null);
             client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + Protocol.FAILED + StringUtils.delimiter + "Not a valid username/password combo");
         }
-        client.sendUserLocation();
-        client.sendFullGameState();
     }
 
     @Override
@@ -43,7 +52,7 @@ public class LoginAction implements Action {
             username = values[0];
             password = values[1];
         } else {
-            System.out.println("Error at LoginCommand, size not ok of: "+values);
+            System.out.println(this.getClass().getName() + ":" + "Error at LoginCommand, size not ok of: "+values);
         }
     }
 }

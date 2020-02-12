@@ -89,7 +89,7 @@ public class BaseplatesPanel extends JPanel implements CommandReceiver {
                     dto.setValues(data);
                     ListItem item = new ListItem(dto);
                     listModel.addElement(item);
-                    System.out.println("Added item " + item);
+                    System.out.println(this.getClass().getName() + ":" + "Added item " + item);
                 }
             });
         }

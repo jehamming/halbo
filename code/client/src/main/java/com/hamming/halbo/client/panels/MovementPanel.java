@@ -104,7 +104,7 @@ public class MovementPanel extends JPanel implements CommandReceiver, Runnable {
     @Override
     public void receiveCommand(Protocol.Command cmd, String[] data) {
         if (cmd.equals(Protocol.Command.MOVE)) {
-            System.out.println("MOVE Command;" + data);
+            System.out.println(this.getClass().getName() + ":" + "MOVE Command;" + data);
         } else if (cmd.equals(Protocol.Command.LOCATION)) {
             UserLocationDto dto = new UserLocationDto();
             dto.setValues(data);
@@ -115,7 +115,7 @@ public class MovementPanel extends JPanel implements CommandReceiver, Runnable {
                 lblLocationDetails.setText(details);
                 lblCurrentLocation.setText(txt);
             } else {
-                System.out.println("Got Location for user "+ dto.getUserId() + ": "+ txt);
+                System.out.println(this.getClass().getName() + ":" + "Got Location for user "+ dto.getUserId() + ": "+ txt);
             }
         }
     }
