@@ -91,6 +91,8 @@ public class CityFactory extends AbstractFactory {
         List<City> loadCities = (ArrayList<City>) loadFromFile(file);
         if (loadCities != null) {
             cities = loadCities;
+            Long highestID = getHighestID(cities);
+            IDManager.getInstance().setLastAddedID(HalboID.Prefix.CTY, highestID);
         }
         return retval;
     }

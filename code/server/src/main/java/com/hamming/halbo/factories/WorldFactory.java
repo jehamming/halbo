@@ -72,6 +72,8 @@ public class WorldFactory extends AbstractFactory {
         List<World> loadWorlds = (ArrayList<World>) loadFromFile(file);
         if ( loadWorlds != null ) {
             worlds = loadWorlds;
+            Long highestID = getHighestID(worlds);
+            IDManager.getInstance().setLastAddedID(HalboID.Prefix.WLD, highestID);
         }
         return retval;
     }

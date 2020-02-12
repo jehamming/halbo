@@ -1,9 +1,11 @@
 package com.hamming.halbo.factories;
 
+import com.hamming.halbo.model.BasicObject;
 import com.hamming.halbo.model.User;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AbstractFactory {
 
@@ -45,5 +47,16 @@ public class AbstractFactory {
         return readObject;
     }
 
+
+    public Long getHighestID(List<? extends BasicObject> list) {
+        Long highest = 0L;
+        for (BasicObject b : list) {
+            long id = b.getId().getId();
+            if (id > highest) {
+                highest = id;
+            }
+        }
+        return highest;
+    }
 
 }

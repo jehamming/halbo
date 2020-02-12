@@ -72,6 +72,8 @@ public class ContinentFactory extends AbstractFactory{
         List<Continent> loadContinents = (ArrayList<Continent>) loadFromFile(file);
         if (loadContinents != null) {
             continents = loadContinents;
+            Long highestID = getHighestID(continents);
+            IDManager.getInstance().setLastAddedID(HalboID.Prefix.CNT, highestID);
         }
         return retval;
     }
