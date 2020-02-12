@@ -149,4 +149,8 @@ public class ClientConnection implements Runnable, GameStateListener {
             send(Protocol.Command.LOCATION.ordinal() + StringUtils.delimiter + dto.toNetData());
         }
     }
+
+    public ProtocolHandler getProtocolHandler() {
+        return protocolHandler;
+    }
 }

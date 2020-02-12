@@ -33,6 +33,7 @@ public class LoginAction implements Action {
             } else {
                 // Connected!
                 client.setUser(u);
+                client.getProtocolHandler().LoggedIn();
                 UserDto dto = DTOFactory.getInstance().getUserDTO(u);
                 client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + Protocol.SUCCESS + StringUtils.delimiter + dto.toNetData());
                 client.sendUserLocation();

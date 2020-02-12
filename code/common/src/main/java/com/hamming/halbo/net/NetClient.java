@@ -30,6 +30,10 @@ public class NetClient implements Runnable {
             socket = new Socket(ip, port);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
+
+            // Do Protocol handshake
+            doProtocolHandshake();
+
             Thread clientThread = new Thread(this);
             clientThread.setName("Client Connection");
             clientThread.setDaemon(true);
@@ -41,6 +45,23 @@ public class NetClient implements Runnable {
             //e.printStackTrace();
         }
         return retval;
+    }
+
+    private void doProtocolHandshake() throws IOException {
+        send(protocolHandler.getVersionCommand() + StringUtils.delimiter + Protocol.version);
+        String response = in.readLine();
+        if (response != null) {
+            Protocol.Command cmd = protocolHandler.parseCommandString(response);
+            if (cmd != null && cmd.equals(Protocol.Command.VERSION)) {
+                String[] splitted = response.split(StringUtils.delimiter);
+                String[] data = Arrays.copyOfRange(splitted, 1, splitted.length);
+                String status = Arrays.toString(data);
+                if (Protocol.FAILED.equals(status)) {
+                    String failure = data[1];
+                    throw new IOException(failure);
+                }
+            }
+        }
     }
 
     @Override

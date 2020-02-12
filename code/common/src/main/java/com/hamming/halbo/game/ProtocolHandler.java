@@ -22,6 +22,12 @@ public class ProtocolHandler implements Protocol {
         return cmd;
     }
 
+    public String getVersionCommand() {
+        String cmd = Command.VERSION.ordinal() + "";
+        return cmd;
+    }
+
+
     public String getGetContinentsCommand(String worldId) {
         String cmd = Command.GETCONTINENTS.ordinal() + StringUtils.delimiter + worldId;
         return cmd;
