@@ -28,7 +28,7 @@ public class HALBOServer extends Server {
         ContinentFactory.getInstance().loadContinentsFromFile(config.getContinentsDataFile());
         CityFactory.getInstance().loadCitiesFromFile(config.getCitiesDataFile());
         BaseplateFactory.getInstance().loadBaseplatesFromFile(config.getBaseplatesDataFile());
-        System.out.println("Data loaded");
+        System.out.println(this.getClass().getName() + ":" + "Data loaded");
 
         // Start GameController
         controller = new GameController();
@@ -36,13 +36,13 @@ public class HALBOServer extends Server {
         controllerThread.setDaemon(true);
         controllerThread.setName("GameController");
         controllerThread.start();
-        System.out.println("GameController started");
+        System.out.println(this.getClass().getName() + ":" + "GameController started");
     }
 
 
     public void startServer() {
         startServer(port);
-        System.out.println("Started main HALBO Server, port:"+port);
+        System.out.println(this.getClass().getName() + ":" + "Started main HALBO Server, port:"+port);
     }
 
 
@@ -55,7 +55,7 @@ public class HALBOServer extends Server {
             clientThread.setDaemon(true);
             clientThread.setName("Client " + s.getInetAddress().toString());
             clientThread.start();
-            System.out.println("Client " + s.getInetAddress().toString() + ", ClientThread started");
+            System.out.println(this.getClass().getName() + ":" + "Client " + s.getInetAddress().toString() + ", ClientThread started");
         } catch (Exception exception) {
             exception.printStackTrace();
         }

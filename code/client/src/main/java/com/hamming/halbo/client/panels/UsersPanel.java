@@ -3,6 +3,7 @@ package com.hamming.halbo.client.panels;
 import com.hamming.halbo.client.HALBOTestToollWindow;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
+import com.hamming.halbo.model.dto.ContinentDto;
 import com.hamming.halbo.model.dto.UserDto;
 import com.hamming.halbo.net.CommandReceiver;
 
@@ -84,15 +85,25 @@ public class UsersPanel extends JPanel implements CommandReceiver {
 
     private void addUser(UserDto user) {
         if (!contains(user)) {
-            ListItem item = new ListItem(user);
-            listModel.addElement(item);
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    ListItem item = new ListItem(user);
+                    listModel.addElement(item);
+                }
+            });
         }
     }
 
     private void removeUser(UserDto user) {
         if (contains(user)) {
-            ListItem item = findListItemFor(user);
-            listModel.removeElement(item);
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    ListItem item = findListItemFor(user);
+                    listModel.removeElement(item);
+                }
+            });
         }
     }
 

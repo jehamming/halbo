@@ -64,7 +64,7 @@ public class ServerConfig {
     public String loadProperty( String name ) {
         String value = properties.getProperty(name);
         if (value == null) {
-            System.out.println("Error loading property '" + name +"', no value found!");
+            System.out.println(this.getClass().getName() + ":" + "Error loading property '" + name +"', no value found!");
         }
         return value;
     }

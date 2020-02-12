@@ -54,9 +54,14 @@ public class CitiesPanel extends JPanel implements CommandReceiver {
     @Override
     public void receiveCommand(Protocol.Command cmd, String[] data) {
         if (cmd.equals(Protocol.Command.GETCITIES)) {
-            CityDto city = new CityDto();
-            city.setValues(data);
-            listModel.addElement(city);
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    CityDto city = new CityDto();
+                    city.setValues(data);
+                    listModel.addElement(city);
+                }
+            });
         }
     }
 

@@ -32,16 +32,16 @@ public class ProtocolHandler implements Protocol {
     }
 
     public Action parseCommandString(String s) {
-        System.out.println("ParseIncomingCommand:" + s);
+        System.out.println(this.getClass().getName() + ":" + "ParseIncomingCommand:" + s);
         String[] sArr = s.split(StringUtils.delimiter);
         String strId = sArr[0];
         Command cmd = Command.values()[Integer.valueOf(strId)];
-        System.out.println("IncomingCommand=" + cmd);
+        System.out.println(this.getClass().getName() + ":" + "IncomingCommand=" + cmd);
         Action pCMD = commands.get(cmd);
         if ( pCMD != null ) {
             pCMD.setValues(Arrays.copyOfRange(sArr, 1, sArr.length));
         } else {
-            System.out.println("Unhandled command: " + cmd);
+            System.out.println(this.getClass().getName() + ":" + "Unhandled command: " + cmd);
         }
         return pCMD;
     }

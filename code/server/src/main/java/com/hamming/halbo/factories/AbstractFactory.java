@@ -39,7 +39,7 @@ public class AbstractFactory {
             readObject = (ArrayList<User>) ois.readObject();
             ois.close();
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("ERROR:" + e.getMessage());
+            System.out.println(this.getClass().getName() + ":" + "ERROR:" + e.getMessage());
             //e.printStackTrace();
         }
         return readObject;

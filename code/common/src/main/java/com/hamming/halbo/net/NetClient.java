@@ -36,7 +36,7 @@ public class NetClient implements Runnable {
             clientThread.start();
             open = true;
         } catch (IOException e) {
-            System.out.println("ERROR:" + e.getMessage());
+            System.out.println(this.getClass().getName() + ":" + "ERROR:" + e.getMessage());
             retval = e.getMessage();
             //e.printStackTrace();
         }
@@ -53,7 +53,7 @@ public class NetClient implements Runnable {
                 }
             } catch (Exception e) {
                 open = false;
-                System.out.println("Error:" + e.getMessage());
+                System.out.println(this.getClass().getName() + ":" + "Error:" + e.getMessage());
             }
         }
         if ( socket != null ) {
@@ -62,7 +62,7 @@ public class NetClient implements Runnable {
             } catch (IOException e) {
             }
         }
-        System.out.println("NetClient finished");
+        System.out.println(this.getClass().getName() + ":" + "NetClient finished");
     }
 
     public void send(String s) {
@@ -70,7 +70,7 @@ public class NetClient implements Runnable {
     }
 
     public void received(String s) {
-        System.out.println("Received:" + s);
+        System.out.println(this.getClass().getName() + ":" + "Received:" + s);
         Protocol.Command cmd = protocolHandler.parseCommandString(s);
         String[] splitted = s.split(StringUtils.delimiter);
         String[] data = Arrays.copyOfRange(splitted, 1, splitted.length);
@@ -84,7 +84,7 @@ public class NetClient implements Runnable {
         }
 
         if (!handled) {
-            System.out.println("Command " + cmd.toString() + " NOT handled");
+            System.out.println(this.getClass().getName() + ":" + "Command " + cmd.toString() + " NOT handled");
         }
 
     }

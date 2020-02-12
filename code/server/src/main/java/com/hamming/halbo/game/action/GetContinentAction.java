@@ -41,7 +41,7 @@ public class GetContinentAction implements Action {
         if (values.length == 1 ) {
             worldId = values[0];
         } else {
-            System.out.println("Error at "+getClass().getName()+", size not ok of: "+values);
+            System.out.println(this.getClass().getName() + ":" + "Error at "+getClass().getName()+", size not ok of: "+values);
         }
     }
 }

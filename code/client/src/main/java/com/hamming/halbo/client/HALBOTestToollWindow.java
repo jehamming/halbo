@@ -102,7 +102,7 @@ public class HALBOTestToollWindow extends JFrame {
         registerCommandReceivers();
         String result = client.connect(serverip, port);
         if (result != null) {
-            System.out.println("Something went wrong connecting to the server");
+            System.out.println(this.getClass().getName() + ":" + "Something went wrong connecting to the server");
             JOptionPane.showMessageDialog(loginPanel, result);
             success = false;
         }
@@ -118,7 +118,7 @@ public class HALBOTestToollWindow extends JFrame {
         try {
             client.closeConnection();
         } catch (IOException e) {
-            System.out.println("Error:" + e.getMessage());
+            System.out.println(this.getClass().getName() + ":" + "Error:" + e.getMessage());
             //e.printStackTrace();
         }
     }

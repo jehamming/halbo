@@ -3,6 +3,7 @@ package com.hamming.halbo.client.panels;
 import com.hamming.halbo.client.HALBOTestToollWindow;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
+import com.hamming.halbo.model.dto.CityDto;
 import com.hamming.halbo.model.dto.ContinentDto;
 import com.hamming.halbo.net.CommandReceiver;
 
@@ -54,9 +55,14 @@ public class ContinentsPanel extends JPanel implements CommandReceiver {
     @Override
     public void receiveCommand(Protocol.Command cmd, String[] data) {
         if (cmd.equals(Protocol.Command.GETCONTINENTS)) {
-            ContinentDto c = new ContinentDto();
-            c.setValues(data);
-            listModel.addElement(c);
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    ContinentDto c = new ContinentDto();
+                    c.setValues(data);
+                    listModel.addElement(c);
+                }
+            });
         }
     }
 
