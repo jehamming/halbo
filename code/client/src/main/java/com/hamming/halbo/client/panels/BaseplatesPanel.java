@@ -62,7 +62,7 @@ public class BaseplatesPanel extends JPanel implements CommandReceiver {
     }
 
     private void teleport() {
-        client.teleport();
+        client.teleportRequest();
     }
 
 

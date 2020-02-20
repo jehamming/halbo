@@ -1,3 +1,4 @@
 .idea
 server.iml
 code/server/*.dat
+*.log

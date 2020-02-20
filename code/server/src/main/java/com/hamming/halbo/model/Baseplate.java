@@ -6,6 +6,8 @@ import java.awt.*;
 public class Baseplate extends BasicObject   {
 
     private BaseplateType type ;
+    private int width;
+    private int length;
     private int spawnPointX;
     private int spawnPointY;
     private int spawnPointZ;
@@ -15,11 +17,8 @@ public class Baseplate extends BasicObject   {
         spawnPointX = 0;
         spawnPointY = 0;
         spawnPointX = 0;
-    }
-
-    public boolean addConstruction(Construction c) {
-        // TODO Implement - How to position Contructionss ?
-        return true;
+        width = 100;
+        length = 100;
     }
 
     public int getSpawnPointX() {
@@ -46,11 +45,31 @@ public class Baseplate extends BasicObject   {
         this.spawnPointZ = spawnPointZ;
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+    }
+
     @Override
     public String toString() {
         return "Baseplate{" +
                 "type=" + type +
-                super.toString() +
+                ", width=" + width +
+                ", length=" + length +
+                ", spawnPointX=" + spawnPointX +
+                ", spawnPointY=" + spawnPointY +
+                ", spawnPointZ=" + spawnPointZ +
                 '}';
     }
 }

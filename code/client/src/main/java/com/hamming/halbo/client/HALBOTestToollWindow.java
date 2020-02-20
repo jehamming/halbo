@@ -2,10 +2,12 @@ package com.hamming.halbo.client;
 
 
 import com.hamming.halbo.client.panels.*;
+import com.hamming.halbo.client.viewer.ViewController;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.*;
 import com.hamming.halbo.net.NetClient;
+import org.lwjgl.LWJGLException;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -22,7 +24,7 @@ public class HALBOTestToollWindow extends JFrame {
     private UserDto user;
     private UserLocationDto userLocation;
     private ProtocolHandler protocolHandler;
-
+    private ViewController viewController;
 
     public HALBOTestToollWindow() {
         protocolHandler = new ProtocolHandler();
@@ -51,6 +53,10 @@ public class HALBOTestToollWindow extends JFrame {
         });
 
         toolsWindow = new ToolsWindow(this);
+
+        viewController = new ViewController();
+        Thread t = new Thread(viewController);
+        t.start();
     }
 
     private void registerCommandReceivers() {
@@ -94,7 +100,7 @@ public class HALBOTestToollWindow extends JFrame {
     public boolean connect(String serverip, int port) {
         boolean success = true;
         emptyPanels();
-        if (client != null && !client.isConnected() ) {
+        if (client != null && !client.isConnected()) {
             client.dispose();
         }
         client = new NetClient();
@@ -133,8 +139,6 @@ public class HALBOTestToollWindow extends JFrame {
      * event-dispatching thread.
      */
     private static void createAndShowGUI() {
-//TODO Remove this remark
-// WorldOpenGLWindow openGLWindow = new WorldOpenGLWindow();
         HALBOTestToollWindow clientWindow = new HALBOTestToollWindow();
     }
 
@@ -172,17 +176,23 @@ public class HALBOTestToollWindow extends JFrame {
         });
     }
 
-    public void teleport() {
+    public void teleportRequest() {
         WorldDto world = worldsPanel.getSelectedWorld();
         ContinentDto continent = continentsPanel.getSelectedContinent();
         CityDto city = citiesPanel.getSelectedCity();
         BaseplateDto baseplate = baseplatesPanel.getSelectedBaseplate();
-        if ( user != null && world != null && continent != null && city != null && baseplate != null)  {
+        if (user != null && world != null && continent != null && city != null && baseplate != null) {
             String cmd = protocolHandler.getTeleportCommand(user.getId(), world, continent, city, baseplate);
             send(cmd);
         } else {
             JOptionPane.showMessageDialog(this, "Please select a World, Continent, City and Baseplate to teleport to!");
         }
+    }
+
+
+    public void teleport(UserLocationDto location) {
+        BaseplateDto baseplate = baseplatesPanel.getSelectedBaseplate();
+        viewController.teleportTo(baseplate, location);
     }
 
     public UserDto getUser() {
@@ -199,6 +209,7 @@ public class HALBOTestToollWindow extends JFrame {
 
     public void setUserLocation(UserLocationDto userLocation) {
         this.userLocation = userLocation;
+        viewController.setLocation(userLocation);
     }
 }
 

@@ -1,7 +1,13 @@
 package com.hamming.halbo.game.action;
 
 import com.hamming.halbo.ClientConnection;
+import com.hamming.halbo.factories.DTOFactory;
 import com.hamming.halbo.game.GameController;
+import com.hamming.halbo.game.Protocol;
+import com.hamming.halbo.model.UserLocation;
+import com.hamming.halbo.model.dto.UserDto;
+import com.hamming.halbo.model.dto.UserLocationDto;
+import com.hamming.halbo.util.StringUtils;
 
 public class TeleportAction implements Action {
     private GameController controller;
@@ -21,7 +27,15 @@ public class TeleportAction implements Action {
 
     @Override
     public void execute() {
-        controller.handleTeleportRequest(userId, worldId, continentId, cityId, baseplateId);
+        UserLocation location = controller.handleTeleportRequest(userId, worldId, continentId, cityId, baseplateId);
+
+        if ( location != null )  {
+            UserLocationDto dto = DTOFactory.getInstance().getUserLocationDTO(location);
+            client.send(Protocol.Command.TELEPORT.ordinal() + StringUtils.delimiter + Protocol.SUCCESS + StringUtils.delimiter + dto.toNetData());
+        } else {
+            client.send(Protocol.Command.TELEPORT.ordinal() + StringUtils.delimiter + Protocol.FAILED + StringUtils.delimiter + "Teleport Failed!");
+        }
+
     }
 
     @Override

@@ -64,7 +64,7 @@ public class DTOFactory {
 
 
     public BaseplateDto getBaseplateDto(Baseplate b) {
-        BaseplateDto dto = new BaseplateDto(b.getId().toString(), b.getName(), b.getCreator().getId().toString(), b.getOwner().getId().toString());
+        BaseplateDto dto = new BaseplateDto(b.getId().toString(), b.getName(), b.getCreator().getId().toString(), b.getOwner().getId().toString(), b.getWidth(), b.getLength());
         return dto;
     }
 

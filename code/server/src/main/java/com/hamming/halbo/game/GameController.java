@@ -54,14 +54,15 @@ public class GameController implements Runnable {
     }
 
 
-    public void handleTeleportRequest(String userId, String worldId, String continentId, String cityId, String baseplateId) {
+    public UserLocation handleTeleportRequest(String userId, String worldId, String continentId, String cityId, String baseplateId) {
         User u = UserFactory.getInstance().findUserById(userId);
         World w = WorldFactory.getInstance().findWorldById(worldId);;
         Continent c = ContinentFactory.getInstance().findContinentById(continentId);
         City ct = CityFactory.getInstance().findCityByID(cityId);
         Baseplate b = BaseplateFactory.getInstance().findBaseplateByID(baseplateId);
+        UserLocation loc = null;
         if (u != null && w != null && c != null && ct != null && b != null ) {
-            UserLocation loc = gameState.getLocation(u);
+            loc = gameState.getLocation(u);
             if (loc == null) {
                 loc = new UserLocation(IDManager.getInstance().getNextID(HalboID.Prefix.LOC));
                 loc.setUser(u);
@@ -76,7 +77,7 @@ public class GameController implements Runnable {
             gameState.setLocation(u, loc);
             fireGameStateEvent(GameStateEvent.Type.USERLOCATION, loc);
         }
-
+        return loc;
     }
 
     public void addCommand(Action cmd) {

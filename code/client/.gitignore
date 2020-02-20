@@ -1,3 +1,5 @@
 target
 client.iml
+lwglNatives
+errors.log
 *.so

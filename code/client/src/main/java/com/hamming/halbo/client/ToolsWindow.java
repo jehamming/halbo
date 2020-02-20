@@ -51,6 +51,7 @@ public class ToolsWindow extends JFrame {
         clientWindow.getClient().registerReceiver(Protocol.Command.MOVE, movementPanel);
         clientWindow.getClient().registerReceiver(Protocol.Command.LOCATION, movementPanel);
         clientWindow.getClient().registerReceiver(Protocol.Command.MOVE, movementPanel);
+        clientWindow.getClient().registerReceiver(Protocol.Command.TELEPORT, movementPanel);
     }
 
 
