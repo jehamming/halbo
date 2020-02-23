@@ -84,40 +84,40 @@ public class Player {
         // Boundaries (Y boundaries are handled by the jumping code in the move method).
         Vector position = camera.getPosition();
         if (position.x < 0) camera.setPositionX(0);
-        else if (position.x > 16) camera.setPositionX(16);
+        else if (position.x > chunk.width) camera.setPositionX(chunk.height);
         if (position.z < 0) camera.setPositionZ(0);
-        else if (position.z > 16) camera.setPositionZ(16);
+        else if (position.z > chunk.length) camera.setPositionZ(chunk.length);
         
         // Right and left
         if (deltaPosition.x > 0) {
-            if ((int)Math.round(position.x) < 16 && (int)Math.round(position.x) > position.x && ((position.z-0.25f >= 0 && chunk.getBlockType(new Block((int)Math.round(position.x), (int)(height), (int)(position.z-0.25f))) != 0)
-                    || (position.z+0.25f < 16 && chunk.getBlockType(new Block((int)Math.round(position.x), (int)(height), (int)(position.z+0.25f))) != 0)
-                    || (height + 1 < 16 && position.z-0.25f >= 0 && chunk.getBlockType(new Block((int)Math.round(position.x), (int)(height+1), (int)(position.z-0.25f))) != 0)
-                    || (height + 1 < 16 && position.z+0.25f < 16 && chunk.getBlockType(new Block((int)Math.round(position.x), (int)(height+1), (int)(position.z+0.25f))) != 0))) {
+            if ((int)Math.round(position.x) < chunk.width && (int)Math.round(position.x) > position.x && ((position.z-0.25f >= 0 && chunk.getBlockType(new Block((int)Math.round(position.x), (int)(height), (int)(position.z-0.25f))) != 0)
+                    || (position.z+0.25f < chunk.width && chunk.getBlockType(new Block((int)Math.round(position.x), (int)(height), (int)(position.z+0.25f))) != 0)
+                    || (height + 1 < chunk.height && position.z-0.25f >= 0 && chunk.getBlockType(new Block((int)Math.round(position.x), (int)(height+1), (int)(position.z-0.25f))) != 0)
+                    || (height + 1 < chunk.height && position.z+0.25f < chunk.length && chunk.getBlockType(new Block((int)Math.round(position.x), (int)(height+1), (int)(position.z+0.25f))) != 0))) {
                 camera.setPositionX((int)Math.round(position.x) - 0.5f);
             }
         } else {
             if ((int)Math.round(position.x)-1 >= 0 && (int)Math.round(position.x) < position.x && ((position.z-0.25f >= 0 && chunk.getBlockType(new Block((int)Math.round(position.x)-1, (int)(height), (int)(position.z-0.25f))) != 0)
-                    || (position.z+0.25f < 16 && chunk.getBlockType(new Block((int)Math.round(position.x)-1, (int)(height), (int)(position.z+0.25f))) != 0)
-                    || (height + 1 < 16 && position.z-0.25f >= 0 && chunk.getBlockType(new Block((int)Math.round(position.x)-1, (int)(height+1), (int)(position.z-0.25f))) != 0)
-                    || (height + 1 < 16 && position.z+0.25f < 16 && chunk.getBlockType(new Block((int)Math.round(position.x)-1, (int)(height+1), (int)(position.z+0.25f))) != 0))) {
+                    || (position.z+0.25f < chunk.length && chunk.getBlockType(new Block((int)Math.round(position.x)-1, (int)(height), (int)(position.z+0.25f))) != 0)
+                    || (height + 1 < chunk.height && position.z-0.25f >= 0 && chunk.getBlockType(new Block((int)Math.round(position.x)-1, (int)(height+1), (int)(position.z-0.25f))) != 0)
+                    || (height + 1 < chunk.height && position.z+0.25f < chunk.length && chunk.getBlockType(new Block((int)Math.round(position.x)-1, (int)(height+1), (int)(position.z+0.25f))) != 0))) {
                 camera.setPositionX((int)Math.round(position.x) + 0.5f);
             }
         }
         
         // Forward and backward
         if (deltaPosition.z > 0) {
-            if ((int)Math.round(position.z) < 16 && (int)Math.round(position.z) > position.z && ((position.x-0.25f >= 0 && chunk.getBlockType(new Block((int)(position.x-0.25f), (int)(height), (int)Math.round(position.z))) != 0)
-                    || (position.x+0.25f < 16 && chunk.getBlockType(new Block((int)(position.x+0.25f), (int)(height), (int)Math.round(position.z))) != 0)
-                    || (height+1 < 16 && position.x-0.25f >= 0 && chunk.getBlockType(new Block((int)(position.x-0.25f), (int)(height+1), (int)Math.round(position.z))) != 0)
-                    || (height+1 < 16 && position.x+0.25f < 16 && chunk.getBlockType(new Block((int)(position.x+0.25f), (int)(height+1), (int)Math.round(position.z))) != 0))) {
+            if ((int)Math.round(position.z) < chunk.length && (int)Math.round(position.z) > position.z && ((position.x-0.25f >= 0 && chunk.getBlockType(new Block((int)(position.x-0.25f), (int)(height), (int)Math.round(position.z))) != 0)
+                    || (position.x+0.25f < chunk.width && chunk.getBlockType(new Block((int)(position.x+0.25f), (int)(height), (int)Math.round(position.z))) != 0)
+                    || (height+1 < chunk.height && position.x-0.25f >= 0 && chunk.getBlockType(new Block((int)(position.x-0.25f), (int)(height+1), (int)Math.round(position.z))) != 0)
+                    || (height+1 < chunk.height && position.x+0.25f < chunk.width && chunk.getBlockType(new Block((int)(position.x+0.25f), (int)(height+1), (int)Math.round(position.z))) != 0))) {
                 camera.setPositionZ((int)Math.ceil(position.z) - 0.5f);
             }
         } else {
             if ((int)Math.round(position.z)-1 >= 0 && (int)Math.round(position.z) < position.z && ((position.x-0.25f >= 0 && chunk.getBlockType(new Block((int)(position.x-0.25f), (int)(height), (int)Math.round(position.z)-1)) != 0)
-                    || (position.x+0.25f < 16 && chunk.getBlockType(new Block((int)(position.x+0.25f), (int)(height), (int)Math.round(position.z)-1)) != 0)
-                    || (height+1 < 16 && position.x-0.25f >= 0 && chunk.getBlockType(new Block((int)(position.x-0.25f), (int)(height+1), (int)Math.round(position.z)-1)) != 0)
-                    || (height+1 < 16 && position.x+0.25f < 16 && chunk.getBlockType(new Block((int)(position.x+0.25f), (int)(height+1), (int)Math.round(position.z)-1)) != 0))) {
+                    || (position.x+0.25f < chunk.width && chunk.getBlockType(new Block((int)(position.x+0.25f), (int)(height), (int)Math.round(position.z)-1)) != 0)
+                    || (height+1 < chunk.height && position.x-0.25f >= 0 && chunk.getBlockType(new Block((int)(position.x-0.25f), (int)(height+1), (int)Math.round(position.z)-1)) != 0)
+                    || (height+1 < chunk.height && position.x+0.25f < chunk.width && chunk.getBlockType(new Block((int)(position.x+0.25f), (int)(height+1), (int)Math.round(position.z)-1)) != 0))) {
                 camera.setPositionZ((int)Math.round(position.z) + 0.5f);
             }
         }
@@ -127,30 +127,30 @@ public class Player {
             int drop = (int)height;
             
             // Cast down a line until it reaches a solid block, which is the ground.
-            while (drop >= 1 && !(((int)position.x < 16 && (int)position.z < 16 && chunk.getBlockType(new Block((int)(position.x), drop-1, (int)(position.z))) != 0)
-                    || ((int)position.z < 16 && position.x+0.25f < 16 && chunk.getBlockType(new Block((int)(position.x+0.25f), drop-1, (int)(position.z))) != 0)
-                    || ((int)position.x < 16 && position.z+0.25f < 16 && chunk.getBlockType(new Block((int)(position.x), drop-1, (int)(position.z+0.25f))) != 0)
-                    || (position.x+0.25f < 16 && position.z+0.25f < 16 && chunk.getBlockType(new Block((int)(position.x+0.25f), drop-1, (int)(position.z+0.25f))) != 0)
-                    || ((int)position.z < 16 && position.x-0.25f >= 0 && chunk.getBlockType(new Block((int)(position.x-0.25f), drop-1, (int)(position.z))) != 0)
-                    || ((int)position.x < 16 && position.z-0.25f >= 0 && chunk.getBlockType(new Block((int)(position.x), drop-1, (int)(position.z-0.25f))) != 0)
+            while (drop >= 1 && !(((int)position.x < chunk.width && (int)position.z < chunk.length && chunk.getBlockType(new Block((int)(position.x), drop-1, (int)(position.z))) != 0)
+                    || ((int)position.z < chunk.length && position.x+0.25f < chunk.width && chunk.getBlockType(new Block((int)(position.x+0.25f), drop-1, (int)(position.z))) != 0)
+                    || ((int)position.x < chunk.width && position.z+0.25f < chunk.length && chunk.getBlockType(new Block((int)(position.x), drop-1, (int)(position.z+0.25f))) != 0)
+                    || (position.x+0.25f < chunk.width && position.z+0.25f < chunk.length && chunk.getBlockType(new Block((int)(position.x+0.25f), drop-1, (int)(position.z+0.25f))) != 0)
+                    || ((int)position.z < chunk.length && position.x-0.25f >= 0 && chunk.getBlockType(new Block((int)(position.x-0.25f), drop-1, (int)(position.z))) != 0)
+                    || ((int)position.x < chunk.width && position.z-0.25f >= 0 && chunk.getBlockType(new Block((int)(position.x), drop-1, (int)(position.z-0.25f))) != 0)
                     || (position.z-0.25f >= 0 && position.x-0.25f >= 0 && chunk.getBlockType(new Block((int)(position.x-0.25f), drop-1, (int)(position.z-0.25f))) != 0)
-                    || (position.x+0.25f < 16 && position.z-0.25f >= 0 && chunk.getBlockType(new Block((int)(position.x+0.25f), drop-1, (int)(position.z-0.25f))) != 0)
-                    || (position.x-0.25f >= 0 && position.z+0.25f < 16 && chunk.getBlockType(new Block((int)(position.x-0.25f), drop-1, (int)(position.z+0.25f))) != 0))) {
+                    || (position.x+0.25f < chunk.width && position.z-0.25f >= 0 && chunk.getBlockType(new Block((int)(position.x+0.25f), drop-1, (int)(position.z-0.25f))) != 0)
+                    || (position.x-0.25f >= 0 && position.z+0.25f < chunk.length && chunk.getBlockType(new Block((int)(position.x-0.25f), drop-1, (int)(position.z+0.25f))) != 0))) {
                 drop--;
             }
             
             ground = drop;
         } else {
             // Hitting your head when jumping
-            if ((int)Math.round(position.y) < 16 && (((int)position.x < 16 && (int)position.z < 16 && chunk.getBlockType(new Block((int)(position.x), (int)Math.round(position.y), (int)(position.z))) != 0)
-                    || ((int)position.z < 16 && position.x+0.25f < 16 && chunk.getBlockType(new Block((int)(position.x+0.25f), (int)Math.round(position.y), (int)(position.z))) != 0)
-                    || ((int)position.x < 16 && position.z+0.25f < 16 && chunk.getBlockType(new Block((int)(position.x), (int)Math.round(position.y), (int)(position.z+0.25f))) != 0)
-                    || (position.x+0.25f < 16 && position.z+0.25f < 16 && chunk.getBlockType(new Block((int)(position.x+0.25f), (int)Math.round(position.y), (int)(position.z+0.25f))) != 0)
-                    || ((int)position.z < 16 && position.x-0.25f >= 0 && chunk.getBlockType(new Block((int)(position.x-0.25f), (int)Math.round(position.y), (int)(position.z))) != 0)
-                    || ((int)position.x < 16 && position.z-0.25f >= 0 && chunk.getBlockType(new Block((int)(position.x), (int)Math.round(position.y), (int)(position.z-0.25f))) != 0)
+            if ((int)Math.round(position.y) < chunk.height && (((int)position.x < chunk.width && (int)position.z < chunk.length && chunk.getBlockType(new Block((int)(position.x), (int)Math.round(position.y), (int)(position.z))) != 0)
+                    || ((int)position.z < chunk.length && position.x+0.25f < chunk.width && chunk.getBlockType(new Block((int)(position.x+0.25f), (int)Math.round(position.y), (int)(position.z))) != 0)
+                    || ((int)position.x < chunk.width && position.z+0.25f < chunk.length && chunk.getBlockType(new Block((int)(position.x), (int)Math.round(position.y), (int)(position.z+0.25f))) != 0)
+                    || (position.x+0.25f < chunk.width && position.z+0.25f < chunk.length && chunk.getBlockType(new Block((int)(position.x+0.25f), (int)Math.round(position.y), (int)(position.z+0.25f))) != 0)
+                    || ((int)position.z < chunk.length && position.x-0.25f >= 0 && chunk.getBlockType(new Block((int)(position.x-0.25f), (int)Math.round(position.y), (int)(position.z))) != 0)
+                    || ((int)position.x < chunk.width && position.z-0.25f >= 0 && chunk.getBlockType(new Block((int)(position.x), (int)Math.round(position.y), (int)(position.z-0.25f))) != 0)
                     || (position.z-0.25f >= 0 && position.x-0.25f >= 0 && chunk.getBlockType(new Block((int)(position.x-0.25f), (int)Math.round(position.y), (int)(position.z-0.25f))) != 0)
-                    || (position.x+0.25f < 16 && position.z-0.25f >= 0 && chunk.getBlockType(new Block((int)(position.x+0.25f), (int)Math.round(position.y), (int)(position.z-0.25f))) != 0)
-                    || (position.x-0.25f >= 0 && position.z+0.25f < 16 && chunk.getBlockType(new Block((int)(position.x-0.25f), (int)Math.round(position.y), (int)(position.z+0.25f))) != 0))) {
+                    || (position.x+0.25f < chunk.width && position.z-0.25f >= 0 && chunk.getBlockType(new Block((int)(position.x+0.25f), (int)Math.round(position.y), (int)(position.z-0.25f))) != 0)
+                    || (position.x-0.25f >= 0 && position.z+0.25f < chunk.length && chunk.getBlockType(new Block((int)(position.x-0.25f), (int)Math.round(position.y), (int)(position.z+0.25f))) != 0))) {
                 // Reposition and stop upward velocity
                 height = (int)Math.ceil(position.y) - CAMERA_HEIGHT - 0.5f;
                 velocity = 0;
@@ -164,22 +164,15 @@ public class Player {
      * @param input the user input
      * @param multiplier 
      */
-    void move(ViewStateInputData input, float multiplier) {
+    void move(Chunk chunk, ViewStateInputData input, float multiplier) {
         Vector previousPosition = camera.getPosition();
         // Movement
-        if (input.forward) {
-            camera.moveForward(MOVE_SPEED * multiplier);
+        if ( input.location != null ) {
+           camera.setPositionX((float) input.location.getX());
+           camera.setPositionY((float) input.location.getY());
+           camera.setPositionZ((float) input.location.getZ());
         }
-        if (input.backward) {
-            camera.moveForward(-MOVE_SPEED * multiplier);
-        }
-        if (input.left) {
-            camera.strafeRight(-MOVE_SPEED * multiplier);
-        }
-        if (input.right) {
-            camera.strafeRight(MOVE_SPEED * multiplier);
-        }
-        
+
         if (height != ground) {
             height += velocity * multiplier;
             velocity += GRAVITY * multiplier;
@@ -187,7 +180,7 @@ public class Player {
             if (height < ground) {
                 height = ground;
                 velocity = 0;
-            } else if (height + CAMERA_HEIGHT > 16) {
+            } else if (height + CAMERA_HEIGHT > chunk.height) {
                 height = 16 - CAMERA_HEIGHT;
                 velocity = 0;
             }

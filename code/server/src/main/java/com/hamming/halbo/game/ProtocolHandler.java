@@ -33,6 +33,7 @@ public class ProtocolHandler implements Protocol {
         commands.put(Command.GETBASEPLATES, new GetBaseplatesAction(controller,client));
         commands.put(Command.MOVE, new MoveAction(controller,client));
         commands.put(Command.TELEPORT, new TeleportAction(controller,client));
+        commands.put(Command.GETBASEPLATE, new GetBaseplateAction(controller,client));
     }
 
 

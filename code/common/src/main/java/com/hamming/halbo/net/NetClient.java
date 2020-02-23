@@ -66,10 +66,11 @@ public class NetClient implements Runnable {
 
     @Override
     public void run() {
-        while (open) {
+        Scanner scanner = new Scanner(in);
+        while (open && scanner.hasNextLine()) {
             try {
-                String s = in.readLine();
-                if (s != null) {
+                String s = scanner.nextLine();
+                if ( s != null ) {
                     received(s);
                 }
             } catch (Exception e) {
@@ -91,8 +92,8 @@ public class NetClient implements Runnable {
     }
 
     public void received(String s) {
-        System.out.println(this.getClass().getName() + ":" + "Received:" + s);
         Protocol.Command cmd = protocolHandler.parseCommandString(s);
+        System.out.println(this.getClass().getName() + ":" + "Received:(" +cmd +")-" + s);
         String[] splitted = s.split(StringUtils.delimiter);
         String[] data = Arrays.copyOfRange(splitted, 1, splitted.length);
         List<CommandReceiver> listReceivers = receivers.get(cmd);
@@ -107,7 +108,6 @@ public class NetClient implements Runnable {
         if (!handled) {
             System.out.println(this.getClass().getName() + ":" + "Command " + cmd.toString() + " NOT handled");
         }
-
     }
 
     public void registerReceiver(Protocol.Command cmd, CommandReceiver receiver) {
