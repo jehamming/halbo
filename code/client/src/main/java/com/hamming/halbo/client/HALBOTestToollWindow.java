@@ -6,13 +6,16 @@ import com.hamming.halbo.client.viewer.ViewController;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.*;
+import com.hamming.halbo.net.CommandReceiver;
 import com.hamming.halbo.net.NetClient;
 import org.lwjgl.LWJGLException;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class HALBOTestToollWindow extends JFrame {
+public class HALBOTestToollWindow extends JFrame implements CommandReceiver {
 
     private LoginPanel loginPanel;
     private NetClient client;
@@ -25,6 +28,8 @@ public class HALBOTestToollWindow extends JFrame {
     private UserLocationDto userLocation;
     private ProtocolHandler protocolHandler;
     private ViewController viewController;
+    private boolean teleported = false;
+    private List<BaseplateDto> baseplates;
 
     public HALBOTestToollWindow() {
         protocolHandler = new ProtocolHandler();
@@ -54,9 +59,12 @@ public class HALBOTestToollWindow extends JFrame {
 
         toolsWindow = new ToolsWindow(this);
 
-        viewController = new ViewController();
+        viewController = new ViewController(this);
         Thread t = new Thread(viewController);
         t.start();
+
+        baseplates = new ArrayList<BaseplateDto>();
+        teleported = false;
     }
 
     private void registerCommandReceivers() {
@@ -65,6 +73,7 @@ public class HALBOTestToollWindow extends JFrame {
         client.registerReceiver(Protocol.Command.GETCONTINENTS, continentsPanel);
         client.registerReceiver(Protocol.Command.GETCITIES, citiesPanel);
         client.registerReceiver(Protocol.Command.GETBASEPLATES, baseplatesPanel);
+        client.registerReceiver(Protocol.Command.GETBASEPLATE, this);
         toolsWindow.registerReceivers();
     }
 
@@ -125,7 +134,7 @@ public class HALBOTestToollWindow extends JFrame {
             client.closeConnection();
         } catch (IOException e) {
             System.out.println(this.getClass().getName() + ":" + "Error:" + e.getMessage());
-            //e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -192,8 +201,15 @@ public class HALBOTestToollWindow extends JFrame {
 
     public void teleport(UserLocationDto location) {
         BaseplateDto baseplate = baseplatesPanel.getSelectedBaseplate();
-        viewController.teleportTo(baseplate, location);
+        teleport(location, baseplate);
     }
+
+    public void teleport(UserLocationDto location, BaseplateDto baseplate) {
+        viewController.teleportTo(baseplate, location);
+        teleported = true;
+        this.userLocation = location;
+    }
+
 
     public UserDto getUser() {
         return user;
@@ -208,8 +224,42 @@ public class HALBOTestToollWindow extends JFrame {
     }
 
     public void setUserLocation(UserLocationDto userLocation) {
+        BaseplateDto bp = findBaseplateById(userLocation.getBaseplateId());
+        if (  bp == null ) {
+            String s = protocolHandler.getGetBaseplateCommand(userLocation.getBaseplateId());
+            client.send(s);
+        }
         this.userLocation = userLocation;
         viewController.setLocation(userLocation);
+    }
+
+    private BaseplateDto findBaseplateById(String baseplateId) {
+        BaseplateDto found = null;
+        for (BaseplateDto bp: baseplates) {
+            if (bp.getId().equals( baseplateId)) {
+                found = bp;
+                break;
+            }
+        }
+        return found;
+    }
+
+    @Override
+    public void receiveCommand(Protocol.Command cmd, String[] data) {
+        switch (cmd) {
+            case GETBASEPLATE:
+                handleBaseplate(data);
+        }
+    }
+
+    private void handleBaseplate(String[] data) {
+        BaseplateDto dto = new BaseplateDto();
+        dto.setValues(data);
+        baseplates.add(dto);
+        if ( !teleported && userLocation != null && userLocation.getBaseplateId().equals(dto.getId()) ) {
+            //Do teleport!
+            teleport(userLocation, dto);
+        }
     }
 }
 

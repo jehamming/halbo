@@ -73,4 +73,8 @@ public class ProtocolHandler implements Protocol {
     }
 
 
+    public String getGetBaseplateCommand(String baseplateId) {
+        String cmd = Command.GETBASEPLATE.ordinal() + StringUtils.delimiter + baseplateId;
+        return cmd;
+    }
 }

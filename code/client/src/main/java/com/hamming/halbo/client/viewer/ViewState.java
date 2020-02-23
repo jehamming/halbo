@@ -43,6 +43,8 @@ final class ViewState {
      * chooses to.
      */
     private Block newBlock;
+
+    private boolean chunkChanged = false;
     
     /**
      * Creates a new ViewState with the specified class implementing
@@ -52,10 +54,16 @@ final class ViewState {
      */
     ViewState(ViewStateListener listener) {
         this.listener = listener;
-        chunk = new Chunk();
-        listener.viewStateChunkChanged(chunk);
+        if (chunk != null ) {
+            listener.viewStateChunkChanged(chunk);
+        }
     }
-    
+
+    public void setChunk(Chunk chunk) {
+        this.chunk = chunk;
+        chunkChanged = true;
+    }
+
     /**
      * Updates the ViewState, responding to user input through {@code ViewStateInputData}.
      * This should be called every frame.
@@ -65,28 +73,36 @@ final class ViewState {
      * @see ViewStateInputData
      */
     void update(ViewStateInputData input, float deltaTime) {
-        // Everything is simulated to look correct at 60FPS, and is multiplied
-        // by this to match the real framerate.
-        float multiplier = deltaTime / (100.f / 6.f);
-        
-        // Player movement
-        player.move(input, multiplier);
-        player.collision(chunk);
-        if (input.jump) player.jump();
-        
-        // Set selectedBlock and newBlock
-        calculateSelectedBlock(chunk);
-        
-        // Break or place a block
-        if (selectedBlock != null && newBlock != null) {
-            if (input.breakBlock) {
-                chunk.setBlockType(selectedBlock, (byte)0);
-                // Notify the listener
+        if ( chunk != null ) {
+
+            if (chunkChanged) {
                 listener.viewStateChunkChanged(chunk);
-            } else if (input.placeBlock) {
-                chunk.setBlockType(newBlock, (byte)1);
-                // Notify the listener
-                listener.viewStateChunkChanged(chunk);
+                chunkChanged = false;
+            }
+
+            // Everything is simulated to look correct at 60FPS, and is multiplied
+            // by this to match the real framerate.
+            float multiplier = deltaTime / (100.f / 6.f);
+
+            // Player movement
+            player.move(chunk, input, multiplier);
+            player.collision(chunk);
+            if (input.jump) player.jump();
+
+            // Set selectedBlock and newBlock
+            calculateSelectedBlock(chunk);
+
+            // Break or place a block
+            if (selectedBlock != null && newBlock != null) {
+                if (input.breakBlock) {
+                    chunk.setBlockType(selectedBlock, (byte) 0);
+                    // Notify the listener
+                    listener.viewStateChunkChanged(chunk);
+                } else if (input.placeBlock) {
+                    chunk.setBlockType(newBlock, (byte) 1);
+                    // Notify the listener
+                    listener.viewStateChunkChanged(chunk);
+                }
             }
         }
     }
@@ -99,7 +115,7 @@ final class ViewState {
     void calculateSelectedBlock(Chunk chunk) {
         Vector position = player.getCamera().getPosition();
         Vector sight = player.getCamera().getSight();
-        
+
         Vector ray;  // Vector cast out from the players position to find a block
         Vector step; // step to increment ray by
         
@@ -120,12 +136,12 @@ final class ViewState {
             else ray = position.plus(sight.scaled((float)(Math.floor(position.z) - position.z) / sight.z));
             step = sight.scaled(Math.abs(1.f / sight.z));
             
-            // Do the first step already if z == 16 to prevent an ArrayIndexOutOfBoundsException
-            if (ray.z == 16) ray.add(step);
+            // Do the first step already if z == chunk length to prevent an ArrayIndexOutOfBoundsException
+            if (ray.z == chunk.length) ray.add(step);
             
-            while (ray.x >= 0 && ray.x < 16
-                    && ray.y >= 0 && ray.y < 16
-                    && ray.z >= 0 && ray.z < 16) {
+            while (ray.x >= 0 && ray.x < chunk.width
+                    && ray.y >= 0 && ray.y < chunk.height
+                    && ray.z >= 0 && ray.z < chunk.length) {
                 // Give up if we've extended the ray longer than the Player's arm length
                 float distSquared = ray.minus(position).magnitudeSquared();
                 if (distSquared > ARM_LENGTH * ARM_LENGTH) break;
@@ -144,7 +160,7 @@ final class ViewState {
                 } else {
                     if (ray.z-1 >= 0 && chunk.getBlockType(new Block((int)ray.x, (int)ray.y, (int)ray.z-1)) != 0) {
                         selectedBlock = new Block((int)ray.x, (int)ray.y, (int)ray.z-1);
-                        if (selectedBlock.z+1 < 16) {
+                        if (selectedBlock.z+1 < chunk.length) {
                             newBlock = new Block(selectedBlock.x, selectedBlock.y, selectedBlock.z+1);
                             if (chunk.getBlockType(newBlock) != 0) newBlock = null;
                         }
@@ -164,11 +180,11 @@ final class ViewState {
             else ray = position.plus(sight.scaled((float)(Math.floor(position.x) - position.x) / sight.x));
             step = sight.scaled(Math.abs(1.f / sight.x));
             
-            if (ray.x == 16) ray.add(step);
+            if (ray.x == chunk.width) ray.add(step);
             
-            while (ray.x >= 0 && ray.x < 16
-                    && ray.y >= 0 && ray.y < 16
-                    && ray.z >= 0 && ray.z < 16) {
+            while (ray.x >= 0 && ray.x < chunk.width
+                    && ray.y >= 0 && ray.y < chunk.height
+                    && ray.z >= 0 && ray.z < chunk.length) {
                 float distSquared = ray.minus(position).magnitudeSquared();
                 if (distSquared > ARM_LENGTH * ARM_LENGTH || distSquared > frontBackDistSquared) break;
                 
@@ -186,7 +202,7 @@ final class ViewState {
                 } else {
                     if (ray.x-1 >= 0 && chunk.getBlockType(new Block((int)ray.x-1, (int)ray.y, (int)ray.z)) != 0) {
                         selectedBlock = new Block((int)ray.x-1, (int)ray.y, (int)ray.z);
-                        if (selectedBlock.x+1 < 16) {
+                        if (selectedBlock.x+1 < chunk.width) {
                             newBlock = new Block(selectedBlock.x+1, selectedBlock.y, selectedBlock.z);
                             if (chunk.getBlockType(newBlock) != 0) newBlock = null;
                         }
@@ -206,11 +222,11 @@ final class ViewState {
             else ray = position.plus(sight.scaled((float)(Math.floor(position.y) - position.y) / sight.y));
             step = sight.scaled(Math.abs(1.f / sight.y));
             
-            if (ray.y == 16) ray.add(step);
+            if (ray.y == chunk.height) ray.add(step);
             
-            while (ray.x >= 0 && ray.x < 16
-                    && ray.y >= 0 && ray.y < 16
-                    && ray.z >= 0 && ray.z < 16) {
+            while (ray.x >= 0 && ray.x < chunk.width
+                    && ray.y >= 0 && ray.y < chunk.height
+                    && ray.z >= 0 && ray.z < chunk.length) {
                 float distSquared = ray.minus(position).magnitudeSquared();
                 if (distSquared > ARM_LENGTH * ARM_LENGTH || distSquared > frontBackDistSquared || distSquared > leftRightDistSquared) break;
                 
@@ -228,7 +244,7 @@ final class ViewState {
                 } else {
                     if (ray.y-1 >= 0 && chunk.getBlockType(new Block((int)ray.x, (int)ray.y-1, (int)ray.z)) != 0) {
                         selectedBlock = new Block((int)ray.x, (int)ray.y-1, (int)ray.z);
-                        if (selectedBlock.y+1 < 16) {
+                        if (selectedBlock.y+1 < chunk.height) {
                             newBlock = new Block(selectedBlock.x, selectedBlock.y+1, selectedBlock.z);
                             if (chunk.getBlockType(newBlock) != 0) newBlock = null;
                         }

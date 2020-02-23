@@ -96,14 +96,23 @@ public class GameController implements Runnable {
     public void handleMoveRequest(User u, boolean forward, boolean back, boolean left, boolean right) {
         UserLocation location = gameState.getLocation(u);
         if (location != null ) {
-            // TODO Check Baseplate bounds -Baseplate baseplate = location.getBaseplate();
-            // First - lets try flat movement in the X/Y plane
-            if (forward) location.setY(location.getY()+1);
-            if (back) location.setY(location.getY()-1);
-            if (left) location.setX(location.getX()-1);
-            if (right) location.setX(location.getX()+1);
-            gameState.setLocation(u, location);
-            fireGameStateEvent(GameStateEvent.Type.USERLOCATION, location);
+            if ( forward || back || left || right ) {
+                // First - lets try flat movement in the X/Y plane
+                if (forward) location.setZ(location.getZ() + 0.2);
+                if (back) location.setZ(location.getZ() - 0.2);
+                if (left) location.setX(location.getX() - 0.2);
+                if (right) location.setX(location.getX() + 0.2);
+                // Check out of bounds
+                if (location.getX() < 0) location.setX(0);
+                if (location.getY() < 0) location.setY(0);
+                if (location.getZ() < 0) location.setZ(0);
+                if (location.getX() > location.getBaseplate().getWidth())
+                    location.setX(location.getBaseplate().getWidth());
+                if (location.getZ() > location.getBaseplate().getLength())
+                    location.setZ(location.getBaseplate().getLength());
+                gameState.setLocation(u, location);
+                fireGameStateEvent(GameStateEvent.Type.USERLOCATION, location);
+            }
         }
     }
 

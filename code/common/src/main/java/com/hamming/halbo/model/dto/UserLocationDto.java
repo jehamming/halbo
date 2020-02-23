@@ -9,15 +9,15 @@ public class UserLocationDto implements DTO {
     private String continentId;
     private String cityId;
     private String baseplateId;
-    private int x;
-    private int y;
-    private int z;
+    private double x;
+    private double y;
+    private double z;
 
     public UserLocationDto(){
 
     }
 
-    public UserLocationDto(String userId, String worldId, String continentId, String cityId, String baseplateId, int x, int y, int z){
+    public UserLocationDto(String userId, String worldId, String continentId, String cityId, String baseplateId, double x, double y, double z){
         this.userId = userId;
         this.worldId = worldId;
         this.continentId = continentId;
@@ -49,9 +49,9 @@ public class UserLocationDto implements DTO {
             continentId = values[2];
             cityId = values[3];
             baseplateId = values[4];
-            x = Integer.valueOf(values[5]);
-            y = Integer.valueOf(values[6]);
-            z = Integer.valueOf(values[7]);
+            x = Double.valueOf(values[5]);
+            y = Double.valueOf(values[6]);
+            z = Double.valueOf(values[7]);
         }
     }
 
@@ -75,15 +75,15 @@ public class UserLocationDto implements DTO {
         return baseplateId;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
-    public int getZ() {
+    public double getZ() {
         return z;
     }
 

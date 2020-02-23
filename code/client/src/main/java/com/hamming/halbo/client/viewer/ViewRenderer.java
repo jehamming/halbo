@@ -215,7 +215,7 @@ final class ViewRenderer implements ViewStateListener {
         try {
             dirtTexture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("src/main/resources/textures/dirt.png"));
         } catch (IOException ioe) {
-            Mycraft.LOGGER.log(Level.WARNING, ioe.toString(), ioe);
+            System.out.println(this.getClass().getName() + "-Warning:" + ioe.toString());
         }
         
         // Texture parameters
@@ -235,7 +235,7 @@ final class ViewRenderer implements ViewStateListener {
      */
     private void initializeData() throws LWJGLException {
         if (!GLContext.getCapabilities().GL_ARB_vertex_buffer_object) {
-            Mycraft.LOGGER.log(Level.SEVERE, "GL_ARB_vertex_buffer_object not supported.");
+            System.out.println(this.getClass().getName() + "-SEVERE: GL_ARB_vertex_buffer_object not supported.");
             throw new LWJGLException("GL_ARB_vertex_buffer_object not supported");
         }
         
@@ -316,12 +316,12 @@ final class ViewRenderer implements ViewStateListener {
     @Override
     public void viewStateChunkChanged(Chunk chunk) {
         byte[][][] data = chunk.getData();
-        IntBuffer vertexData = BufferUtils.createIntBuffer(70000);
+        IntBuffer vertexData = BufferUtils.createIntBuffer(700000);
         
         try {
-            for (int x = 0; x < 16; x++) {
-                for (int y = 0; y < 16; y++) {
-                    for (int z = 0; z > -16; z--) {
+            for (int x = 0; x < chunk.width; x++) {
+                for (int y = 0; y < chunk.height; y++) {
+                    for (int z = 0; z > -chunk.length; z--) {
                         if (data[x][y][-z] != 0) vertexData.put(cubeData(x, y, z));
                     }
                 }
@@ -329,18 +329,19 @@ final class ViewRenderer implements ViewStateListener {
         } catch (BufferOverflowException boe1) {
             // Try again with more memory
             try {
-                vertexData = BufferUtils.createIntBuffer(150000);
-                for (int x = 0; x < 16; x++) {
-                    for (int y = 0; y < 16; y++) {
-                        for (int z = 0; z > -16; z--) {
+                vertexData = BufferUtils.createIntBuffer(1500000);
+                for (int x = 0; x < chunk.width; x++) {
+                    for (int y = 0; y < chunk.height; y++) {
+                        for (int z = 0; z > -chunk.length; z--) {
                             if (data[x][y][-z] != 0) vertexData.put(cubeData(x, y, z));
                         }
                     }
                 }
             } catch (BufferOverflowException boe2) {
                 // Bail out
-                System.out.println("Oops! Mycraft has crashed!");
-                Mycraft.LOGGER.log(Level.SEVERE, boe2.toString(), boe2);
+                System.out.println(this.getClass().getName() + "Oops! I have crashed!");
+                System.out.println(this.getClass().getName() + "-Warning:" + boe2.toString());
+                boe2.printStackTrace();
                 System.exit(1);
             }
         }

@@ -75,6 +75,9 @@ final class Camera {
      * assumed that the identity matrix has been loaded.
      */
     void updateMatrix() {
+
+        //System.out.println("X:" + position.x +",Y:" + position.y + ",Z:" + position.z);
+
         // Get the absolute coordinate of the view direction
         Vector lookAt = position.plus(sight);
 
@@ -94,6 +97,7 @@ final class Camera {
     void move(Vector vec) {
         position.add(vec.invertedZ());
     }
+
     
     /**
      * Moves this Camera forward in the direction it is facing. Pass a negative

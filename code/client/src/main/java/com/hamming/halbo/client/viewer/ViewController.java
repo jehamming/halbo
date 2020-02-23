@@ -2,6 +2,8 @@
 
 package com.hamming.halbo.client.viewer;
 
+import com.hamming.halbo.client.HALBOTestToollWindow;
+import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.BaseplateDto;
 import com.hamming.halbo.model.dto.UserLocationDto;
 import org.lwjgl.LWJGLException;
@@ -74,7 +76,16 @@ public final class ViewController implements Runnable {
 
     private boolean running = false;
 
+    private HALBOTestToollWindow client;
+
     private UserLocationDto location;
+
+    private ProtocolHandler protocolHandler;
+
+    public ViewController( HALBOTestToollWindow client) {
+        this.client = client;
+        protocolHandler = new ProtocolHandler();
+    }
 
     /**
      * Initializes the ViewController, which manages its own ViewState and
@@ -166,6 +177,11 @@ public final class ViewController implements Runnable {
         try {
             renderer = new ViewRenderer();
             state = new ViewState(renderer);
+
+            //TODO Remove
+            // state.setChunk(new Chunk(100,100));
+
+
             init();
             running = true;
         } catch (LWJGLException e) {
@@ -175,12 +191,16 @@ public final class ViewController implements Runnable {
         while (running) {
             if (!Display.isCloseRequested()) {
                 if (Display.isVisible()) {
+                    // Check movement
+                    doMove(
+                            Keyboard.isKeyDown(Keyboard.KEY_W),
+                            Keyboard.isKeyDown(Keyboard.KEY_S),
+                            Keyboard.isKeyDown(Keyboard.KEY_A),
+                            Keyboard.isKeyDown(Keyboard.KEY_D)
+                    );
                     // Update the state with the required input
                     state.update(new ViewStateInputData(
-                                    Keyboard.isKeyDown(Keyboard.KEY_W),
-                                    Keyboard.isKeyDown(Keyboard.KEY_S),
-                                    Keyboard.isKeyDown(Keyboard.KEY_A),
-                                    Keyboard.isKeyDown(Keyboard.KEY_D),
+                                    location,
                                     wasSpaceBarPressed(),
                                     Mouse.getDX(), Mouse.getDY(), Mouse.getDWheel() / -120,
                                     wasMouseClicked(MouseButton.LEFT),
@@ -219,6 +239,15 @@ public final class ViewController implements Runnable {
         }
     }
 
+    public void doMove(boolean forward, boolean back, boolean left, boolean right) {
+        if ( client.isConnected() && client.getUserLocation() != null ) {
+            if ( forward || back || left || right ) {
+                String cmd = protocolHandler.getMoveCommand(forward, back, left, right);
+                client.send(cmd);
+            }
+        }
+    }
+
     private void showMouse(boolean b) {
         //TODO Enable?
         if (b) {
@@ -237,6 +266,7 @@ public final class ViewController implements Runnable {
     }
 
     public void teleportTo(BaseplateDto baseplate, UserLocationDto location) {
+        state.setChunk( new Chunk(baseplate.getWidth(), baseplate.getLength()));
         setLocation(location);
     }
 }
