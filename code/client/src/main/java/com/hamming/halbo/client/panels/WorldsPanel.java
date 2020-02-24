@@ -1,6 +1,8 @@
 package com.hamming.halbo.client.panels;
 
-import com.hamming.halbo.client.HALBOTestToollWindow;
+import com.hamming.halbo.client.BaseWindow;
+import com.hamming.halbo.client.controllers.DataController;
+import com.hamming.halbo.client.interfaces.IWorldWindow;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.WorldDto;
@@ -12,16 +14,16 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
-public class WorldsPanel extends JPanel implements CommandReceiver {
+public class WorldsPanel extends JPanel implements IWorldWindow {
 
-    private HALBOTestToollWindow client;
     private JList<WorldDto> listOfWorlds;
     private DefaultListModel listModel;
-    private ProtocolHandler protocolHandler;
+    private DataController dataController;
 
-    public WorldsPanel(HALBOTestToollWindow client) {
-        this.client = client;
-        protocolHandler = new ProtocolHandler();
+
+    public WorldsPanel(DataController controller) {
+        this.dataController = controller;
+        dataController.setWorldWindow(this);
         createPanel();
     }
 
@@ -35,7 +37,7 @@ public class WorldsPanel extends JPanel implements CommandReceiver {
                 if ( !e.getValueIsAdjusting() ) { //Else this is called twice!
                     WorldDto world = listOfWorlds.getSelectedValue();
                     if (world != null) {
-                        worldSelected(world);
+                        dataController.worldSelected(world);
                     }
                 }
             }
@@ -50,26 +52,14 @@ public class WorldsPanel extends JPanel implements CommandReceiver {
         listModel.removeAllElements();
     }
 
-    public void worldSelected(WorldDto world) {
-        client.getContinentsPanel().empty();
-        client.getCitiesPanel().empty();
-        client.getBaseplatesPanel().empty();
-        String s = protocolHandler.getGetContinentsCommand(world.getId());
-        client.send(s);
-    }
 
-    @Override
-    public void receiveCommand(Protocol.Command cmd, String[] data) {
-        if (cmd.equals(Protocol.Command.GETWORLDS)) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    WorldDto world = new WorldDto();
-                    world.setValues(data);
-                    listModel.addElement(world);
-                }
-            });
-        }
+    public void addWorld(WorldDto dto) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                listModel.addElement(dto);
+            }
+        });
     }
 
     public WorldDto getSelectedWorld() {

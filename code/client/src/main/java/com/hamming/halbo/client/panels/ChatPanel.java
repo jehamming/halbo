@@ -1,6 +1,6 @@
 package com.hamming.halbo.client.panels;
 
-import com.hamming.halbo.client.HALBOTestToollWindow;
+import com.hamming.halbo.client.BaseWindow;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.net.CommandReceiver;
@@ -10,14 +10,12 @@ import javax.swing.border.TitledBorder;
 
 public class ChatPanel extends JPanel implements CommandReceiver {
 
-    private HALBOTestToollWindow client;
+    private BaseWindow client;
     private DefaultListModel listModel;
-    private ProtocolHandler protocolHandler;
 
 
-    public ChatPanel(HALBOTestToollWindow clientWindow) {
+    public ChatPanel(BaseWindow clientWindow) {
         this.client = clientWindow;
-        protocolHandler = new ProtocolHandler();
         createPanel();
     }
 

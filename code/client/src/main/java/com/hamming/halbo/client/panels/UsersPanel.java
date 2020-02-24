@@ -1,9 +1,8 @@
 package com.hamming.halbo.client.panels;
 
-import com.hamming.halbo.client.HALBOTestToollWindow;
+import com.hamming.halbo.client.BaseWindow;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
-import com.hamming.halbo.model.dto.ContinentDto;
 import com.hamming.halbo.model.dto.UserDto;
 import com.hamming.halbo.net.CommandReceiver;
 
@@ -13,11 +12,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.Enumeration;
-import java.util.List;
 
 public class UsersPanel extends JPanel implements CommandReceiver {
 
-    private HALBOTestToollWindow client;
+    private BaseWindow client;
     private DefaultListModel listModel;
     private ProtocolHandler protocolHandler;
 
@@ -38,7 +36,7 @@ public class UsersPanel extends JPanel implements CommandReceiver {
     }
 
 
-    public UsersPanel(HALBOTestToollWindow clientWindow) {
+    public UsersPanel(BaseWindow clientWindow) {
         this.client = clientWindow;
         protocolHandler = new ProtocolHandler();
         createPanel();

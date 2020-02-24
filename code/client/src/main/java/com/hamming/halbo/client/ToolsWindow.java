@@ -2,9 +2,7 @@ package com.hamming.halbo.client;
 
 
 import com.hamming.halbo.client.panels.ChatPanel;
-import com.hamming.halbo.client.panels.MovementPanel;
 import com.hamming.halbo.client.panels.UsersPanel;
-import com.hamming.halbo.game.Protocol;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,10 +11,9 @@ public class ToolsWindow extends JFrame {
 
     private UsersPanel usersPanel;
     private ChatPanel chatPanel;
-    private MovementPanel movementPanel;
-    private HALBOTestToollWindow clientWindow;
+    private BaseWindow clientWindow;
 
-    public ToolsWindow(HALBOTestToollWindow clientWindow) {
+    public ToolsWindow(BaseWindow clientWindow) {
         this.clientWindow = clientWindow;
         initWindow();
     }
@@ -35,9 +32,6 @@ public class ToolsWindow extends JFrame {
         chatPanel = new ChatPanel(clientWindow);
         mainPainel.add(chatPanel);
 
-        movementPanel = new MovementPanel(clientWindow, this);
-        mainPainel.add(movementPanel);
-
         getContentPane().add(mainPainel);
 
         pack();
@@ -45,20 +39,9 @@ public class ToolsWindow extends JFrame {
     }
 
 
-    public void registerReceivers() {
-        clientWindow.getClient().registerReceiver(Protocol.Command.USERCONNECTED, usersPanel);
-        clientWindow.getClient().registerReceiver(Protocol.Command.USERDISCONNECTED, usersPanel);
-        clientWindow.getClient().registerReceiver(Protocol.Command.MOVE, movementPanel);
-        clientWindow.getClient().registerReceiver(Protocol.Command.LOCATION, movementPanel);
-        clientWindow.getClient().registerReceiver(Protocol.Command.MOVE, movementPanel);
-        clientWindow.getClient().registerReceiver(Protocol.Command.TELEPORT, movementPanel);
-    }
-
-
     public void emptyPanels() {
         usersPanel.empty();
         chatPanel.empty();
-        movementPanel.empty();;
     }
 
 
