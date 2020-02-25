@@ -49,13 +49,12 @@ public class ProtocolHandler implements Protocol {
     }
 
 
-    public String getTeleportCommand(String userId, WorldDto world, ContinentDto continent, CityDto city, BaseplateDto baseplate) {
+    public String getTeleportCommand(String userId, WorldDto world, ContinentDto continent, CityDto city) {
         String cmd = Command.TELEPORT.ordinal() + StringUtils.delimiter
                 + userId + StringUtils.delimiter
                 + world.getId().toString() + StringUtils.delimiter
                 + continent.getId().toString() + StringUtils.delimiter
-                + city.getId().toString() + StringUtils.delimiter
-                + baseplate.getId().toString();
+                + city.getId().toString() + StringUtils.delimiter;
          return cmd;
     }
 

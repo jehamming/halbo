@@ -1,26 +1,18 @@
 package com.hamming.halbo.client.panels;
 
-import com.hamming.halbo.client.BaseWindow;
-import com.hamming.halbo.client.controllers.DataController;
-import com.hamming.halbo.game.Protocol;
-import com.hamming.halbo.game.ProtocolHandler;
-import com.hamming.halbo.model.dto.BaseplateDto;
-import com.hamming.halbo.net.CommandReceiver;
+import com.hamming.halbo.client.controllers.MoveController;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class TeleportPanel extends JPanel {
 
     private JButton btnTeleport;
+    private MoveController moveController;
 
-    private DataController dataController;
-
-    public TeleportPanel(DataController dataController) {
-        this.dataController = dataController;
+    public TeleportPanel(MoveController moveController) {
+        this.moveController = moveController;
         createPanel();
     }
 
@@ -36,7 +28,10 @@ public class TeleportPanel extends JPanel {
     }
 
     private void teleport() {
-        //TODO
+       String result = moveController.teleportRequest();
+       if (result != null ) {
+           JOptionPane.showMessageDialog(this, result);
+       }
     }
 
 }

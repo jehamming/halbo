@@ -1,12 +1,9 @@
 package com.hamming.halbo.client.panels;
 
 import com.hamming.halbo.client.BaseWindow;
-import com.hamming.halbo.client.controllers.DataController;
-import com.hamming.halbo.client.interfaces.IWorldWindow;
-import com.hamming.halbo.game.Protocol;
-import com.hamming.halbo.game.ProtocolHandler;
+import com.hamming.halbo.client.controllers.WorldController;
+import com.hamming.halbo.client.interfaces.IWorldListener;
 import com.hamming.halbo.model.dto.WorldDto;
-import com.hamming.halbo.net.CommandReceiver;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -14,16 +11,18 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
-public class WorldsPanel extends JPanel implements IWorldWindow {
+public class WorldsPanel extends JPanel implements IWorldListener {
 
     private JList<WorldDto> listOfWorlds;
     private DefaultListModel listModel;
-    private DataController dataController;
+    private WorldController worldController;
+    private BaseWindow baseWindow;
 
 
-    public WorldsPanel(DataController controller) {
-        this.dataController = controller;
-        dataController.setWorldWindow(this);
+    public WorldsPanel(BaseWindow window, WorldController controller) {
+        this.baseWindow = window;
+        this.worldController = controller;
+        worldController.addWorldListener(this);
         createPanel();
     }
 
@@ -37,7 +36,9 @@ public class WorldsPanel extends JPanel implements IWorldWindow {
                 if ( !e.getValueIsAdjusting() ) { //Else this is called twice!
                     WorldDto world = listOfWorlds.getSelectedValue();
                     if (world != null) {
-                        dataController.worldSelected(world);
+                        worldController.worldSelected(world);
+                        baseWindow.getContinentsPanel().empty();
+                        baseWindow.getCitiesPanel().empty();
                     }
                 }
             }
@@ -47,22 +48,23 @@ public class WorldsPanel extends JPanel implements IWorldWindow {
         add(scrollPane);
     }
 
-
     public void empty() {
         listModel.removeAllElements();
     }
 
 
-    public void addWorld(WorldDto dto) {
+    @Override
+    public void worldAdded(WorldDto world) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                listModel.addElement(dto);
+                listModel.addElement(world);
             }
         });
     }
 
-    public WorldDto getSelectedWorld() {
-        return listOfWorlds.getSelectedValue();
+    @Override
+    public void worldDeleted(WorldDto world) {
+
     }
 }

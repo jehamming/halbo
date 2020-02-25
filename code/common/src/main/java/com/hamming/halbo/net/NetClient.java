@@ -16,11 +16,11 @@ public class NetClient implements Runnable {
     private BufferedReader in;
     private PrintWriter out;
     private boolean open = true;
-    private Map<Protocol.Command, List<CommandReceiver>> receivers;
     private ProtocolHandler protocolHandler;
+    private CommandReceiver receiver;
 
-    public NetClient() {
-        receivers = new HashMap<Protocol.Command, List<CommandReceiver>>();
+    public NetClient(CommandReceiver receiver) {
+        this.receiver = receiver;
         protocolHandler = new ProtocolHandler();
     }
 
@@ -96,27 +96,7 @@ public class NetClient implements Runnable {
         System.out.println(this.getClass().getName() + ":" + "Received:(" +cmd +")-" + s);
         String[] splitted = s.split(StringUtils.delimiter);
         String[] data = Arrays.copyOfRange(splitted, 1, splitted.length);
-        List<CommandReceiver> listReceivers = receivers.get(cmd);
-        boolean handled = false;
-        if (listReceivers != null) {
-            for (CommandReceiver c : listReceivers) {
-                c.receiveCommand(cmd, data);
-                handled = true;
-            }
-        }
-
-        if (!handled) {
-            System.out.println(this.getClass().getName() + ":" + "Command " + cmd.toString() + " NOT handled");
-        }
-    }
-
-    public void registerReceiver(Protocol.Command cmd, CommandReceiver receiver) {
-        List<CommandReceiver> listReceivers = receivers.get(cmd);
-        if (listReceivers == null) {
-            listReceivers = new ArrayList<CommandReceiver>();
-        }
-        listReceivers.add(receiver);
-        receivers.put(cmd, listReceivers);
+        receiver.receiveCommand(cmd, data);
     }
 
 

@@ -234,7 +234,7 @@ public class ServerCLI {
         String cityName = userInput.nextLine();
         User creator = searchUserByUsername();
         if ( creator != null ) {
-            CityFactory.getInstance().addCity(cityName, creator);
+           // CityFactory.getInstance().createCity(cityName, creator);
         }
     }
 

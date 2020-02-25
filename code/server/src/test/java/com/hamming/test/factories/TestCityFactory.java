@@ -1,6 +1,8 @@
 package com.hamming.test.factories;
 
+import com.hamming.halbo.factories.BaseplateFactory;
 import com.hamming.halbo.factories.UserFactory;
+import com.hamming.halbo.model.Baseplate;
 import com.hamming.halbo.model.City;
 import com.hamming.halbo.factories.CityFactory;
 import com.hamming.halbo.model.User;
@@ -16,8 +18,10 @@ public class TestCityFactory {
         deleteAllCities();
         User u1 = UserFactory.getInstance().addUser("Luuk Hamming", "lhhamming", "lhhamming", "luuk.hamming@gmail.com");
         User u2 = UserFactory.getInstance().addUser("Jan-Egbert Hamming", "jehamming", "jehamming", "janneman@hotmail.com");
-        City w1 = CityFactory.getInstance().addCity("City1", u1);
-        City w2 = CityFactory.getInstance().addCity("City2", u2);
+        Baseplate bp1 = BaseplateFactory.getInstance().createBaseplate("Baseplate1", u1);
+        City w1 = CityFactory.getInstance().createCity("City1", u1, bp1);
+        Baseplate bp2 = BaseplateFactory.getInstance().createBaseplate("Baseplate2", u1);
+        City w2 = CityFactory.getInstance().createCity("City2", u2, bp2);
         File tmpFile = null;
         try {
             tmpFile = File.createTempFile("HALBO","TST");

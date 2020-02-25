@@ -1,27 +1,38 @@
 package com.hamming.halbo.client;
 
-import com.hamming.halbo.client.controllers.ConnectionController;
-import com.hamming.halbo.client.controllers.DataController;
-import com.hamming.halbo.game.Protocol;
+import com.hamming.halbo.client.controllers.*;
 
 public class ClientApplication {
 
     private ToolsWindow toolsWindow;
-    private BaseWindow clientWindow;
+    private BaseWindow baseWindow;
 
     //Controllers
     private ConnectionController connectionController;
-    private DataController dataController;
+    private UserController userController;
+    private WorldController worldController;
+    private ContinentController continentController;
+    private CityController cityController;
+    private MoveController moveController;
 
     public void initControllers() {
         connectionController = new ConnectionController();
-        dataController = new DataController(connectionController);
+        userController = new UserController(connectionController);
+        worldController = new WorldController(connectionController);
+        continentController = new ContinentController(connectionController);
+        cityController = new CityController(connectionController);
+        moveController = new MoveController(connectionController,userController, worldController, continentController, cityController);
     }
 
     private void createAndShowGUI() {
         initControllers();
-       clientWindow = new BaseWindow(connectionController, dataController);
-       //toolsWindow = new ToolsWindow();
+        baseWindow = new BaseWindow(connectionController,
+                userController,
+                worldController,
+                continentController,
+                cityController,
+                moveController);
+        //toolsWindow = new ToolsWindow();
     }
 
     public static void main(String[] args) {
@@ -34,66 +45,6 @@ public class ClientApplication {
             }
         });
     }
-
-
-
-
-    //TODO
-/*
-            client.registerReceiver(Protocol.Command.LOGIN, loginPanel);
-        client.registerReceiver(Protocol.Command.GETWORLDS, worldsPanel);
-        client.registerReceiver(Protocol.Command.GETCONTINENTS, continentsPanel);
-        client.registerReceiver(Protocol.Command.GETCITIES, citiesPanel);
-        client.registerReceiver(Protocol.Command.GETBASEPLATES, baseplatesPanel);
-        client.registerReceiver(Protocol.Command.GETBASEPLATE, this);
-    registerReceiver(Protocol.Command.USERCONNECTED, usersPanel);
-        clientWindow.getClient().registerReceiver(Protocol.Command.USERDISCONNECTED, usersPanel);
-        clientWindow.getClient().registerReceiver(Protocol.Command.MOVE, movementPanel);
-        clientWindow.getClient().registerReceiver(Protocol.Command.LOCATION, movementPanel);
-        clientWindow.getClient().registerReceiver(Protocol.Command.MOVE, movementPanel);
-        clientWindow.getClient().registerReceiver(Protocol.Command.TELEPORT, movementPanel);
-
-
-
-    public void teleportRequest() {
-        WorldDto world = worldsPanel.getSelectedWorld();
-        ContinentDto continent = continentsPanel.getSelectedContinent();
-        CityDto city = citiesPanel.getSelectedCity();
-        BaseplateDto baseplate = baseplatesPanel.getSelectedBaseplate();
-        if (user != null && world != null && continent != null && city != null && baseplate != null) {
-            String cmd = protocolHandler.getTeleportCommand(user.getId(), world, continent, city, baseplate);
-            send(cmd);
-        } else {
-            JOptionPane.showMessageDialog(this, "Please select a World, Continent, City and Baseplate to teleport to!");
-        }
-    }
-
-        public void setUserLocation(UserLocationDto userLocation) {
-        BaseplateDto bp = findBaseplateById(userLocation.getBaseplateId());
-        if (  bp == null ) {
-            String s = protocolHandler.getGetBaseplateCommand(userLocation.getBaseplateId());
-            client.send(s);
-        }
-        this.userLocation = userLocation;
-    //    viewController.setLocation(userLocation);
-    }
-
-    private BaseplateDto findBaseplateById(String baseplateId) {
-        BaseplateDto found = null;
-        for (BaseplateDto bp: baseplates) {
-            if (bp.getId().equals( baseplateId)) {
-                found = bp;
-                break;
-            }
-        }
-        return found;
-    }
-
-
-
-
-
-*/
 
 
 }

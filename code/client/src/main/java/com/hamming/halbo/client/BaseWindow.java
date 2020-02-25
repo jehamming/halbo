@@ -1,8 +1,7 @@
 package com.hamming.halbo.client;
 
 
-import com.hamming.halbo.client.controllers.ConnectionController;
-import com.hamming.halbo.client.controllers.DataController;
+import com.hamming.halbo.client.controllers.*;
 import com.hamming.halbo.client.panels.*;
 
 import javax.swing.*;
@@ -15,12 +14,22 @@ public class BaseWindow extends JFrame {
     private ContinentsPanel continentsPanel;
     private TeleportPanel teleportPanel;
     private ConnectionController connectionController;
-    private DataController dataController;
+    private UserController userController;
+    private WorldController worldController;
+    private ContinentController continentController;
+    private CityController cityController;
+    private MoveController moveController;
 
 
-    public BaseWindow(ConnectionController connectionController, DataController dataController) {
+
+    public BaseWindow(ConnectionController connectionController, UserController userController, WorldController worldController, ContinentController continentController, CityController cityController, MoveController moveController) {
         this.connectionController = connectionController;
-        this.dataController = dataController;
+        this.userController = userController;
+        this.worldController = worldController;
+        this.connectionController = connectionController;
+        this.cityController = cityController;
+        this.continentController = continentController;
+        this.moveController = moveController;
         init();
     }
 
@@ -47,19 +56,19 @@ public class BaseWindow extends JFrame {
     private JPanel getMainPanel() {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        loginPanel = new LoginPanel(this, connectionController);
+        loginPanel = new LoginPanel(this, connectionController, userController);
         mainPanel.add(loginPanel);
 
-        worldsPanel = new WorldsPanel(dataController);
+        worldsPanel = new WorldsPanel(this, worldController);
         mainPanel.add(worldsPanel);
 
-        continentsPanel = new ContinentsPanel(dataController);
+        continentsPanel = new ContinentsPanel(this, continentController);
         mainPanel.add(continentsPanel);
 
-        citiesPanel = new CitiesPanel(dataController);
+        citiesPanel = new CitiesPanel(cityController);
         mainPanel.add(citiesPanel);
 
-        teleportPanel = new TeleportPanel(dataController);
+        teleportPanel = new TeleportPanel(moveController);
         mainPanel.add(teleportPanel);
 
         return mainPanel;

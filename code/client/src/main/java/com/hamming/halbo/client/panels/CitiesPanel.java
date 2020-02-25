@@ -1,12 +1,8 @@
 package com.hamming.halbo.client.panels;
 
-import com.hamming.halbo.client.BaseWindow;
-import com.hamming.halbo.client.controllers.DataController;
-import com.hamming.halbo.client.interfaces.ICityWindow;
-import com.hamming.halbo.game.Protocol;
-import com.hamming.halbo.game.ProtocolHandler;
+import com.hamming.halbo.client.controllers.CityController;
+import com.hamming.halbo.client.interfaces.ICityListener;
 import com.hamming.halbo.model.dto.CityDto;
-import com.hamming.halbo.net.CommandReceiver;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -14,15 +10,15 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
-public class CitiesPanel extends JPanel implements ICityWindow {
+public class CitiesPanel extends JPanel implements ICityListener {
 
     private DefaultListModel listModel;
     private JList<CityDto> listOfCities;
-    private DataController dataController;
+    private CityController cityController;
 
-    public CitiesPanel(DataController dataController) {
-        this.dataController = dataController;
-        dataController.setCityWindow(this);
+    public CitiesPanel(CityController cityController) {
+        this.cityController = cityController;
+        cityController.addCityListener(this);
         createPanel();
     }
 
@@ -36,7 +32,7 @@ public class CitiesPanel extends JPanel implements ICityWindow {
                 if ( !e.getValueIsAdjusting() ) { //Else this is called twice!
                     CityDto dto = listOfCities.getSelectedValue();
                     if (dto != null) {
-                        dataController.citySelected(dto);
+                        cityController.citySelected(dto);
                     }
                 }
             }
@@ -51,18 +47,18 @@ public class CitiesPanel extends JPanel implements ICityWindow {
         listModel.removeAllElements();
     }
 
-
     @Override
-    public void addCity(CityDto dto) {
+    public void cityAdded(CityDto city) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                listModel.addElement(dto);
+                listModel.addElement(city);
             }
         });
     }
 
-    public CityDto getSelectedCity() {
-        return listOfCities.getSelectedValue();
+    @Override
+    public void cityDeleted(CityDto city) {
+
     }
 }

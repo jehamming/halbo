@@ -1,6 +1,7 @@
 package com.hamming.halbo.factories;
 
 import com.hamming.halbo.IDManager;
+import com.hamming.halbo.model.Baseplate;
 import com.hamming.halbo.model.City;
 import com.hamming.halbo.model.HalboID;
 import com.hamming.halbo.model.User;
@@ -56,9 +57,9 @@ public class CityFactory extends AbstractFactory {
     }
 
 
-    public City addCity(String name, User creator) {
+    public City createCity(String name, User creator, Baseplate teleportBaseplate) {
         HalboID id = IDManager.getInstance().getNextID(HalboID.Prefix.CTY);
-        City city = new City(id, name);
+        City city = new City(id, name, teleportBaseplate);
         city.setCreator(creator);
         city.setOwner(creator);
         cities.add(city);

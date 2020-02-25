@@ -2,7 +2,9 @@ package com.hamming.halbo.client.panels;
 
 import com.hamming.halbo.client.BaseWindow;
 import com.hamming.halbo.client.controllers.ConnectionController;
-import com.hamming.halbo.client.interfaces.ILoginCallback;
+import com.hamming.halbo.client.controllers.UserController;
+import com.hamming.halbo.client.interfaces.IUserListener;
+import com.hamming.halbo.model.dto.UserDto;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -12,7 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class LoginPanel extends JPanel implements ILoginCallback {
+public class LoginPanel extends JPanel implements IUserListener {
 
     private JTextField txtServer;
     JTextField txtPort;
@@ -21,13 +23,17 @@ public class LoginPanel extends JPanel implements ILoginCallback {
     JLabel lblStatus;
     JButton btnConnect;
     JButton btnDisconnect;
-    private ConnectionController controller;
+    private ConnectionController connectionController;
+    private UserController userController;
     private BaseWindow baseWindow;
 
 
-    public LoginPanel(BaseWindow window, ConnectionController controller) {
+    public LoginPanel(BaseWindow window, ConnectionController controller, UserController userController) {
         createPanel();
-        this.controller = controller;
+        this.connectionController = controller;
+        this.userController = userController;
+        userController.addUserListener(this);
+
         this.baseWindow = window;
     }
 
@@ -92,7 +98,7 @@ public class LoginPanel extends JPanel implements ILoginCallback {
     }
 
     private void disconnect() {
-        controller.disconnect();
+        connectionController.disconnect();
         baseWindow.emptyPanels();
         btnDisconnect.setEnabled(false);
         btnConnect.setEnabled(true);
@@ -105,8 +111,8 @@ public class LoginPanel extends JPanel implements ILoginCallback {
         String username = txtUsername.getText().trim();
         String password = String.valueOf(txtPassword.getPassword());
         try {
-            controller.connect(server,port, this);
-            controller.sendLogin(username, password);
+            connectionController.connect(server,port);
+            userController.sendLogin(username, password);
             btnDisconnect.setEnabled(true);
             btnConnect.setEnabled(false);
         } catch (Exception e) {
@@ -114,6 +120,16 @@ public class LoginPanel extends JPanel implements ILoginCallback {
         }
     }
 
+
+    @Override
+    public void userConnected(UserDto user) {
+
+    }
+
+    @Override
+    public void userDisconnected(UserDto user) {
+
+    }
 
     @Override
     public void loginResult(boolean success, String msg) {

@@ -31,10 +31,12 @@ public class GetBaseplatesAction implements Action {
     public void execute() {
         City c = CityFactory.getInstance().findCityByID(cityId);
         if ( c != null ) {
-            for ( Baseplate b : c.getBaseplates() ) {
+            //TODO IMPLEMENT
+/*            for ( Baseplate b : c.getBaseplates() ) {
                 BaseplateDto dto = DTOFactory.getInstance().getBaseplateDto(b);
                 client.send(Protocol.Command.GETBASEPLATES.ordinal() + StringUtils.delimiter + dto.toNetData());
-            }
+            }*/
+            client.send(Protocol.Command.GETBASEPLATES.ordinal() + StringUtils.delimiter + Protocol.FAILED);
         } else {
             client.send(Protocol.Command.GETBASEPLATES.ordinal() + StringUtils.delimiter + Protocol.FAILED);
         }

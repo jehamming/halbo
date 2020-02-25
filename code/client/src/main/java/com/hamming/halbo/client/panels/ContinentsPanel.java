@@ -1,12 +1,9 @@
 package com.hamming.halbo.client.panels;
 
 import com.hamming.halbo.client.BaseWindow;
-import com.hamming.halbo.client.controllers.DataController;
-import com.hamming.halbo.client.interfaces.IContinentWindow;
-import com.hamming.halbo.game.Protocol;
-import com.hamming.halbo.game.ProtocolHandler;
+import com.hamming.halbo.client.controllers.ContinentController;
+import com.hamming.halbo.client.interfaces.IContinentListener;
 import com.hamming.halbo.model.dto.ContinentDto;
-import com.hamming.halbo.net.CommandReceiver;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -14,15 +11,17 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
-public class ContinentsPanel extends JPanel implements IContinentWindow {
+public class ContinentsPanel extends JPanel implements IContinentListener {
 
     private JList<ContinentDto> listOfContinents;
     private DefaultListModel listModel;
-    private DataController dataController;
+    private ContinentController continentController;
+    private BaseWindow baseWindow;
 
-    public ContinentsPanel(DataController dataController) {
-        this.dataController =  dataController;
-        dataController.setContinentWindow(this);
+    public ContinentsPanel(BaseWindow window, ContinentController continentController) {
+        this.continentController = continentController;
+        this.baseWindow = window;
+        continentController.addContinentListener(this);
         createPanel();
     }
 
@@ -36,7 +35,8 @@ public class ContinentsPanel extends JPanel implements IContinentWindow {
                 if ( !e.getValueIsAdjusting() ) { //Else this is called twice!
                     ContinentDto c = listOfContinents.getSelectedValue();
                     if (c != null) {
-                        dataController.continentSelected(c);
+                        continentController.continentSelected(c);
+                        baseWindow.getCitiesPanel().empty();
                     }
                 }
             }
@@ -51,16 +51,17 @@ public class ContinentsPanel extends JPanel implements IContinentWindow {
     }
 
     @Override
-    public void addContinent(ContinentDto dto) {
+    public void continentAdded(ContinentDto continent) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                listModel.addElement(dto);
+                listModel.addElement(continent);
             }
         });
     }
 
-    public ContinentDto getSelectedContinent() {
-        return listOfContinents.getSelectedValue();
+    @Override
+    public void continentDeleted(ContinentDto continent) {
+
     }
 }
