@@ -32,7 +32,7 @@ public class ClientApplication {
                 continentController,
                 cityController,
                 moveController);
-        //toolsWindow = new ToolsWindow();
+        toolsWindow = new ToolsWindow(userController);
     }
 
     public static void main(String[] args) {

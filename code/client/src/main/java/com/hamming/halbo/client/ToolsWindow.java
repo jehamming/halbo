@@ -1,6 +1,7 @@
 package com.hamming.halbo.client;
 
 
+import com.hamming.halbo.client.controllers.UserController;
 import com.hamming.halbo.client.panels.ChatPanel;
 import com.hamming.halbo.client.panels.UsersPanel;
 
@@ -11,10 +12,10 @@ public class ToolsWindow extends JFrame {
 
     private UsersPanel usersPanel;
     private ChatPanel chatPanel;
-    private BaseWindow clientWindow;
+    private UserController userController;
 
-    public ToolsWindow(BaseWindow clientWindow) {
-        this.clientWindow = clientWindow;
+    public ToolsWindow(UserController userController) {
+        this.userController = userController;
         initWindow();
     }
 
@@ -26,10 +27,10 @@ public class ToolsWindow extends JFrame {
         JPanel mainPainel = new JPanel();
         mainPainel.setLayout(new GridLayout(1,3,5,5));
 
-        usersPanel = new UsersPanel(clientWindow);
+        usersPanel = new UsersPanel(userController);
         mainPainel.add(usersPanel);
 
-        chatPanel = new ChatPanel(clientWindow);
+        chatPanel = new ChatPanel();
         mainPainel.add(chatPanel);
 
         getContentPane().add(mainPainel);

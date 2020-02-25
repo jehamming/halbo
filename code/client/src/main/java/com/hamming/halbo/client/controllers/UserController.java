@@ -80,15 +80,32 @@ public class UserController implements IConnectionListener, CommandReceiver {
                 checkLoginOk(data);
                 break;
             case GETUSER:
-                System.out.println(getClass().getName() + cmd + ": NOT IMPLEMENTED YET");
+                System.out.println(getClass().getName() + ":" + cmd + ": NOT IMPLEMENTED YET");
                 break;
             case USERCONNECTED:
-                System.out.println(getClass().getName() + cmd + ": NOT IMPLEMENTED YET");
+                userConnected(data);
                 break;
             case USERDISCONNECTED:
-                System.out.println(getClass().getName() + cmd + ": NOT IMPLEMENTED YET");
+                userDisconnected(data);
                 break;
         }
     }
+
+    private void userConnected(String[] data) {
+        UserDto user = new UserDto();
+        user.setValues(data);
+        for (IUserListener l: userListeners) {
+            l.userConnected(user);
+        }
+    }
+
+    private void userDisconnected(String[] data) {
+        UserDto user = new UserDto();
+        user.setValues(data);
+        for (IUserListener l: userListeners) {
+            l.userDisconnected(user);
+        }
+    }
+
 
 }
