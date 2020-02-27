@@ -2,6 +2,8 @@ package com.hamming.halbo.model.dto;
 
 import com.hamming.halbo.util.StringUtils;
 
+import java.util.Objects;
+
 public class UserDto implements DTO {
 
     private String id;
@@ -50,5 +52,18 @@ public class UserDto implements DTO {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserDto userDto = (UserDto) o;
+        return Objects.equals(id, userDto.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

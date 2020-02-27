@@ -5,6 +5,7 @@ import com.hamming.halbo.client.interfaces.IUserListener;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.UserDto;
+import com.hamming.halbo.model.dto.UserLocationDto;
 import com.hamming.halbo.net.CommandReceiver;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class UserController implements IConnectionListener, CommandReceiver {
         connectionController.addConnectionListener(this);
         protocolHandler = new ProtocolHandler();
         userListeners = new ArrayList<IUserListener>();
+        users = new ArrayList<UserDto>();
         connectionController.registerReceiver(Protocol.Command.LOGIN,this);
         connectionController.registerReceiver(Protocol.Command.USERCONNECTED,this);
         connectionController.registerReceiver(Protocol.Command.USERDISCONNECTED,this);
@@ -33,6 +35,11 @@ public class UserController implements IConnectionListener, CommandReceiver {
     @Override
     public void connected() {
         connectionController.registerReceiver(Protocol.Command.LOGIN, this);
+    }
+
+    @Override
+    public void disconnected() {
+        connectionController.unregisterReceiver(Protocol.Command.LOGIN,this);
     }
 
     public void sendLogin(String username, String password) {
@@ -80,7 +87,7 @@ public class UserController implements IConnectionListener, CommandReceiver {
                 checkLoginOk(data);
                 break;
             case GETUSER:
-                System.out.println(getClass().getName() + ":" + cmd + ": NOT IMPLEMENTED YET");
+                handleGetUser(data);
                 break;
             case USERCONNECTED:
                 userConnected(data);
@@ -91,9 +98,24 @@ public class UserController implements IConnectionListener, CommandReceiver {
         }
     }
 
+    private void handleGetUser(String[] data) {
+        String status = data[0];
+        String[] values = Arrays.copyOfRange(data, 1, data.length);
+        String msg = "";
+        if (Protocol.SUCCESS.equals(status)) {
+            UserDto user = new UserDto();
+            user.setValues(values);
+            users.add(user);
+        } else {
+            msg = Arrays.toString(values);
+            System.out.println("Get user failed: " + msg);
+        }
+    }
+
     private void userConnected(String[] data) {
         UserDto user = new UserDto();
         user.setValues(data);
+        users.add(user);
         for (IUserListener l: userListeners) {
             l.userConnected(user);
         }
@@ -102,9 +124,34 @@ public class UserController implements IConnectionListener, CommandReceiver {
     private void userDisconnected(String[] data) {
         UserDto user = new UserDto();
         user.setValues(data);
+        users.remove(user);
         for (IUserListener l: userListeners) {
             l.userDisconnected(user);
         }
+    }
+
+    public List<UserDto> getUsers() {
+        return users;
+    }
+
+    public UserDto getUser(String userId) {
+        UserDto user = findUserById(userId);
+        if (user == null ) {
+            connectionController.send(protocolHandler.getUserCommand(userId));
+            // TODO Wait for user details?
+        }
+        return user;
+    }
+
+    private UserDto findUserById(String userId) {
+        UserDto found = null;
+        for (UserDto user : users) {
+            if (user.getId().equals(userId)) {
+                found = user;
+                break;
+            }
+        }
+        return found;
     }
 
 

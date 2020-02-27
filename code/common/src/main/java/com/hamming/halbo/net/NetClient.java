@@ -76,6 +76,7 @@ public class NetClient implements Runnable {
             } catch (Exception e) {
                 open = false;
                 System.out.println(this.getClass().getName() + ":" + "Error:" + e.getMessage());
+                e.printStackTrace();
             }
         }
         if ( socket != null ) {
@@ -88,6 +89,7 @@ public class NetClient implements Runnable {
     }
 
     public void send(String s) {
+        System.out.println(this.getClass().getName() + ":" + "Send:" +s );
         out.println(s);
     }
 

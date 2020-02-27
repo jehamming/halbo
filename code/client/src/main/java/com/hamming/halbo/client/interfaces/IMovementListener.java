@@ -5,6 +5,8 @@ import com.hamming.halbo.model.dto.UserLocationDto;
 
 public interface IMovementListener {
 
-    public void userMoved(UserLocationDto newUserLocation);
+    public void userMoved(UserDto user, UserLocationDto newUserLocation);
+
+    public void teleported(UserLocationDto location);
 
 }
