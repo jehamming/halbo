@@ -54,12 +54,12 @@ public class GameController implements Runnable {
     }
 
 
-    public UserLocation handleTeleportRequest(String userId, String worldId, String continentId, String cityId, String baseplateId) {
+    public UserLocation handleTeleportRequest(String userId, String worldId, String continentId, String cityId) {
         User u = UserFactory.getInstance().findUserById(userId);
         World w = WorldFactory.getInstance().findWorldById(worldId);;
         Continent c = ContinentFactory.getInstance().findContinentById(continentId);
         City ct = CityFactory.getInstance().findCityByID(cityId);
-        Baseplate b = BaseplateFactory.getInstance().findBaseplateByID(baseplateId);
+        Baseplate b = ct.getTeleportBaseplate();
         UserLocation loc = null;
         if (u != null && w != null && c != null && ct != null && b != null ) {
             loc = gameState.getLocation(u);

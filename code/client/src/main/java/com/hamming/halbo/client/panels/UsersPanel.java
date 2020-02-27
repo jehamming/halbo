@@ -1,9 +1,10 @@
 package com.hamming.halbo.client.panels;
 
-import com.hamming.halbo.client.HALBOTestToollWindow;
+import com.hamming.halbo.client.BaseWindow;
+import com.hamming.halbo.client.controllers.UserController;
+import com.hamming.halbo.client.interfaces.IUserListener;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
-import com.hamming.halbo.model.dto.ContinentDto;
 import com.hamming.halbo.model.dto.UserDto;
 import com.hamming.halbo.net.CommandReceiver;
 
@@ -13,13 +14,13 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.Enumeration;
-import java.util.List;
 
-public class UsersPanel extends JPanel implements CommandReceiver {
+public class UsersPanel extends JPanel implements IUserListener {
 
-    private HALBOTestToollWindow client;
     private DefaultListModel listModel;
     private ProtocolHandler protocolHandler;
+    private UserController userController;
+
 
     private class ListItem {
         private UserDto user;
@@ -38,8 +39,9 @@ public class UsersPanel extends JPanel implements CommandReceiver {
     }
 
 
-    public UsersPanel(HALBOTestToollWindow clientWindow) {
-        this.client = clientWindow;
+    public UsersPanel(UserController userController) {
+        this.userController = userController;
+        userController.addUserListener(this);
         protocolHandler = new ProtocolHandler();
         createPanel();
     }
@@ -66,21 +68,6 @@ public class UsersPanel extends JPanel implements CommandReceiver {
 
     private void userSelected(UserDto user) {
         // Not implemented yet
-    }
-
-    @Override
-    public void receiveCommand(Protocol.Command cmd, String[] data) {
-        UserDto user = new UserDto();
-        user.setValues(data);
-        switch (cmd) {
-            case USERCONNECTED:
-                addUser(user);
-                break;
-            case USERDISCONNECTED:
-                removeUser(user);
-                break;
-
-        }
     }
 
     private void addUser(UserDto user) {
@@ -139,6 +126,24 @@ public class UsersPanel extends JPanel implements CommandReceiver {
     public void empty() {
         listModel.removeAllElements();
     }
+
+
+
+    @Override
+    public void userConnected(UserDto user) {
+        addUser(user);
+    }
+
+    @Override
+    public void userDisconnected(UserDto user) {
+        removeUser(user);
+    }
+
+    @Override
+    public void loginResult(boolean success, String message) {
+
+    }
+
 
 
 }

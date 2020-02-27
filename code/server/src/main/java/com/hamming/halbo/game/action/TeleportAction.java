@@ -27,7 +27,7 @@ public class TeleportAction implements Action {
 
     @Override
     public void execute() {
-        UserLocation location = controller.handleTeleportRequest(userId, worldId, continentId, cityId, baseplateId);
+        UserLocation location = controller.handleTeleportRequest(userId, worldId, continentId, cityId);
 
         if ( location != null )  {
             UserLocationDto dto = DTOFactory.getInstance().getUserLocationDTO(location);
@@ -40,14 +40,15 @@ public class TeleportAction implements Action {
 
     @Override
     public void setValues(String... values) {
-        if (values.length == 5 ) {
+        if (values.length == 4 ) {
             userId = values[0];
             worldId = values[1];
             continentId = values[2];
             cityId = values[3];
-            baseplateId = values[4];
         } else {
             System.out.println(this.getClass().getName() + ":" + "Error at "+getClass().getName()+", size not ok of: "+values);
+            Exception e = new Exception();
+            e.printStackTrace();
         }
     }
 }

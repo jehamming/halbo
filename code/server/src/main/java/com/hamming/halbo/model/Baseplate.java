@@ -17,8 +17,8 @@ public class Baseplate extends BasicObject   {
         spawnPointX = 0;
         spawnPointY = 2.5;
         spawnPointX = 0;
-        width = 100;
-        length = 100;
+        width = 50;
+        length = 50;
     }
 
     public double getSpawnPointX() {

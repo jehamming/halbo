@@ -1,10 +1,9 @@
 package com.hamming.halbo.client;
 
 
+import com.hamming.halbo.client.controllers.UserController;
 import com.hamming.halbo.client.panels.ChatPanel;
-import com.hamming.halbo.client.panels.MovementPanel;
 import com.hamming.halbo.client.panels.UsersPanel;
-import com.hamming.halbo.game.Protocol;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,11 +12,10 @@ public class ToolsWindow extends JFrame {
 
     private UsersPanel usersPanel;
     private ChatPanel chatPanel;
-    private MovementPanel movementPanel;
-    private HALBOTestToollWindow clientWindow;
+    private UserController userController;
 
-    public ToolsWindow(HALBOTestToollWindow clientWindow) {
-        this.clientWindow = clientWindow;
+    public ToolsWindow(UserController userController) {
+        this.userController = userController;
         initWindow();
     }
 
@@ -29,14 +27,11 @@ public class ToolsWindow extends JFrame {
         JPanel mainPainel = new JPanel();
         mainPainel.setLayout(new GridLayout(1,3,5,5));
 
-        usersPanel = new UsersPanel(clientWindow);
+        usersPanel = new UsersPanel(userController);
         mainPainel.add(usersPanel);
 
-        chatPanel = new ChatPanel(clientWindow);
+        chatPanel = new ChatPanel();
         mainPainel.add(chatPanel);
-
-        movementPanel = new MovementPanel(clientWindow, this);
-        mainPainel.add(movementPanel);
 
         getContentPane().add(mainPainel);
 
@@ -45,20 +40,9 @@ public class ToolsWindow extends JFrame {
     }
 
 
-    public void registerReceivers() {
-        clientWindow.getClient().registerReceiver(Protocol.Command.USERCONNECTED, usersPanel);
-        clientWindow.getClient().registerReceiver(Protocol.Command.USERDISCONNECTED, usersPanel);
-        clientWindow.getClient().registerReceiver(Protocol.Command.MOVE, movementPanel);
-        clientWindow.getClient().registerReceiver(Protocol.Command.LOCATION, movementPanel);
-        clientWindow.getClient().registerReceiver(Protocol.Command.MOVE, movementPanel);
-        clientWindow.getClient().registerReceiver(Protocol.Command.TELEPORT, movementPanel);
-    }
-
-
     public void emptyPanels() {
         usersPanel.empty();
         chatPanel.empty();
-        movementPanel.empty();;
     }
 
 

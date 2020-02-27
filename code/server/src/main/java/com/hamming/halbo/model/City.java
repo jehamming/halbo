@@ -1,8 +1,5 @@
 package com.hamming.halbo.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 // A City is a collection of connected baseplates
 //
 // "The world is flat"
@@ -10,18 +7,14 @@ import java.util.List;
 public class City extends BasicObject {
 
     private User mayor;
-    private List<Baseplate> baseplates;
+    private Baseplate teleportBaseplate;
 
-    public City(HalboID id, String name) {
+    public City(HalboID id, String name, Baseplate teleportBaseplate) {
         super(id);
         setName(name);
-        baseplates = new ArrayList<Baseplate>();
+        this.teleportBaseplate = teleportBaseplate;
     }
 
-    public boolean addBaseplate(Baseplate baseplate, long x, long y) {
-        baseplates.add(baseplate);
-        return true;
-    }
 
     public long getSizeX() {
         //TODO Implement
@@ -33,11 +26,6 @@ public class City extends BasicObject {
         return 0;
     }
 
-    public List<Baseplate> getBaseplates() {
-        return baseplates;
-    }
-
-
     public User getMayor() {
         return mayor;
     }
@@ -46,6 +34,9 @@ public class City extends BasicObject {
         this.mayor = mayor;
     }
 
+    public Baseplate getTeleportBaseplate() {
+        return teleportBaseplate;
+    }
 
     @Override
     public String toString() {

@@ -1,10 +1,9 @@
 package com.hamming.halbo.client.panels;
 
-import com.hamming.halbo.client.HALBOTestToollWindow;
-import com.hamming.halbo.game.Protocol;
-import com.hamming.halbo.game.ProtocolHandler;
+import com.hamming.halbo.client.BaseWindow;
+import com.hamming.halbo.client.controllers.WorldController;
+import com.hamming.halbo.client.interfaces.IWorldListener;
 import com.hamming.halbo.model.dto.WorldDto;
-import com.hamming.halbo.net.CommandReceiver;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -12,16 +11,18 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
-public class WorldsPanel extends JPanel implements CommandReceiver {
+public class WorldsPanel extends JPanel implements IWorldListener {
 
-    private HALBOTestToollWindow client;
     private JList<WorldDto> listOfWorlds;
     private DefaultListModel listModel;
-    private ProtocolHandler protocolHandler;
+    private WorldController worldController;
+    private BaseWindow baseWindow;
 
-    public WorldsPanel(HALBOTestToollWindow client) {
-        this.client = client;
-        protocolHandler = new ProtocolHandler();
+
+    public WorldsPanel(BaseWindow window, WorldController controller) {
+        this.baseWindow = window;
+        this.worldController = controller;
+        worldController.addWorldListener(this);
         createPanel();
     }
 
@@ -35,7 +36,9 @@ public class WorldsPanel extends JPanel implements CommandReceiver {
                 if ( !e.getValueIsAdjusting() ) { //Else this is called twice!
                     WorldDto world = listOfWorlds.getSelectedValue();
                     if (world != null) {
-                        worldSelected(world);
+                        worldController.worldSelected(world);
+                        baseWindow.getContinentsPanel().empty();
+                        baseWindow.getCitiesPanel().empty();
                     }
                 }
             }
@@ -45,34 +48,23 @@ public class WorldsPanel extends JPanel implements CommandReceiver {
         add(scrollPane);
     }
 
-
     public void empty() {
         listModel.removeAllElements();
     }
 
-    public void worldSelected(WorldDto world) {
-        client.getContinentsPanel().empty();
-        client.getCitiesPanel().empty();
-        client.getBaseplatesPanel().empty();
-        String s = protocolHandler.getGetContinentsCommand(world.getId());
-        client.send(s);
+
+    @Override
+    public void worldAdded(WorldDto world) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                listModel.addElement(world);
+            }
+        });
     }
 
     @Override
-    public void receiveCommand(Protocol.Command cmd, String[] data) {
-        if (cmd.equals(Protocol.Command.GETWORLDS)) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    WorldDto world = new WorldDto();
-                    world.setValues(data);
-                    listModel.addElement(world);
-                }
-            });
-        }
-    }
+    public void worldDeleted(WorldDto world) {
 
-    public WorldDto getSelectedWorld() {
-        return listOfWorlds.getSelectedValue();
     }
 }

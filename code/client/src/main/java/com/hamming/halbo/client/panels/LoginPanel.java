@@ -1,10 +1,10 @@
 package com.hamming.halbo.client.panels;
 
-import com.hamming.halbo.client.HALBOTestToollWindow;
-import com.hamming.halbo.game.Protocol;
-import com.hamming.halbo.game.ProtocolHandler;
+import com.hamming.halbo.client.BaseWindow;
+import com.hamming.halbo.client.controllers.ConnectionController;
+import com.hamming.halbo.client.controllers.UserController;
+import com.hamming.halbo.client.interfaces.IUserListener;
 import com.hamming.halbo.model.dto.UserDto;
-import com.hamming.halbo.net.CommandReceiver;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -13,24 +13,28 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Arrays;
 
-public class LoginPanel extends JPanel implements CommandReceiver {
+public class LoginPanel extends JPanel implements IUserListener {
 
     private JTextField txtServer;
     JTextField txtPort;
     JTextField txtUsername;
     JPasswordField txtPassword;
     JLabel lblStatus;
-    HALBOTestToollWindow client;
     JButton btnConnect;
     JButton btnDisconnect;
-    private ProtocolHandler protocolHandler;
+    private ConnectionController connectionController;
+    private UserController userController;
+    private BaseWindow baseWindow;
 
-    public LoginPanel(HALBOTestToollWindow client) {
+
+    public LoginPanel(BaseWindow window, ConnectionController controller, UserController userController) {
         createPanel();
-        this.client = client;
-        this.protocolHandler = new ProtocolHandler();
+        this.connectionController = controller;
+        this.userController = userController;
+        userController.addUserListener(this);
+
+        this.baseWindow = window;
     }
 
     private void createPanel() {
@@ -59,7 +63,7 @@ public class LoginPanel extends JPanel implements CommandReceiver {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    login();
+                    doLogin();
                 }
             }
 
@@ -87,58 +91,54 @@ public class LoginPanel extends JPanel implements CommandReceiver {
         btnConnect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                login();
+                doLogin();
             }
         });
         add(btnConnect);
     }
 
     private void disconnect() {
-        client.disConnect();
-        client.emptyPanels();
+        connectionController.disconnect();
+        baseWindow.emptyPanels();
         btnDisconnect.setEnabled(false);
         btnConnect.setEnabled(true);
     }
 
-    public void login() {
+    public void doLogin() {
         String server = txtServer.getText().trim();
         String strPort = txtPort.getText().trim();
         Integer port = Integer.valueOf(strPort);
         String username = txtUsername.getText().trim();
         String password = String.valueOf(txtPassword.getPassword());
-        boolean ok = client.connect(server,port);
-        if (ok) {
-            String s = protocolHandler.getLoginCommand(username, password);
-            client.send(s);
+        try {
+            connectionController.connect(server,port);
+            userController.sendLogin(username, password);
             btnDisconnect.setEnabled(true);
             btnConnect.setEnabled(false);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }
 
-    public void checkLoginOk( String[] data) {
-        String status = data[0];
-        String[] values = Arrays.copyOfRange(data, 1, data.length);
-        if (Protocol.SUCCESS.equals(status)) {
-            UserDto user = new UserDto();
-            user.setValues(values);
-            client.setUser(user);
-            String newCommand = protocolHandler.getWorldsCommand();
-            client.send(newCommand);
-        } else {
-            String msg = Arrays.toString(values);
-            JOptionPane.showMessageDialog(this, "Login failed : " + msg);
-            txtUsername.setText("");
-            txtPassword.setText("");
-            client.setUser(null);
-            btnDisconnect.setEnabled(false);
-            btnConnect.setEnabled(true);
-        }
+
+    @Override
+    public void userConnected(UserDto user) {
+
     }
 
     @Override
-    public void receiveCommand(Protocol.Command cmd, String[] data) {
-        if (cmd.equals(Protocol.Command.LOGIN)) {
-            checkLoginOk(data);
+    public void userDisconnected(UserDto user) {
+
+    }
+
+    @Override
+    public void loginResult(boolean success, String msg) {
+        if ( !success ) {
+            JOptionPane.showMessageDialog(this, "Login failed : " + msg);
+            txtUsername.setText("");
+            txtPassword.setText("");
+            btnDisconnect.setEnabled(false);
+            btnConnect.setEnabled(true);
         }
     }
 }

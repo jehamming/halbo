@@ -18,29 +18,24 @@ public class ProtocolHandler implements Protocol {
     }
 
     public String getWorldsCommand() {
-        String cmd = Command.GETWORLDS.ordinal() + "";
-        return cmd;
+        return Command.GETWORLDS.ordinal() + "";
     }
 
     public String getVersionCommand() {
-        String cmd = Command.VERSION.ordinal() + "";
-        return cmd;
+        return Command.VERSION.ordinal() + "";
     }
 
 
     public String getGetContinentsCommand(String worldId) {
-        String cmd = Command.GETCONTINENTS.ordinal() + StringUtils.delimiter + worldId;
-        return cmd;
+        return Command.GETCONTINENTS.ordinal() + StringUtils.delimiter + worldId;
     }
 
     public String getGetCitiesCommand(String continentId) {
-        String cmd = Command.GETCITIES.ordinal() + StringUtils.delimiter + continentId;
-        return cmd;
+        return Command.GETCITIES.ordinal() + StringUtils.delimiter + continentId;
     }
 
     public String getGetBaseplatesCommand(String cityId) {
-        String cmd = Command.GETBASEPLATES.ordinal() + StringUtils.delimiter + cityId;
-        return cmd;
+        return Command.GETBASEPLATES.ordinal() + StringUtils.delimiter + cityId;
     }
 
 
@@ -54,13 +49,12 @@ public class ProtocolHandler implements Protocol {
     }
 
 
-    public String getTeleportCommand(String userId, WorldDto world, ContinentDto continent, CityDto city, BaseplateDto baseplate) {
+    public String getTeleportCommand(String userId, WorldDto world, ContinentDto continent, CityDto city) {
         String cmd = Command.TELEPORT.ordinal() + StringUtils.delimiter
                 + userId + StringUtils.delimiter
                 + world.getId().toString() + StringUtils.delimiter
                 + continent.getId().toString() + StringUtils.delimiter
-                + city.getId().toString() + StringUtils.delimiter
-                + baseplate.getId().toString();
+                + city.getId().toString() + StringUtils.delimiter;
          return cmd;
     }
 
@@ -68,13 +62,11 @@ public class ProtocolHandler implements Protocol {
     public Command parseCommandString(String s) {
         String[] sArr = s.split(StringUtils.delimiter);
         String strId = sArr[0];
-        Command cmd = Command.values()[Integer.valueOf(strId)];
-        return cmd;
+        return Command.values()[Integer.valueOf(strId)];
     }
 
 
     public String getGetBaseplateCommand(String baseplateId) {
-        String cmd = Command.GETBASEPLATE.ordinal() + StringUtils.delimiter + baseplateId;
-        return cmd;
+        return Command.GETBASEPLATE.ordinal() + StringUtils.delimiter + baseplateId;
     }
 }

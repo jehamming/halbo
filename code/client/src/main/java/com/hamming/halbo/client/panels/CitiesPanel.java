@@ -1,10 +1,8 @@
 package com.hamming.halbo.client.panels;
 
-import com.hamming.halbo.client.HALBOTestToollWindow;
-import com.hamming.halbo.game.Protocol;
-import com.hamming.halbo.game.ProtocolHandler;
+import com.hamming.halbo.client.controllers.CityController;
+import com.hamming.halbo.client.interfaces.ICityListener;
 import com.hamming.halbo.model.dto.CityDto;
-import com.hamming.halbo.net.CommandReceiver;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -12,16 +10,15 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
-public class CitiesPanel extends JPanel implements CommandReceiver {
+public class CitiesPanel extends JPanel implements ICityListener {
 
-    private HALBOTestToollWindow client;
     private DefaultListModel listModel;
-    private ProtocolHandler protocolHandler;
     private JList<CityDto> listOfCities;
+    private CityController cityController;
 
-    public CitiesPanel(HALBOTestToollWindow clientWindow) {
-        this.client = clientWindow;
-        protocolHandler = new ProtocolHandler();
+    public CitiesPanel(CityController cityController) {
+        this.cityController = cityController;
+        cityController.addCityListener(this);
         createPanel();
     }
 
@@ -35,7 +32,7 @@ public class CitiesPanel extends JPanel implements CommandReceiver {
                 if ( !e.getValueIsAdjusting() ) { //Else this is called twice!
                     CityDto dto = listOfCities.getSelectedValue();
                     if (dto != null) {
-                        citySelected(dto);
+                        cityController.citySelected(dto);
                     }
                 }
             }
@@ -45,33 +42,23 @@ public class CitiesPanel extends JPanel implements CommandReceiver {
         add(scrollPane);
     }
 
-    private void citySelected(CityDto city) {
-        client.getBaseplatesPanel().empty();
-        String s = protocolHandler.getGetBaseplatesCommand(city.getId());
-        client.send(s);
-    }
-
-    @Override
-    public void receiveCommand(Protocol.Command cmd, String[] data) {
-        if (cmd.equals(Protocol.Command.GETCITIES)) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    CityDto city = new CityDto();
-                    city.setValues(data);
-                    listModel.addElement(city);
-                }
-            });
-        }
-    }
-
 
     public void empty() {
         listModel.removeAllElements();
     }
 
+    @Override
+    public void cityAdded(CityDto city) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                listModel.addElement(city);
+            }
+        });
+    }
 
-    public CityDto getSelectedCity() {
-        return listOfCities.getSelectedValue();
+    @Override
+    public void cityDeleted(CityDto city) {
+
     }
 }
