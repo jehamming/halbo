@@ -3,6 +3,7 @@ package com.hamming.halbo;
 
 import com.hamming.halbo.factories.DTOFactory;
 import com.hamming.halbo.game.*;
+import com.hamming.halbo.game.action.GetUserAction;
 import com.hamming.halbo.game.action.UserConnectedAction;
 import com.hamming.halbo.game.action.UserDisconnectedAction;
 import com.hamming.halbo.model.User;
@@ -86,6 +87,7 @@ public class ClientConnection implements Runnable, GameStateListener {
             // Logged in Users;
             for ( User u: gameController.getGameState().getOnlineUsers()) {
                 if (!u.getId().equals(user.getId())) {
+                    sendUserDetails(u);
                     handleUserConnected(u);
                 }
             }
@@ -123,6 +125,14 @@ public class ClientConnection implements Runnable, GameStateListener {
         if (userLocation != null && loc.getCity().equals(userLocation.getCity())) {
             UserLocationDto dto = DTOFactory.getInstance().getUserLocationDTO(loc);
             send(Protocol.Command.LOCATION.ordinal() + StringUtils.delimiter + dto.toNetData());
+        }
+    }
+
+    private void sendUserDetails(User u) {
+        if (user != null && !user.equals(u)) {
+            GetUserAction action = new GetUserAction(gameController, this);
+            action.setUserId(u.getId().toString());
+            gameController.addCommand( action );
         }
     }
 

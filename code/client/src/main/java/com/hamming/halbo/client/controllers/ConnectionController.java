@@ -7,7 +7,10 @@ import com.hamming.halbo.model.dto.UserDto;
 import com.hamming.halbo.net.CommandReceiver;
 import com.hamming.halbo.net.NetClient;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ConnectionController implements CommandReceiver {
 
@@ -28,6 +31,7 @@ public class ConnectionController implements CommandReceiver {
     public void disconnect() {
         if (client != null ) {
             client.dispose();
+            fireDisconnectedEvent();
         }
     }
 
@@ -39,6 +43,7 @@ public class ConnectionController implements CommandReceiver {
         user = null;
         String result = client.connect(serverip, port);
         if (result != null) throw new Exception("Error:" + result);
+        fireConnectedEvent();
     }
 
     public void send(String s) {
@@ -53,9 +58,25 @@ public class ConnectionController implements CommandReceiver {
         }
     }
 
-    public void addConnectionListener(IConnectionListener listener) {
-        connectionListeners.add(listener);
+    public void fireDisconnectedEvent() {
+        for (IConnectionListener l: connectionListeners) {
+            l.disconnected();
+        }
     }
+
+
+    public void addConnectionListener(IConnectionListener listener) {
+        if ( !connectionListeners.contains(listener) ) {
+            connectionListeners.add(listener);
+        }
+    }
+
+    public void removeConnectionListener(IConnectionListener listener) {
+        if ( connectionListeners.contains(listener) ) {
+            connectionListeners.remove(listener);
+        }
+    }
+
 
 
     @Override
@@ -75,14 +96,25 @@ public class ConnectionController implements CommandReceiver {
     }
 
 
-
     public void registerReceiver(Protocol.Command cmd, CommandReceiver receiver) {
         List<CommandReceiver> listReceivers = commandReceivers.get(cmd);
         if (listReceivers == null) {
             listReceivers = new ArrayList<CommandReceiver>();
         }
-        listReceivers.add(receiver);
-        commandReceivers.put(cmd, listReceivers);
+        if (!listReceivers.contains(receiver)) {
+            listReceivers.add(receiver);
+            commandReceivers.put(cmd, listReceivers);
+        }
     }
 
+    public void unregisterReceiver(Protocol.Command cmd, CommandReceiver receiver) {
+        List<CommandReceiver> listReceivers = commandReceivers.get(cmd);
+        if ( listReceivers != null && listReceivers.contains(receiver)) {
+            listReceivers.remove(receiver);
+        }
+    }
+
+    public boolean isConnected() {
+        return client.isConnected();
+    }
 }

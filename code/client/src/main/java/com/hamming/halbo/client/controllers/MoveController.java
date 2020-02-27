@@ -4,13 +4,11 @@ import com.hamming.halbo.client.interfaces.IMovementListener;
 import com.hamming.halbo.client.interfaces.IUserListener;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
-import com.hamming.halbo.model.dto.CityDto;
-import com.hamming.halbo.model.dto.ContinentDto;
-import com.hamming.halbo.model.dto.UserDto;
-import com.hamming.halbo.model.dto.WorldDto;
+import com.hamming.halbo.model.dto.*;
 import com.hamming.halbo.net.CommandReceiver;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MoveController implements CommandReceiver {
@@ -56,20 +54,71 @@ public class MoveController implements CommandReceiver {
     }
 
 
-
     @Override
     public void receiveCommand(Protocol.Command cmd, String[] data) {
         switch (cmd) {
             case MOVE:
-                System.out.println(getClass().getName() + cmd + ": NOT IMPLEMENTED YET");
+                System.out.println(getClass().getName() + ":" + cmd + ": NOT IMPLEMENTED YET");
                 break;
             case TELEPORT:
-                System.out.println(getClass().getName() + cmd + ": NOT IMPLEMENTED YET");
+                teleportResult(data);
                 break;
             case LOCATION:
-                System.out.println(getClass().getName() + cmd + ": NOT IMPLEMENTED YET");
+                handleLocation(data);
                 break;
         }
+    }
+
+    private void handleLocation(String[] data) {
+        UserLocationDto loc = new UserLocationDto();
+        loc.setValues(data);
+        if (userController.getCurrentUser().getId().equals( loc.getUserId())) {
+            // Current logged in user!
+            move(userController.getCurrentUser(), loc);
+        } else  {
+            // Movement of other user!
+            UserDto user = userController.getUser(loc.getUserId());
+            if (user != null ) {
+                move(user, loc);
+            }
+        }
+    }
+
+    private void teleportResult(String[] data) {
+        String status = data[0];
+        String[] values = Arrays.copyOfRange(data, 1, data.length);
+        String msg = "";
+        if (Protocol.SUCCESS.equals(status)) {
+            UserLocationDto loc = new UserLocationDto();
+            loc.setValues(values);
+            teleported(loc);
+        } else {
+            msg = Arrays.toString(values);
+            System.out.println("Teleport failed: " + msg);
+        }
+    }
+
+    private void teleported(UserLocationDto location) {
+        for (IMovementListener l: movementListeners) {
+            l.teleported(location);
+        }
+    }
+
+    private void move(UserDto user, UserLocationDto location) {
+        for (IMovementListener l: movementListeners) {
+            l.userMoved(user,location);
+        }
+    }
+
+
+    public void moveRequest(boolean forward, boolean back, boolean left, boolean right) {
+        if ( connectionController.isConnected()) {
+            connectionController.send(protocolHandler.getMoveCommand(forward, back, left, right));
+        }
+    }
+
+    public UserDto getCurrentUser() {
+        return userController.getCurrentUser();
     }
 
 }

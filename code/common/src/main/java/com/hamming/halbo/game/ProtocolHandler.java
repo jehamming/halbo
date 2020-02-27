@@ -69,4 +69,8 @@ public class ProtocolHandler implements Protocol {
     public String getGetBaseplateCommand(String baseplateId) {
         return Command.GETBASEPLATE.ordinal() + StringUtils.delimiter + baseplateId;
     }
+
+    public String getUserCommand(String userId) {
+        return Command.GETUSER.ordinal() + StringUtils.delimiter + userId;
+    }
 }
