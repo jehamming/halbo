@@ -1,6 +1,6 @@
 package com.hamming.halbo.client.interfaces;
 
-public interface IConnectionListener {
+public interface ConnectionListener {
 
     public void connected();
 

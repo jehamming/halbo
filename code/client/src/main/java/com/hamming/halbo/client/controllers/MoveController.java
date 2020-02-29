@@ -1,7 +1,6 @@
 package com.hamming.halbo.client.controllers;
 
-import com.hamming.halbo.client.interfaces.IMovementListener;
-import com.hamming.halbo.client.interfaces.IUserListener;
+import com.hamming.halbo.client.interfaces.MovementListener;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.*;
@@ -15,7 +14,7 @@ public class MoveController implements CommandReceiver {
 
     private ProtocolHandler protocolHandler;
     private ConnectionController connectionController;
-    private List<IMovementListener> movementListeners;
+    private List<MovementListener> movementListeners;
     private UserController userController;
     private WorldController worldController;
     private ContinentController continentController;
@@ -28,13 +27,13 @@ public class MoveController implements CommandReceiver {
         this.continentController = continentController;
         this.cityController = cityController;
         protocolHandler = new ProtocolHandler();
-        movementListeners = new ArrayList<IMovementListener>();
+        movementListeners = new ArrayList<MovementListener>();
         connectionController.registerReceiver(Protocol.Command.TELEPORT, this);
         connectionController.registerReceiver(Protocol.Command.LOCATION, this);
         connectionController.registerReceiver(Protocol.Command.MOVE, this);
     }
 
-    public void addMovementListener(IMovementListener l) {
+    public void addMovementListener(MovementListener l) {
         movementListeners.add(l);
     }
 
@@ -99,13 +98,13 @@ public class MoveController implements CommandReceiver {
     }
 
     private void teleported(UserLocationDto location) {
-        for (IMovementListener l: movementListeners) {
+        for (MovementListener l: movementListeners) {
             l.teleported(location);
         }
     }
 
     private void move(UserDto user, UserLocationDto location) {
-        for (IMovementListener l: movementListeners) {
+        for (MovementListener l: movementListeners) {
             l.userMoved(user,location);
         }
     }

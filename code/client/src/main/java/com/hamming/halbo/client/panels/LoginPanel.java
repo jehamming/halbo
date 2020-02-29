@@ -3,7 +3,7 @@ package com.hamming.halbo.client.panels;
 import com.hamming.halbo.client.BaseWindow;
 import com.hamming.halbo.client.controllers.ConnectionController;
 import com.hamming.halbo.client.controllers.UserController;
-import com.hamming.halbo.client.interfaces.IUserListener;
+import com.hamming.halbo.client.interfaces.UserListener;
 import com.hamming.halbo.model.dto.UserDto;
 
 import javax.swing.*;
@@ -14,7 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class LoginPanel extends JPanel implements IUserListener {
+public class LoginPanel extends JPanel implements UserListener {
 
     private JTextField txtServer;
     JTextField txtPort;

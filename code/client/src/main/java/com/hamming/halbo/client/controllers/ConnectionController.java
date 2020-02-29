@@ -1,6 +1,6 @@
 package com.hamming.halbo.client.controllers;
 
-import com.hamming.halbo.client.interfaces.IConnectionListener;
+import com.hamming.halbo.client.interfaces.ConnectionListener;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.UserDto;
@@ -17,14 +17,14 @@ public class ConnectionController implements CommandReceiver {
     private NetClient client;
     private ProtocolHandler protocolHandler;
     private UserDto user;
-    private List<IConnectionListener> connectionListeners;
+    private List<ConnectionListener> connectionListeners;
 
     private Map<Protocol.Command, List<CommandReceiver>> commandReceivers;
 
 
     public ConnectionController() {
         protocolHandler = new ProtocolHandler();
-        connectionListeners = new ArrayList<IConnectionListener>();
+        connectionListeners = new ArrayList<ConnectionListener>();
         commandReceivers = new HashMap<Protocol.Command, List<CommandReceiver>>();
     }
 
@@ -53,25 +53,25 @@ public class ConnectionController implements CommandReceiver {
     }
 
     public void fireConnectedEvent() {
-        for (IConnectionListener l: connectionListeners) {
+        for (ConnectionListener l: connectionListeners) {
             l.connected();
         }
     }
 
     public void fireDisconnectedEvent() {
-        for (IConnectionListener l: connectionListeners) {
+        for (ConnectionListener l: connectionListeners) {
             l.disconnected();
         }
     }
 
 
-    public void addConnectionListener(IConnectionListener listener) {
+    public void addConnectionListener(ConnectionListener listener) {
         if ( !connectionListeners.contains(listener) ) {
             connectionListeners.add(listener);
         }
     }
 
-    public void removeConnectionListener(IConnectionListener listener) {
+    public void removeConnectionListener(ConnectionListener listener) {
         if ( connectionListeners.contains(listener) ) {
             connectionListeners.remove(listener);
         }

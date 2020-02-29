@@ -1,7 +1,7 @@
 package com.hamming.halbo.client;
 
 import com.hamming.halbo.client.controllers.*;
-import com.hamming.halbo.client.interfaces.IVirtualDisplay;
+import com.hamming.halbo.client.interfaces.Viewer;
 import com.hamming.halbo.client.viewer.DummyVirtualDisplay;
 
 public class ClientApplication {
@@ -16,6 +16,7 @@ public class ClientApplication {
     private ContinentController continentController;
     private CityController cityController;
     private MoveController moveController;
+    private ViewController viewController;
 
     public void initControllers() {
         connectionController = new ConnectionController();
@@ -34,12 +35,11 @@ public class ClientApplication {
                 continentController,
                 cityController,
                 moveController);
-        toolsWindow = new ToolsWindow(userController);
+        toolsWindow = new ToolsWindow(userController, moveController);
 
         // TODO Replace with OpenGL Window
-        IVirtualDisplay display = new DummyVirtualDisplay();
-        display.setMovementController(moveController);
-        connectionController.addConnectionListener(display);
+        Viewer display = new DummyVirtualDisplay();
+        viewController = new ViewController(display, connectionController,  userController,  worldController, continentController,  cityController,  moveController);
     }
 
     public static void main(String[] args) {
