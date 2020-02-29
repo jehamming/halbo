@@ -2,7 +2,7 @@ package com.hamming.halbo.client.panels;
 
 import com.hamming.halbo.client.BaseWindow;
 import com.hamming.halbo.client.controllers.ContinentController;
-import com.hamming.halbo.client.interfaces.IContinentListener;
+import com.hamming.halbo.client.interfaces.ContinentListener;
 import com.hamming.halbo.model.dto.ContinentDto;
 
 import javax.swing.*;
@@ -11,7 +11,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
-public class ContinentsPanel extends JPanel implements IContinentListener {
+public class ContinentsPanel extends JPanel implements ContinentListener {
 
     private JList<ContinentDto> listOfContinents;
     private DefaultListModel listModel;

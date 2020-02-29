@@ -93,7 +93,7 @@ public class GameController implements Runnable {
 
 
 
-    public void handleMoveRequest(User u, boolean forward, boolean back, boolean left, boolean right) {
+    public void handleMoveRequest(User u, boolean forward, boolean back, boolean left, boolean right, double viewAngle) {
         UserLocation location = gameState.getLocation(u);
         if (location != null ) {
             if ( forward || back || left || right ) {
@@ -110,6 +110,8 @@ public class GameController implements Runnable {
                     location.setX(location.getBaseplate().getWidth());
                 if (location.getZ() > location.getBaseplate().getLength())
                     location.setZ(location.getBaseplate().getLength());
+                // ViewAngle
+                location.setViewAngle(viewAngle);
                 gameState.setLocation(u, location);
                 fireGameStateEvent(GameStateEvent.Type.USERLOCATION, location);
             }

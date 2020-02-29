@@ -1,22 +1,21 @@
 package com.hamming.halbo.client.controllers;
 
-import com.hamming.halbo.client.interfaces.IConnectionListener;
-import com.hamming.halbo.client.interfaces.IUserListener;
+import com.hamming.halbo.client.interfaces.ConnectionListener;
+import com.hamming.halbo.client.interfaces.UserListener;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.UserDto;
-import com.hamming.halbo.model.dto.UserLocationDto;
 import com.hamming.halbo.net.CommandReceiver;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class UserController implements IConnectionListener, CommandReceiver {
+public class UserController implements ConnectionListener, CommandReceiver {
 
     private ProtocolHandler protocolHandler;
     private ConnectionController connectionController;
-    private List<IUserListener> userListeners;
+    private List<UserListener> userListeners;
     private List<UserDto> users;
     private UserDto currentUser;
 
@@ -24,7 +23,7 @@ public class UserController implements IConnectionListener, CommandReceiver {
         this.connectionController = connectionController;
         connectionController.addConnectionListener(this);
         protocolHandler = new ProtocolHandler();
-        userListeners = new ArrayList<IUserListener>();
+        userListeners = new ArrayList<UserListener>();
         users = new ArrayList<UserDto>();
         connectionController.registerReceiver(Protocol.Command.LOGIN,this);
         connectionController.registerReceiver(Protocol.Command.USERCONNECTED,this);
@@ -67,12 +66,12 @@ public class UserController implements IConnectionListener, CommandReceiver {
 
 
     public void sendLoginResult(boolean success, String msg) {
-        for (IUserListener userListener: userListeners) {
+        for (UserListener userListener: userListeners) {
             userListener.loginResult(success, msg);
         }
     }
 
-    public void addUserListener(IUserListener l) {
+    public void addUserListener(UserListener l) {
         userListeners.add(l);
     }
 
@@ -116,7 +115,7 @@ public class UserController implements IConnectionListener, CommandReceiver {
         UserDto user = new UserDto();
         user.setValues(data);
         users.add(user);
-        for (IUserListener l: userListeners) {
+        for (UserListener l: userListeners) {
             l.userConnected(user);
         }
     }
@@ -125,7 +124,7 @@ public class UserController implements IConnectionListener, CommandReceiver {
         UserDto user = new UserDto();
         user.setValues(data);
         users.remove(user);
-        for (IUserListener l: userListeners) {
+        for (UserListener l: userListeners) {
             l.userDisconnected(user);
         }
     }

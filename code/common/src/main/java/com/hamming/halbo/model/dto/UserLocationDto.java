@@ -12,12 +12,13 @@ public class UserLocationDto implements DTO {
     private double x;
     private double y;
     private double z;
+    private double viewingAngle;
 
     public UserLocationDto(){
 
     }
 
-    public UserLocationDto(String userId, String worldId, String continentId, String cityId, String baseplateId, double x, double y, double z){
+    public UserLocationDto(String userId, String worldId, String continentId, String cityId, String baseplateId, double x, double y, double z, double angle){
         this.userId = userId;
         this.worldId = worldId;
         this.continentId = continentId;
@@ -26,6 +27,7 @@ public class UserLocationDto implements DTO {
         this.x = x;
         this.y = y;
         this.z = z;
+        this.viewingAngle = angle;
     }
 
     @Override
@@ -37,13 +39,14 @@ public class UserLocationDto implements DTO {
                 + baseplateId + StringUtils.delimiter
                 + x + StringUtils.delimiter
                 + y + StringUtils.delimiter
-                + z;
+                + z + StringUtils.delimiter
+                + viewingAngle;;
         return data;
     }
 
     @Override
     public void setValues(String... values) {
-        if ( values.length == 8) {
+        if ( values.length == 9) {
             userId = values[0];
             worldId = values[1];
             continentId = values[2];
@@ -52,6 +55,7 @@ public class UserLocationDto implements DTO {
             x = Double.valueOf(values[5]);
             y = Double.valueOf(values[6]);
             z = Double.valueOf(values[7]);
+            viewingAngle = Double.valueOf(values[8]);
         }
     }
 
@@ -87,7 +91,9 @@ public class UserLocationDto implements DTO {
         return z;
     }
 
-
+    public double getViewingAngle() {
+        return viewingAngle;
+    }
 
     @Override
     public String toString() {
@@ -100,6 +106,7 @@ public class UserLocationDto implements DTO {
                 ", x=" + x +
                 ", y=" + y +
                 ", z=" + z +
+                ", viewingAngle=" + viewingAngle+
                 '}';
     }
 }

@@ -1,6 +1,6 @@
 package com.hamming.halbo.client.controllers;
 
-import com.hamming.halbo.client.interfaces.IWorldListener;
+import com.hamming.halbo.client.interfaces.WorldListener;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.WorldDto;
@@ -13,13 +13,13 @@ public class WorldController implements CommandReceiver {
 
     private ProtocolHandler protocolHandler;
     private ConnectionController connectionController;
-    private List<IWorldListener> worldListeners;
+    private List<WorldListener> worldListeners;
     private WorldDto selectedWorld;
 
     public WorldController(ConnectionController connectionController) {
         this.connectionController = connectionController;
         protocolHandler = new ProtocolHandler();
-        worldListeners = new ArrayList<IWorldListener>();
+        worldListeners = new ArrayList<WorldListener>();
         connectionController.registerReceiver(Protocol.Command.GETWORLDS, this);
     }
 
@@ -31,12 +31,12 @@ public class WorldController implements CommandReceiver {
     }
 
     public void worldAdded(WorldDto dto) {
-        for (IWorldListener l: worldListeners) {
+        for (WorldListener l: worldListeners) {
             l.worldAdded(dto);
         }
     }
 
-    public void addWorldListener(IWorldListener l) {
+    public void addWorldListener(WorldListener l) {
         worldListeners.add(l);
     }
 

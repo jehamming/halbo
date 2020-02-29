@@ -2,7 +2,7 @@ package com.hamming.halbo.client.interfaces;
 
 import com.hamming.halbo.model.dto.UserDto;
 
-public interface IUserListener {
+public interface UserListener {
 
     public void userConnected(UserDto user);
     public void userDisconnected(UserDto user);

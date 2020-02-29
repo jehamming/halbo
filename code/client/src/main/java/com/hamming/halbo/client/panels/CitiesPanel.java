@@ -1,7 +1,7 @@
 package com.hamming.halbo.client.panels;
 
 import com.hamming.halbo.client.controllers.CityController;
-import com.hamming.halbo.client.interfaces.ICityListener;
+import com.hamming.halbo.client.interfaces.CityListener;
 import com.hamming.halbo.model.dto.CityDto;
 
 import javax.swing.*;
@@ -10,7 +10,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
-public class CitiesPanel extends JPanel implements ICityListener {
+public class CitiesPanel extends JPanel implements CityListener {
 
     private DefaultListModel listModel;
     private JList<CityDto> listOfCities;

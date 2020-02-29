@@ -5,6 +5,7 @@ import com.hamming.halbo.factories.DTOFactory;
 import com.hamming.halbo.game.GameController;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.model.UserLocation;
+import com.hamming.halbo.model.dto.BaseplateDto;
 import com.hamming.halbo.model.dto.UserDto;
 import com.hamming.halbo.model.dto.UserLocationDto;
 import com.hamming.halbo.util.StringUtils;
@@ -30,6 +31,10 @@ public class TeleportAction implements Action {
         UserLocation location = controller.handleTeleportRequest(userId, worldId, continentId, cityId);
 
         if ( location != null )  {
+            // First, send Baseplate details
+            BaseplateDto baseplateDto = DTOFactory.getInstance().getBaseplateDto(location.getBaseplate());
+            client.send(Protocol.Command.GETBASEPLATES.ordinal() + StringUtils.delimiter + baseplateDto.toNetData());
+
             UserLocationDto dto = DTOFactory.getInstance().getUserLocationDTO(location);
             client.send(Protocol.Command.TELEPORT.ordinal() + StringUtils.delimiter + Protocol.SUCCESS + StringUtils.delimiter + dto.toNetData());
         } else {

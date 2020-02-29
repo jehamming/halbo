@@ -2,7 +2,7 @@ package com.hamming.halbo.client.panels;
 
 import com.hamming.halbo.client.BaseWindow;
 import com.hamming.halbo.client.controllers.WorldController;
-import com.hamming.halbo.client.interfaces.IWorldListener;
+import com.hamming.halbo.client.interfaces.WorldListener;
 import com.hamming.halbo.model.dto.WorldDto;
 
 import javax.swing.*;
@@ -11,7 +11,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
-public class WorldsPanel extends JPanel implements IWorldListener {
+public class WorldsPanel extends JPanel implements WorldListener {
 
     private JList<WorldDto> listOfWorlds;
     private DefaultListModel listModel;

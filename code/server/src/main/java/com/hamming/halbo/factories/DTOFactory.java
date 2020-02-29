@@ -58,10 +58,9 @@ public class DTOFactory {
             String continentId = loc.getContinent().getId().toString();
             String cityId = loc.getCity().getId().toString();
             String baseplateId = loc.getBaseplate().getId().toString();
-            UserLocationDto dto = new UserLocationDto(userId, worldId, continentId, cityId, baseplateId, loc.getX(), loc.getY(), loc.getZ());
+            UserLocationDto dto = new UserLocationDto(userId, worldId, continentId, cityId, baseplateId, loc.getX(), loc.getY(), loc.getZ(), loc.getViewAngle());
         return dto;
     }
-
 
     public BaseplateDto getBaseplateDto(Baseplate b) {
         BaseplateDto dto = new BaseplateDto(b.getId().toString(), b.getName(), b.getCreator().getId().toString(), b.getOwner().getId().toString(), b.getWidth(), b.getLength());

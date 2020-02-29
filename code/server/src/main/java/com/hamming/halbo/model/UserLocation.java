@@ -10,6 +10,7 @@ public class UserLocation extends BasicObject{
     private double x;
     private double y;
     private double z;
+    private double viewAngle;
 
     public UserLocation(HalboID id) {
         super(id);
@@ -77,5 +78,13 @@ public class UserLocation extends BasicObject{
 
     public void setZ(double z) {
         this.z = z;
+    }
+
+    public double getViewAngle() {
+        return viewAngle;
+    }
+
+    public void setViewAngle(double viewAngle) {
+        this.viewAngle = viewAngle;
     }
 }

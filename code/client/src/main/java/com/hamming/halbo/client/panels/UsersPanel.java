@@ -1,12 +1,9 @@
 package com.hamming.halbo.client.panels;
 
-import com.hamming.halbo.client.BaseWindow;
 import com.hamming.halbo.client.controllers.UserController;
-import com.hamming.halbo.client.interfaces.IUserListener;
-import com.hamming.halbo.game.Protocol;
+import com.hamming.halbo.client.interfaces.UserListener;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.UserDto;
-import com.hamming.halbo.net.CommandReceiver;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -15,7 +12,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.Enumeration;
 
-public class UsersPanel extends JPanel implements IUserListener {
+public class UsersPanel extends JPanel implements UserListener {
 
     private DefaultListModel listModel;
     private ProtocolHandler protocolHandler;
