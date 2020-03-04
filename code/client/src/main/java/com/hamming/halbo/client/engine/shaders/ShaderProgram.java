@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 
+
 public abstract class ShaderProgram {
 	
 	private int programID;
@@ -18,6 +19,7 @@ public abstract class ShaderProgram {
 	private int fragmentShaderID;
 	
 	private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
+
 	
 	public ShaderProgram(String vertexFile,String fragmentFile){
 		vertexShaderID = loadShader(vertexFile, GL20.GL_VERTEX_SHADER);

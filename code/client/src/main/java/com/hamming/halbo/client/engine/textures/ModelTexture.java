@@ -1,9 +1,8 @@
 package com.hamming.halbo.client.engine.textures;
 
-public class ModelTexture {
+public class ModelTexture  {
 	
 	private int textureID;
-
 	private float shineDamper = 1;
 	private float reflectivity = 0;
 

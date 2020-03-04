@@ -1,4 +1,4 @@
-package com.hamming.halbo.client.engine.renderEngine;
+package com.hamming.halbo.client.engine.renderengine;
 
 import com.hamming.halbo.client.engine.entities.Entity;
 import com.hamming.halbo.client.engine.models.RawModel;

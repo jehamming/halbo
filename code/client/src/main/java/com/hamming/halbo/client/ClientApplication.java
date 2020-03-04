@@ -1,6 +1,7 @@
 package com.hamming.halbo.client;
 
 import com.hamming.halbo.client.controllers.*;
+import com.hamming.halbo.client.engine.GLViewer;
 import com.hamming.halbo.client.interfaces.Viewer;
 import com.hamming.halbo.client.viewer.DummyVirtualDisplay;
 
@@ -38,7 +39,7 @@ public class ClientApplication {
         toolsWindow = new ToolsWindow(userController, moveController);
 
         // TODO Replace with OpenGL Window
-        Viewer display = new DummyVirtualDisplay();
+        Viewer display = new GLViewer();
         viewController = new ViewController(display, connectionController,  userController,  worldController, continentController,  cityController,  moveController);
     }
 
