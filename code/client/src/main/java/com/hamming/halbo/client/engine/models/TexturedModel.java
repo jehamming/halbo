@@ -5,6 +5,7 @@ import com.hamming.halbo.client.engine.textures.ModelTexture;
 public class TexturedModel {
 	
 	private RawModel rawModel;
+
 	private ModelTexture texture;
 	
 	public TexturedModel(RawModel model, ModelTexture texture){
