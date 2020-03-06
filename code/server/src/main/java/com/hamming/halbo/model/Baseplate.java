@@ -8,40 +8,40 @@ public class Baseplate extends BasicObject   {
     private BaseplateType type ;
     private int width;
     private int length;
-    private double spawnPointX;
-    private double spawnPointY;
-    private double spawnPointZ;
+    private float spawnPointX;
+    private float spawnPointY;
+    private float spawnPointZ;
 
     public Baseplate(HalboID id) {
         super(id);
         spawnPointX = 0;
-        spawnPointY = 2.5;
+        spawnPointY = 0;
         spawnPointX = 0;
         width = 50;
         length = 50;
     }
 
-    public double getSpawnPointX() {
+    public float getSpawnPointX() {
         return spawnPointX;
     }
 
-    public void setSpawnPointX(double spawnPointX) {
+    public void setSpawnPointX(float spawnPointX) {
         this.spawnPointX = spawnPointX;
     }
 
-    public double getSpawnPointY() {
+    public float getSpawnPointY() {
         return spawnPointY;
     }
 
-    public void setSpawnPointY(double spawnPointY) {
+    public void setSpawnPointY(float spawnPointY) {
         this.spawnPointY = spawnPointY;
     }
 
-    public double getSpawnPointZ() {
+    public float getSpawnPointZ() {
         return spawnPointZ;
     }
 
-    public void setSpawnPointZ(double spawnPointZ) {
+    public void setSpawnPointZ(float spawnPointZ) {
         this.spawnPointZ = spawnPointZ;
     }
 

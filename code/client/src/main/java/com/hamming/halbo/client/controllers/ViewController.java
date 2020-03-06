@@ -35,9 +35,9 @@ public class ViewController implements MovementListener, ConnectionListener {
     @Override
     public void userMoved(UserDto user, UserLocationDto l) {
         if (user.equals(moveController.getCurrentUser())) {
-            viewer.setLocation(l.getX(), l.getY(), l.getZ(), l.getViewingAngle());
+            viewer.setLocation(l.getX(), l.getY(), l.getZ(), l.getPitch(), l.getYaw());
         } else {
-            viewer.setLocation(user.getId(), user.getName(), l.getX(), l.getY(), l.getZ(), l.getViewingAngle());
+            viewer.setLocation(user.getId(), user.getName(), l.getX(), l.getY(), l.getZ(), l.getPitch(), l.getYaw());
         }
     }
 

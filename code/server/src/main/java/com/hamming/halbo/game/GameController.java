@@ -74,6 +74,8 @@ public class GameController implements Runnable {
             loc.setX(b.getSpawnPointX());
             loc.setY(b.getSpawnPointY());
             loc.setZ(b.getSpawnPointZ());
+            loc.setPitch(0);
+            loc.setYaw(0);
             gameState.setLocation(u, loc);
             fireGameStateEvent(GameStateEvent.Type.USERLOCATION, loc);
         }
@@ -93,16 +95,17 @@ public class GameController implements Runnable {
 
 
 
-    public void handleMoveRequest(User u, boolean forward, boolean back, boolean left, boolean right, double viewAngle) {
+    public void handleMoveRequest(User u, boolean forward, boolean back, boolean left, boolean right, float pitch, float yaw) {
         UserLocation location = gameState.getLocation(u);
         if (location != null ) {
             if ( forward || back || left || right ) {
                 // First - lets try flat movement in the X/Y plane
-                if (forward) location.setZ(location.getZ() + 0.2);
-                if (back) location.setZ(location.getZ() - 0.2);
-                if (left) location.setX(location.getX() - 0.2);
-                if (right) location.setX(location.getX() + 0.2);
+                if (forward) location.setZ(location.getZ() - 0.02f);
+                if (back) location.setZ(location.getZ() + 0.02f);
+                if (left) location.setX(location.getX() - 0.02f);
+                if (right) location.setX(location.getX() + 0.02f);
                 // Check out of bounds
+/*
                 if (location.getX() < 0) location.setX(0);
                 if (location.getY() < 0) location.setY(0);
                 if (location.getZ() < 0) location.setZ(0);
@@ -110,8 +113,10 @@ public class GameController implements Runnable {
                     location.setX(location.getBaseplate().getWidth());
                 if (location.getZ() > location.getBaseplate().getLength())
                     location.setZ(location.getBaseplate().getLength());
+*/
                 // ViewAngle
-                location.setViewAngle(viewAngle);
+                location.setPitch(pitch);
+                location.setYaw(yaw);
                 gameState.setLocation(u, location);
                 fireGameStateEvent(GameStateEvent.Type.USERLOCATION, location);
             }
