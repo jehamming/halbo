@@ -1,17 +1,15 @@
 package com.hamming.halbo;
 
 
+import com.hamming.halbo.factories.ContinentFactory;
 import com.hamming.halbo.factories.DTOFactory;
 import com.hamming.halbo.factories.WorldFactory;
 import com.hamming.halbo.game.*;
 import com.hamming.halbo.game.action.GetUserAction;
 import com.hamming.halbo.game.action.UserConnectedAction;
 import com.hamming.halbo.game.action.UserDisconnectedAction;
-import com.hamming.halbo.model.City;
-import com.hamming.halbo.model.User;
+import com.hamming.halbo.model.*;
 import com.hamming.halbo.game.action.Action;
-import com.hamming.halbo.model.UserLocation;
-import com.hamming.halbo.model.World;
 import com.hamming.halbo.model.dto.*;
 import com.hamming.halbo.util.StringUtils;
 
@@ -87,6 +85,8 @@ public class ClientConnection implements Runnable, GameStateListener {
 
     public void sendFullGameState() {
         if (isLoggedIn()) {
+            // World data
+            sendWorldData();
             // Logged in Users;
             for ( User u: gameController.getGameState().getOnlineUsers()) {
                 if (!u.getId().equals(user.getId())) {
@@ -96,25 +96,26 @@ public class ClientConnection implements Runnable, GameStateListener {
             }
             // UserLocations
             for (UserLocation loc : gameController.getGameState().getUserLocations().values()) {
-                sendWorldContinentCity(loc);
                 handleUserLocation(loc);
             }
         }
     }
 
-    private void sendWorldContinentCity(UserLocation loc) {
-        // World
-        WorldDto worldDto = DTOFactory.getInstance().getWorldDto(loc.getWorld());
-        send(Protocol.Command.GETWORLDS.ordinal() + StringUtils.delimiter + worldDto.toNetData());
-        // Continent
-        ContinentDto continentDto = DTOFactory.getInstance().getContinentDto(loc.getContinent());
-        send(Protocol.Command.GETCONTINENTS.ordinal() + StringUtils.delimiter + continentDto.toNetData());
-        // City
-        CityDto cityDto = DTOFactory.getInstance().getCityDto(loc.getCity());
-        send(Protocol.Command.GETCITIES.ordinal() + StringUtils.delimiter + cityDto.toNetData());
-        // Baseplate
-        BaseplateDto baseplateDto = DTOFactory.getInstance().getBaseplateDto(loc.getBaseplate());
-        send(Protocol.Command.GETBASEPLATES.ordinal() + StringUtils.delimiter + baseplateDto.toNetData());
+    private void sendWorldData() {
+        // Worlds
+        for (World world: WorldFactory.getInstance().getWorlds()) {
+            WorldDto worldDto = DTOFactory.getInstance().getWorldDto(world);
+            send(Protocol.Command.GETWORLDS.ordinal() + StringUtils.delimiter + worldDto.toNetData());
+            // Continents
+            for (Continent continent : world.getContinents()) {
+                ContinentDto continentDto = DTOFactory.getInstance().getContinentDto(world.getId().toString(), continent);
+                send(Protocol.Command.GETCONTINENTS.ordinal() + StringUtils.delimiter + continentDto.toNetData());
+                for (City city : continent.getCities()) {
+                    CityDto cityDto = DTOFactory.getInstance().getCityDto(continent.getId().toString(), city);
+                    send(Protocol.Command.GETCITIES.ordinal() + StringUtils.delimiter + cityDto.toNetData());
+                }
+            }
+        }
     }
 
     public boolean isLoggedIn() {

@@ -1,5 +1,6 @@
 package com.hamming.halbo.client.panels;
 
+import com.hamming.halbo.client.controllers.HALBOClientController;
 import com.hamming.halbo.client.controllers.MoveController;
 
 import javax.swing.*;
@@ -9,10 +10,11 @@ import java.awt.event.ActionListener;
 public class TeleportPanel extends JPanel {
 
     private JButton btnTeleport;
-    private MoveController moveController;
+    private HALBOClientController controller;
 
-    public TeleportPanel(MoveController moveController) {
-        this.moveController = moveController;
+
+    public TeleportPanel(HALBOClientController controller) {
+        this.controller = controller;
         createPanel();
     }
 
@@ -28,10 +30,7 @@ public class TeleportPanel extends JPanel {
     }
 
     private void teleport() {
-       String result = moveController.teleportRequest();
-       if (result != null ) {
-           JOptionPane.showMessageDialog(this, result);
-       }
+        controller.teleport();
     }
 
 }

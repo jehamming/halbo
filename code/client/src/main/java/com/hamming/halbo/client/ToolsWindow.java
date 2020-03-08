@@ -18,9 +18,9 @@ public class ToolsWindow extends JFrame {
     private UserController userController;
     private MoveController moveController;
 
-    public ToolsWindow(UserController userController, MoveController moveController) {
-        this.userController = userController;
-        this.moveController = moveController;
+    public ToolsWindow(Controllers controllers) {
+        this.userController = controllers.getUserController();
+        this.moveController = controllers.getMoveController();
         initWindow();
     }
 

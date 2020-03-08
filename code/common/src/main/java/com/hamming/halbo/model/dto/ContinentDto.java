@@ -8,24 +8,26 @@ public class ContinentDto implements DTO {
     private String name;
     private String creatorID;
     private String ownerID;
-
     private String senatorID;
+    private String worldID;
 
     public ContinentDto(){
 
     }
 
-    public ContinentDto(String id, String name, String creatorID, String ownerID, String senatorID){
+    public ContinentDto(String worldID, String id, String name, String creatorID, String ownerID, String senatorID){
         this.id = id;
         this.name = name;
         this.creatorID = creatorID;
         this.ownerID = ownerID;
         this.senatorID = senatorID;
+        this.worldID = worldID;
     }
 
     @Override
     public String toNetData() {
-        String data = id + StringUtils.delimiter
+        String data = worldID + StringUtils.delimiter
+                + id + StringUtils.delimiter
                 + name + StringUtils.delimiter
                 + creatorID + StringUtils.delimiter
                 + ownerID + StringUtils.delimiter
@@ -35,12 +37,13 @@ public class ContinentDto implements DTO {
 
     @Override
     public void setValues(String... values) {
-        if ( values.length == 5) {
-            id = values[0];
-            name = values[1];
-            creatorID = values[2];
-            ownerID = values[3];
-            senatorID = values[4];
+        if ( values.length == 6) {
+            worldID = values[0];
+            id = values[1];
+            name = values[2];
+            creatorID = values[3];
+            ownerID = values[4];
+            senatorID = values[5];
         }
     }
 
@@ -62,6 +65,10 @@ public class ContinentDto implements DTO {
 
     public String getOwnerID() {
         return ownerID;
+    }
+
+    public String getWorldID() {
+        return worldID;
     }
 
     @Override

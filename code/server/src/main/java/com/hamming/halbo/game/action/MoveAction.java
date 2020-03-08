@@ -12,7 +12,8 @@ public class MoveAction implements Action {
     private boolean back = false;
     private boolean left = false;
     private boolean right = false;
-    private double viewAngle = 0.0;
+    private float pitch = 0.0f;
+    private float yaw = 0.0f;
 
 
     public MoveAction(GameController controller, ClientConnection client) {
@@ -23,17 +24,18 @@ public class MoveAction implements Action {
     @Override
     public void execute() {
         User u = client.getUser();
-        controller.handleMoveRequest(u, forward, back, left, right, viewAngle);
+        controller.handleMoveRequest(u, forward, back, left, right, pitch, yaw);
     }
 
     @Override
     public void setValues(String... values) {
-        if (values.length == 5 ) {
+        if (values.length == 6 ) {
             forward = Boolean.valueOf(values[0]);
             back = Boolean.valueOf(values[1]);
             left = Boolean.valueOf(values[2]);
             right = Boolean.valueOf(values[3]);
-            viewAngle = Double.valueOf(values[4]);
+            pitch = Float.valueOf(values[4]);
+            yaw = Float.valueOf(values[5]);
         } else {
             System.out.println(this.getClass().getName() + ":" + "Error at "+getClass().getName()+", size not ok of: "+values);
         }

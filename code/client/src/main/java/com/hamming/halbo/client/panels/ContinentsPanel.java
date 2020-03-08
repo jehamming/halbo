@@ -2,6 +2,7 @@ package com.hamming.halbo.client.panels;
 
 import com.hamming.halbo.client.BaseWindow;
 import com.hamming.halbo.client.controllers.ContinentController;
+import com.hamming.halbo.client.controllers.HALBOClientController;
 import com.hamming.halbo.client.interfaces.ContinentListener;
 import com.hamming.halbo.model.dto.ContinentDto;
 
@@ -10,18 +11,16 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.util.List;
 
-public class ContinentsPanel extends JPanel implements ContinentListener {
+public class ContinentsPanel extends JPanel {
 
     private JList<ContinentDto> listOfContinents;
     private DefaultListModel listModel;
-    private ContinentController continentController;
-    private BaseWindow baseWindow;
+    private HALBOClientController controller;
 
-    public ContinentsPanel(BaseWindow window, ContinentController continentController) {
-        this.continentController = continentController;
-        this.baseWindow = window;
-        continentController.addContinentListener(this);
+    public ContinentsPanel(HALBOClientController controller) {
+        this.controller = controller;
         createPanel();
     }
 
@@ -35,8 +34,7 @@ public class ContinentsPanel extends JPanel implements ContinentListener {
                 if ( !e.getValueIsAdjusting() ) { //Else this is called twice!
                     ContinentDto c = listOfContinents.getSelectedValue();
                     if (c != null) {
-                        continentController.continentSelected(c);
-                        baseWindow.getCitiesPanel().empty();
+                        controller.continentSelected(c);
                     }
                 }
             }
@@ -47,11 +45,15 @@ public class ContinentsPanel extends JPanel implements ContinentListener {
     }
 
     public void empty() {
-        listModel.removeAllElements();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                listModel.removeAllElements();
+            }
+        });
     }
 
-    @Override
-    public void continentAdded(ContinentDto continent) {
+    public void addContinent(ContinentDto continent) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -60,8 +62,23 @@ public class ContinentsPanel extends JPanel implements ContinentListener {
         });
     }
 
-    @Override
-    public void continentDeleted(ContinentDto continent) {
-
+    public void addContinents(List<ContinentDto> continents) {
+        for (ContinentDto c : continents) {
+            addContinent(c);
+        }
     }
+
+    public void removeContinent(ContinentDto continent) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                listModel.removeElement(continent);
+            }
+        });
+    }
+
+
+
+
+
 }

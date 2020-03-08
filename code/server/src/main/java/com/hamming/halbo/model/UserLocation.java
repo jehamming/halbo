@@ -7,10 +7,7 @@ public class UserLocation extends BasicObject{
     private Continent continent;
     private City city;
     private Baseplate baseplate;
-    private double x;
-    private double y;
-    private double z;
-    private double viewAngle;
+    private float x,y,z,pitch,yaw;
 
     public UserLocation(HalboID id) {
         super(id);
@@ -56,35 +53,43 @@ public class UserLocation extends BasicObject{
         this.baseplate = baseplate;
     }
 
-    public double getX() {
+    public float getX() {
         return x;
     }
 
-    public void setX(double x) {
+    public void setX(float x) {
         this.x = x;
     }
 
-    public double getY() {
+    public float getY() {
         return y;
     }
 
-    public void setY(double y) {
+    public void setY(float y) {
         this.y = y;
     }
 
-    public double getZ() {
+    public float getZ() {
         return z;
     }
 
-    public void setZ(double z) {
+    public void setZ(float z) {
         this.z = z;
     }
 
-    public double getViewAngle() {
-        return viewAngle;
+    public float getPitch() {
+        return pitch;
     }
 
-    public void setViewAngle(double viewAngle) {
-        this.viewAngle = viewAngle;
+    public void setPitch(float pitch) {
+        this.pitch = pitch;
+    }
+
+    public float getYaw() {
+        return yaw;
+    }
+
+    public void setYaw(float yaw) {
+        this.yaw = yaw;
     }
 }

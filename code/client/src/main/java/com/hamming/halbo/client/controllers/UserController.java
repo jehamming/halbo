@@ -54,8 +54,6 @@ public class UserController implements ConnectionListener, CommandReceiver {
         if (Protocol.SUCCESS.equals(status)) {
             currentUser = new UserDto();
             currentUser.setValues(values);
-            String newCommand = protocolHandler.getWorldsCommand();
-            connectionController.send(newCommand);
             success = true;
         } else {
             currentUser = null;

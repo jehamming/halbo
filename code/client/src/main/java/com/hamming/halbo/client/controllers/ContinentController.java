@@ -4,39 +4,38 @@ import com.hamming.halbo.client.interfaces.ContinentListener;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.ContinentDto;
+import com.hamming.halbo.model.dto.WorldDto;
 import com.hamming.halbo.net.CommandReceiver;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ContinentController implements CommandReceiver {
 
-    private ProtocolHandler protocolHandler;
     private ConnectionController connectionController;
-    private List<ContinentListener> continentListeners;
-    private ContinentDto selectedContinent;
+    private Map<String, List<ContinentDto>> continents;
 
     public ContinentController(ConnectionController connectionController) {
         this.connectionController = connectionController;
-        protocolHandler = new ProtocolHandler();
-        continentListeners = new ArrayList<ContinentListener>();
+        this.continents = new HashMap<>();
         connectionController.registerReceiver(Protocol.Command.GETCONTINENTS, this);
     }
 
     private void handleGetContinents(String[] data) {
         ContinentDto dto = new ContinentDto();
         dto.setValues(data);
-        continentAdded(dto);
+        addContinent(dto);
     }
 
-    public void continentAdded(ContinentDto dto) {
-        for (ContinentListener l : continentListeners) {
-            l.continentAdded(dto);
+    public void addContinent(ContinentDto dto) {
+        List<ContinentDto> continentsForWorld = continents.get(dto.getWorldID());
+        if (continentsForWorld == null ) {
+            continentsForWorld = new ArrayList<ContinentDto>();
         }
-    }
-
-    public void addContinentListener(ContinentListener l) {
-        continentListeners.add(l);
+        continentsForWorld.add(dto);
+        continents.put(dto.getWorldID(), continentsForWorld);
     }
 
     @Override
@@ -48,12 +47,14 @@ public class ContinentController implements CommandReceiver {
         }
     }
 
-    public void continentSelected(ContinentDto c) {
-        selectedContinent = c;
-        connectionController.send(protocolHandler.getGetCitiesCommand(c.getId()));
+
+    public List<ContinentDto> getContinents(WorldDto world) {
+        return continents.get(world.getId());
     }
 
-    public ContinentDto getSelectedContinent() {
-        return selectedContinent;
+    public void reset() {
+        this.continents = new HashMap<>();
     }
+
+
 }

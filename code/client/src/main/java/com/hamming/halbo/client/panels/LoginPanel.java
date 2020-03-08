@@ -1,8 +1,7 @@
 package com.hamming.halbo.client.panels;
 
 import com.hamming.halbo.client.BaseWindow;
-import com.hamming.halbo.client.controllers.ConnectionController;
-import com.hamming.halbo.client.controllers.UserController;
+import com.hamming.halbo.client.Controllers;
 import com.hamming.halbo.client.interfaces.UserListener;
 import com.hamming.halbo.model.dto.UserDto;
 
@@ -14,27 +13,20 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class LoginPanel extends JPanel implements UserListener {
+public class LoginPanel extends JPanel {
 
     private JTextField txtServer;
     JTextField txtPort;
     JTextField txtUsername;
     JPasswordField txtPassword;
-    JLabel lblStatus;
     JButton btnConnect;
     JButton btnDisconnect;
-    private ConnectionController connectionController;
-    private UserController userController;
-    private BaseWindow baseWindow;
+    private Controllers controllers;
 
 
-    public LoginPanel(BaseWindow window, ConnectionController controller, UserController userController) {
+    public LoginPanel(Controllers controllers) {
         createPanel();
-        this.connectionController = controller;
-        this.userController = userController;
-        userController.addUserListener(this);
-
-        this.baseWindow = window;
+        this.controllers = controllers;
     }
 
     private void createPanel() {
@@ -98,8 +90,7 @@ public class LoginPanel extends JPanel implements UserListener {
     }
 
     private void disconnect() {
-        connectionController.disconnect();
-        baseWindow.emptyPanels();
+        controllers.getConnectionController().disconnect();
         btnDisconnect.setEnabled(false);
         btnConnect.setEnabled(true);
     }
@@ -111,34 +102,12 @@ public class LoginPanel extends JPanel implements UserListener {
         String username = txtUsername.getText().trim();
         String password = String.valueOf(txtPassword.getPassword());
         try {
-            connectionController.connect(server,port);
-            userController.sendLogin(username, password);
+            controllers.getConnectionController().connect(server,port);
+            controllers.getUserController().sendLogin(username, password);
             btnDisconnect.setEnabled(true);
             btnConnect.setEnabled(false);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
-        }
-    }
-
-
-    @Override
-    public void userConnected(UserDto user) {
-
-    }
-
-    @Override
-    public void userDisconnected(UserDto user) {
-
-    }
-
-    @Override
-    public void loginResult(boolean success, String msg) {
-        if ( !success ) {
-            JOptionPane.showMessageDialog(this, "Login failed : " + msg);
-            txtUsername.setText("");
-            txtPassword.setText("");
-            btnDisconnect.setEnabled(false);
-            btnConnect.setEnabled(true);
         }
     }
 }

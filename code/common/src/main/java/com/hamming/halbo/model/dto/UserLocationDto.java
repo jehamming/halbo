@@ -9,16 +9,13 @@ public class UserLocationDto implements DTO {
     private String continentId;
     private String cityId;
     private String baseplateId;
-    private double x;
-    private double y;
-    private double z;
-    private double viewingAngle;
+    private float x,y,z,pitch,yaw;
 
     public UserLocationDto(){
 
     }
 
-    public UserLocationDto(String userId, String worldId, String continentId, String cityId, String baseplateId, double x, double y, double z, double angle){
+    public UserLocationDto(String userId, String worldId, String continentId, String cityId, String baseplateId, float x, float y, float z, float pitch, float yaw){
         this.userId = userId;
         this.worldId = worldId;
         this.continentId = continentId;
@@ -27,7 +24,8 @@ public class UserLocationDto implements DTO {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.viewingAngle = angle;
+        this.pitch = pitch;
+        this.yaw = yaw;
     }
 
     @Override
@@ -40,22 +38,24 @@ public class UserLocationDto implements DTO {
                 + x + StringUtils.delimiter
                 + y + StringUtils.delimiter
                 + z + StringUtils.delimiter
-                + viewingAngle;;
+                + pitch + StringUtils.delimiter
+                + yaw;
         return data;
     }
 
     @Override
     public void setValues(String... values) {
-        if ( values.length == 9) {
+        if ( values.length == 10) {
             userId = values[0];
             worldId = values[1];
             continentId = values[2];
             cityId = values[3];
             baseplateId = values[4];
-            x = Double.valueOf(values[5]);
-            y = Double.valueOf(values[6]);
-            z = Double.valueOf(values[7]);
-            viewingAngle = Double.valueOf(values[8]);
+            x = Float.valueOf(values[5]);
+            y = Float.valueOf(values[6]);
+            z = Float.valueOf(values[7]);
+            pitch = Float.valueOf(values[8]);
+            yaw = Float.valueOf(values[9]);
         }
     }
 
@@ -79,20 +79,24 @@ public class UserLocationDto implements DTO {
         return baseplateId;
     }
 
-    public double getX() {
+    public float getX() {
         return x;
     }
 
-    public double getY() {
+    public float getY() {
         return y;
     }
 
-    public double getZ() {
+    public float getZ() {
         return z;
     }
 
-    public double getViewingAngle() {
-        return viewingAngle;
+    public float getPitch() {
+        return pitch;
+    }
+
+    public float getYaw() {
+        return yaw;
     }
 
     @Override
@@ -106,7 +110,8 @@ public class UserLocationDto implements DTO {
                 ", x=" + x +
                 ", y=" + y +
                 ", z=" + z +
-                ", viewingAngle=" + viewingAngle+
+                ", pitch=" + pitch+
+                ", yaw=" + yaw+
                 '}';
     }
 }

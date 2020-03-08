@@ -27,22 +27,22 @@ public class DTOFactory {
         return dto;
     }
 
-    public ContinentDto getContinentDto(Continent c) {
+    public ContinentDto getContinentDto(String worldID, Continent c) {
         ContinentDto dto;
         if (c.getSenator() == null ) {
-            dto = new ContinentDto(c.getId().toString(), c.getName(), c.getCreator().getId().toString(), c.getOwner().getId().toString(), null);
+            dto = new ContinentDto(worldID, c.getId().toString(), c.getName(), c.getCreator().getId().toString(), c.getOwner().getId().toString(), null);
         } else {
-            dto = new ContinentDto(c.getId().toString(), c.getName(), c.getCreator().getId().toString(), c.getOwner().getId().toString(), c.getSenator().getId().toString());
+            dto = new ContinentDto(worldID, c.getId().toString(), c.getName(), c.getCreator().getId().toString(), c.getOwner().getId().toString(), c.getSenator().getId().toString());
         }
         return dto;
     }
 
-    public CityDto getCityDto(City c) {
+    public CityDto getCityDto(String continentID, City c) {
         CityDto dto;
         if (c.getMayor() == null ) {
-            dto = new CityDto(c.getId().toString(), c.getName(), c.getCreator().getId().toString(), c.getOwner().getId().toString(), null);
+            dto = new CityDto(continentID, c.getId().toString(), c.getName(), c.getCreator().getId().toString(), c.getOwner().getId().toString(), null);
         } else {
-            dto = new CityDto(c.getId().toString(), c.getName(), c.getCreator().getId().toString(), c.getOwner().getId().toString(), c.getMayor().getId().toString());
+            dto = new CityDto(continentID, c.getId().toString(), c.getName(), c.getCreator().getId().toString(), c.getOwner().getId().toString(), c.getMayor().getId().toString());
         }
         return dto;
     }
@@ -58,7 +58,7 @@ public class DTOFactory {
             String continentId = loc.getContinent().getId().toString();
             String cityId = loc.getCity().getId().toString();
             String baseplateId = loc.getBaseplate().getId().toString();
-            UserLocationDto dto = new UserLocationDto(userId, worldId, continentId, cityId, baseplateId, loc.getX(), loc.getY(), loc.getZ(), loc.getViewAngle());
+            UserLocationDto dto = new UserLocationDto(userId, worldId, continentId, cityId, baseplateId, loc.getX(), loc.getY(), loc.getZ(), loc.getPitch(), loc.getYaw());
         return dto;
     }
 

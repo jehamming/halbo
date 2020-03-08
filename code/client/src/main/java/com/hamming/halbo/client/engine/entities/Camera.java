@@ -13,7 +13,7 @@ public class Camera {
 	
 	public Camera(){}
 	
-	public void move(){
+/*	public void move(){
 		if(Keyboard.isKeyDown(Keyboard.KEY_W)){
 			position.z-=0.02f;
 		}
@@ -26,7 +26,7 @@ public class Camera {
 		if(Keyboard.isKeyDown(Keyboard.KEY_A)){
 			position.x-=0.02f;
 		}
-	}
+	}*/
 
 	public Vector3f getPosition() {
 		return position;
@@ -43,7 +43,20 @@ public class Camera {
 	public float getRoll() {
 		return roll;
 	}
-	
-	
 
+	public void setPosition(Vector3f position) {
+		this.position = position;
+	}
+
+	public void setPitch(float pitch) {
+		this.pitch = pitch;
+	}
+
+	public void setYaw(float yaw) {
+		this.yaw = yaw;
+	}
+
+	public void setRoll(float roll) {
+		this.roll = roll;
+	}
 }
