@@ -20,6 +20,7 @@ public class Player extends Entity {
         texture.setShineDamper(10);
         texture.setReflectivity(1);
         setModel(staticModel);
+        setScale(1f);
     }
 
     public void setPosition(float x, float y, float z) {
