@@ -6,7 +6,9 @@ import com.hamming.halbo.factories.UserFactory;
 import com.hamming.halbo.game.GameController;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.model.User;
+import com.hamming.halbo.model.UserLocation;
 import com.hamming.halbo.model.dto.UserDto;
+import com.hamming.halbo.model.dto.UserLocationDto;
 import com.hamming.halbo.util.StringUtils;
 
 public class UserConnectedAction implements Action {
@@ -25,6 +27,11 @@ public class UserConnectedAction implements Action {
         User u = UserFactory.getInstance().findUserById(userId);;
         UserDto dto = DTOFactory.getInstance().getUserDTO(u);
         client.send(Protocol.Command.USERCONNECTED.ordinal() + StringUtils.delimiter + dto.toNetData());
+        UserLocation loc = controller.getGameState().getLocation(u);
+        if (loc != null ) {
+            UserLocationDto userLocationDTO = DTOFactory.getInstance().getUserLocationDTO(loc);
+            client.send(Protocol.Command.LOCATION.ordinal() + StringUtils.delimiter + userLocationDTO.toNetData());
+        }
     }
 
     public void setUserId(String userId) {

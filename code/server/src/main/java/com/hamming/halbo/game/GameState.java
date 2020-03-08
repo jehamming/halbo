@@ -34,5 +34,4 @@ public class GameState {
     public void setLocation(User u, UserLocation l) {
         userLocations.put(u,l);
     }
-
 }

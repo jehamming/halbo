@@ -7,6 +7,9 @@ public interface Viewer {
     public void setBaseplate(String name, int width, int length);
     public void resetView();
 
+    public void addPlayer(String userId, String name);
+    public void removePlayer(String userId);
+
     //TODO Load LDRAW
     // public void drawConstruction(String ldrawXML, x, y, z)
 

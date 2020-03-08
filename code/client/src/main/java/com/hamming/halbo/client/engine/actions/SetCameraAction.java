@@ -19,7 +19,6 @@ public class SetCameraAction implements Action {
 
     @Override
     public void execute() {
-        System.out.println("SetCamera:" + x +"," +y+","+z);
         viewer.getCamera().setPosition(new Vector3f(x,y,z));
         viewer.getCamera().setPitch(pitch);
         viewer.getCamera().setYaw(yaw);

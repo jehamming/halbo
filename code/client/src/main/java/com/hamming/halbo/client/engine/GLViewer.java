@@ -1,9 +1,7 @@
 package com.hamming.halbo.client.engine;
 
 import com.hamming.halbo.client.controllers.MoveController;
-import com.hamming.halbo.client.engine.actions.Action;
-import com.hamming.halbo.client.engine.actions.SetCameraAction;
-import com.hamming.halbo.client.engine.actions.SetUserLocationAction;
+import com.hamming.halbo.client.engine.actions.*;
 import com.hamming.halbo.client.engine.entities.Camera;
 import com.hamming.halbo.client.engine.entities.Entity;
 import com.hamming.halbo.client.engine.entities.Light;
@@ -146,6 +144,22 @@ public class GLViewer implements Viewer, Runnable {
     @Override
     public void resetView() {
 
+    }
+
+    @Override
+    public void addPlayer(String userId, String name) {
+        Action action = new AddPlayerAction(this, userId, name);
+        synchronized (this) {
+            actions.add(action);
+        }
+    }
+
+    @Override
+    public void removePlayer(String userId) {
+        Action action = new RemovePlayerAction(this, userId);
+        synchronized (this) {
+            actions.add(action);
+        }
     }
 
 

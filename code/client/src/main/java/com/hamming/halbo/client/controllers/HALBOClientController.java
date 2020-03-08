@@ -20,8 +20,6 @@ public class HALBOClientController implements UserListener, ConnectionListener {
     private ContinentDto selectedContinent;
     private CityDto selectedCity;
 
-
-
     public HALBOClientController(HALBOClientApplication application, Controllers controllers) {
         this.controllers = controllers;
         this.application = application;
@@ -78,12 +76,12 @@ public class HALBOClientController implements UserListener, ConnectionListener {
 
     @Override
     public void userConnected(UserDto user) {
-
+        application.getViewer().addPlayer(user.getId(), user.getName());
     }
 
     @Override
     public void userDisconnected(UserDto user) {
-
+        application.getViewer().removePlayer(user.getId());
     }
 
     @Override

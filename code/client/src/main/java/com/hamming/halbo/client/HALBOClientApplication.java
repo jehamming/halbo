@@ -9,6 +9,7 @@ public class HALBOClientApplication {
     private ToolsWindow toolsWindow;
     private BaseWindow baseWindow;
     private ViewController viewController;
+    private Viewer viewer;
 
     //Controllers
     private Controllers controllers;
@@ -28,10 +29,8 @@ public class HALBOClientApplication {
         initControllers();
         baseWindow = new BaseWindow(controllers);
         toolsWindow = new ToolsWindow(controllers);
-
-        // TODO Replace with OpenGL Window
-        Viewer display = new GLViewer(controllers.getMoveController());
-        viewController = new ViewController(display, controllers);
+        viewer = new GLViewer(controllers.getMoveController());
+        viewController = new ViewController(viewer, controllers);
     }
 
     public static void main(String[] args) {
@@ -52,5 +51,9 @@ public class HALBOClientApplication {
 
     public ToolsWindow getToolsWindow() {
         return toolsWindow;
+    }
+
+    public Viewer getViewer() {
+        return viewer;
     }
 }
