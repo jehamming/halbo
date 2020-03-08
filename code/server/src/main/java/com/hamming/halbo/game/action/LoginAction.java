@@ -36,8 +36,8 @@ public class LoginAction implements Action {
                 client.getProtocolHandler().LoggedIn();
                 UserDto dto = DTOFactory.getInstance().getUserDTO(u);
                 client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + Protocol.SUCCESS + StringUtils.delimiter + dto.toNetData());
-                client.sendUserLocation();
                 client.sendFullGameState();
+                client.sendUserLocation();
             }
         } else {
             // Invalid user/password

@@ -1,5 +1,6 @@
 package com.hamming.halbo.client.controllers;
 
+import com.hamming.halbo.client.Controllers;
 import com.hamming.halbo.client.interfaces.ConnectionListener;
 import com.hamming.halbo.client.interfaces.MovementListener;
 import com.hamming.halbo.client.interfaces.Viewer;
@@ -19,13 +20,13 @@ public class ViewController implements MovementListener, ConnectionListener {
     private MoveController moveController;
     private Viewer viewer;
 
-    public ViewController(Viewer viewer, ConnectionController connectionController, UserController userController, WorldController worldController, ContinentController continentController, CityController cityController, MoveController moveController) {
-        this.connectionController = connectionController;
-        this.userController = userController;
-        this.worldController = worldController;
-        this.continentController = continentController;
-        this.cityController = cityController;
-        this.moveController = moveController;
+    public ViewController(Viewer viewer, Controllers controllers) {
+        this.connectionController = controllers.getConnectionController();
+        this.userController = controllers.getUserController();
+        this.worldController = controllers.getWorldController();
+        this.continentController = controllers.getContinentController();
+        this.cityController = controllers.getCityController();
+        this.moveController = controllers.getMoveController();
         this.viewer = viewer;
         protocolHandler = new ProtocolHandler();
         moveController.addMovementListener(this);

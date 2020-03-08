@@ -28,7 +28,7 @@ public class GetContinentAction implements Action {
         World w = WorldFactory.getInstance().findWorldById(worldId);
         if ( w != null ) {
             for ( Continent continent : w.getContinents() ) {
-                ContinentDto dto = DTOFactory.getInstance().getContinentDto(continent);
+                ContinentDto dto = DTOFactory.getInstance().getContinentDto(worldId, continent);
                 client.send(Protocol.Command.GETCONTINENTS.ordinal() + StringUtils.delimiter + dto.toNetData());
             }
         } else {

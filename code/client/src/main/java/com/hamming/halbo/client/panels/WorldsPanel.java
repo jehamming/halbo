@@ -1,7 +1,6 @@
 package com.hamming.halbo.client.panels;
 
-import com.hamming.halbo.client.BaseWindow;
-import com.hamming.halbo.client.controllers.WorldController;
+import com.hamming.halbo.client.controllers.HALBOClientController;
 import com.hamming.halbo.client.interfaces.WorldListener;
 import com.hamming.halbo.model.dto.WorldDto;
 
@@ -10,19 +9,16 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.util.List;
 
-public class WorldsPanel extends JPanel implements WorldListener {
+public class WorldsPanel extends JPanel {
 
     private JList<WorldDto> listOfWorlds;
     private DefaultListModel listModel;
-    private WorldController worldController;
-    private BaseWindow baseWindow;
+    private HALBOClientController controller;
 
-
-    public WorldsPanel(BaseWindow window, WorldController controller) {
-        this.baseWindow = window;
-        this.worldController = controller;
-        worldController.addWorldListener(this);
+    public WorldsPanel(HALBOClientController controller) {
+        this.controller = controller;
         createPanel();
     }
 
@@ -36,9 +32,7 @@ public class WorldsPanel extends JPanel implements WorldListener {
                 if ( !e.getValueIsAdjusting() ) { //Else this is called twice!
                     WorldDto world = listOfWorlds.getSelectedValue();
                     if (world != null) {
-                        worldController.worldSelected(world);
-                        baseWindow.getContinentsPanel().empty();
-                        baseWindow.getCitiesPanel().empty();
+                        controller.worldSelected(world);
                     }
                 }
             }
@@ -49,12 +43,15 @@ public class WorldsPanel extends JPanel implements WorldListener {
     }
 
     public void empty() {
-        listModel.removeAllElements();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                listModel.removeAllElements();
+            }
+        });
     }
 
-
-    @Override
-    public void worldAdded(WorldDto world) {
+    public void addWorld(WorldDto world) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -63,8 +60,9 @@ public class WorldsPanel extends JPanel implements WorldListener {
         });
     }
 
-    @Override
-    public void worldDeleted(WorldDto world) {
-
+    public void addWorlds(List<WorldDto> worlds) {
+        for (WorldDto world: worlds) {
+            addWorld(world);
+        }
     }
 }

@@ -5,12 +5,17 @@ import com.hamming.halbo.client.engine.actions.Action;
 import com.hamming.halbo.client.engine.actions.SetCameraAction;
 import com.hamming.halbo.client.engine.actions.SetUserLocationAction;
 import com.hamming.halbo.client.engine.entities.Camera;
+import com.hamming.halbo.client.engine.entities.Entity;
 import com.hamming.halbo.client.engine.entities.Light;
 import com.hamming.halbo.client.engine.entities.Player;
+import com.hamming.halbo.client.engine.models.RawModel;
+import com.hamming.halbo.client.engine.models.TexturedModel;
 import com.hamming.halbo.client.engine.renderengine.DisplayManager;
 import com.hamming.halbo.client.engine.renderengine.Loader;
+import com.hamming.halbo.client.engine.renderengine.OBJLoader;
 import com.hamming.halbo.client.engine.renderengine.Renderer;
 import com.hamming.halbo.client.engine.shaders.StaticShader;
+import com.hamming.halbo.client.engine.textures.ModelTexture;
 import com.hamming.halbo.client.interfaces.Viewer;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
@@ -49,9 +54,23 @@ public class GLViewer implements Viewer, Runnable {
         light = new Light(new Vector3f(0, -5, -20), new Vector3f(1, 1, 1));
         camera = new Camera();
 
+        // Dragon mag weg als players goed gerendered worden
+        RawModel model = OBJLoader.loadObjModel("dragon", loader);
+        TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("purple")));
+        ModelTexture texture = staticModel.getTexture();
+        texture.setShineDamper(10);
+        texture.setReflectivity(1);
+        Entity dragon = new Entity();
+        dragon.setModel(staticModel);
+        dragon.setPosition(new Vector3f(0, -5, -25));
+        dragon.setScale(1);
+
         while (!Display.isCloseRequested()) {
             handleActions();
+            shader.start();
             renderEverything();
+            renderer.render(dragon, shader);
+            shader.stop();
             handleMove();
             DisplayManager.updateDisplay();
         }
@@ -84,11 +103,9 @@ public class GLViewer implements Viewer, Runnable {
 
     private void renderEverything() {
         renderer.prepare();
-        shader.start();
         shader.loadLight(light);
         shader.loadViewMatrix(camera);
         renderPlayers();
-        shader.stop();
     }
 
     private void renderPlayers() {

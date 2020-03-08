@@ -13,13 +13,14 @@ public class WorldController implements CommandReceiver {
 
     private ProtocolHandler protocolHandler;
     private ConnectionController connectionController;
-    private List<WorldListener> worldListeners;
-    private WorldDto selectedWorld;
+    private HALBOClientController halboClientController;
+    private List<WorldDto> worlds;
 
-    public WorldController(ConnectionController connectionController) {
+    public WorldController(HALBOClientController halboClientController, ConnectionController connectionController) {
         this.connectionController = connectionController;
+        this.halboClientController = halboClientController;
         protocolHandler = new ProtocolHandler();
-        worldListeners = new ArrayList<WorldListener>();
+        worlds = new ArrayList<WorldDto>();
         connectionController.registerReceiver(Protocol.Command.GETWORLDS, this);
     }
 
@@ -27,17 +28,12 @@ public class WorldController implements CommandReceiver {
     private void handleGetWorlds(String[] data) {
         WorldDto dto = new WorldDto();
         dto.setValues(data);
-        worldAdded(dto);
+        addWorld(dto);
     }
 
-    public void worldAdded(WorldDto dto) {
-        for (WorldListener l: worldListeners) {
-            l.worldAdded(dto);
-        }
-    }
-
-    public void addWorldListener(WorldListener l) {
-        worldListeners.add(l);
+    public void addWorld(WorldDto world) {
+        worlds.add(world);
+        halboClientController.worldAdded(world);
     }
 
     @Override
@@ -49,12 +45,12 @@ public class WorldController implements CommandReceiver {
         }
     }
 
-    public void worldSelected(WorldDto world) {
-        selectedWorld = world;
-        connectionController.send(protocolHandler.getGetContinentsCommand(world.getId()));
+
+    public List<WorldDto> getWorlds() {
+        return worlds;
     }
 
-    public WorldDto getSelectedWorld() {
-        return selectedWorld;
+    public void reset() {
+        worlds = new ArrayList<WorldDto>();
     }
 }

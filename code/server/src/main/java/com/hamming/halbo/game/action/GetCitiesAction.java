@@ -29,7 +29,7 @@ public class GetCitiesAction implements Action {
         Continent c = ContinentFactory.getInstance().findContinentById(continentId);
         if ( c != null ) {
             for ( City city : c.getCities() ) {
-                CityDto dto = DTOFactory.getInstance().getCityDto(city);
+                CityDto dto = DTOFactory.getInstance().getCityDto(continentId, city);
                 client.send(Protocol.Command.GETCITIES.ordinal() + StringUtils.delimiter + dto.toNetData());
             }
         } else {

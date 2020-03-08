@@ -1,5 +1,6 @@
 package com.hamming.halbo.client.controllers;
 
+import com.hamming.halbo.client.Controllers;
 import com.hamming.halbo.client.interfaces.MovementListener;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
@@ -20,12 +21,12 @@ public class MoveController implements CommandReceiver {
     private ContinentController continentController;
     private CityController cityController;
 
-    public MoveController(ConnectionController connectionController, UserController userController, WorldController worldController, ContinentController continentController, CityController cityController) {
-        this.connectionController = connectionController;
-        this.userController = userController;
-        this.worldController = worldController;
-        this.continentController = continentController;
-        this.cityController = cityController;
+    public MoveController(Controllers controllers) {
+        this.connectionController = controllers.getConnectionController();
+        this.userController = controllers.getUserController();
+        this.worldController = controllers.getWorldController();
+        this.continentController = controllers.getContinentController();
+        this.cityController = controllers.getCityController();
         protocolHandler = new ProtocolHandler();
         movementListeners = new ArrayList<MovementListener>();
         connectionController.registerReceiver(Protocol.Command.TELEPORT, this);
@@ -37,12 +38,8 @@ public class MoveController implements CommandReceiver {
         movementListeners.add(l);
     }
 
-    public String teleportRequest() {
+    public String teleportRequest(UserDto user, WorldDto world, ContinentDto continent, CityDto city) {
         String message = null;
-        WorldDto world = worldController.getSelectedWorld();
-        ContinentDto continent = continentController.getSelectedContinent();
-        CityDto city = cityController.getSelectedCity();
-        UserDto user = userController.getCurrentUser();
         if (user != null && world != null && continent != null && city != null) {
             String cmd = protocolHandler.getTeleportCommand(user.getId(), world, continent, city);
             connectionController.send(cmd);

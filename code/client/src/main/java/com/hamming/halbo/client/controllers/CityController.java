@@ -6,28 +6,24 @@ import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.BaseplateDto;
 import com.hamming.halbo.model.dto.CityDto;
+import com.hamming.halbo.model.dto.ContinentDto;
 import com.hamming.halbo.net.CommandReceiver;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CityController implements CommandReceiver, ConnectionListener {
+public class CityController implements CommandReceiver {
 
     private ProtocolHandler protocolHandler;
-    private ConnectionController connectionController;
-    private List<CityListener> cityListeners;
-    private CityDto selectedCity;
     private List<BaseplateDto> baseplates;
-    private List<CityDto> cities;
+    private Map<String, List<CityDto>> cities;
 
     public CityController(ConnectionController connectionController) {
-        this.connectionController = connectionController;
         protocolHandler = new ProtocolHandler();
-        cityListeners = new ArrayList<CityListener>();
         baseplates = new ArrayList<BaseplateDto>();
-        cities = new ArrayList<CityDto>();
-        connectionController.addConnectionListener(this);
+        cities = new HashMap<>();
         connectionController.registerReceiver(Protocol.Command.GETCITIES, this);
         connectionController.registerReceiver(Protocol.Command.GETCITYDETAILS, this);
         connectionController.registerReceiver(Protocol.Command.GETBASEPLATES, this);
@@ -40,14 +36,12 @@ public class CityController implements CommandReceiver, ConnectionListener {
     }
 
     public void addCity(CityDto city) {
-        cities.add(city);
-        for (CityListener l : cityListeners) {
-            l.cityAdded(city);
+        List<CityDto> citiesForContinent = cities.get(city.getContinentID());
+        if (citiesForContinent == null ) {
+            citiesForContinent = new ArrayList<CityDto>();
         }
-    }
-
-    public void addCityListener(CityListener l) {
-        cityListeners.add(l);
+        citiesForContinent.add(city);
+        cities.put(city.getContinentID(), citiesForContinent);
     }
 
     @Override
@@ -75,13 +69,7 @@ public class CityController implements CommandReceiver, ConnectionListener {
         baseplates.add(dto);
     }
 
-    public void citySelected(CityDto dto) {
-        selectedCity = dto;
-    }
 
-    public CityDto getSelectedCity() {
-        return selectedCity;
-    }
 
     public BaseplateDto getBaseplate(String baseplateId) {
         BaseplateDto found = null;
@@ -94,14 +82,12 @@ public class CityController implements CommandReceiver, ConnectionListener {
         return found;
     }
 
-    @Override
-    public void connected() {
-        baseplates = new ArrayList<BaseplateDto>();
-        cities = new ArrayList<CityDto>();
+    public List<CityDto> getCities(ContinentDto c) {
+        return cities.get(c.getId());
     }
 
-    @Override
-    public void disconnected() {
-
+    public void reset() {
+        cities = new HashMap<>();
     }
+
 }

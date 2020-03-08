@@ -1,7 +1,6 @@
 package com.hamming.halbo.client;
 
 
-import com.hamming.halbo.client.controllers.*;
 import com.hamming.halbo.client.panels.*;
 
 import javax.swing.*;
@@ -13,23 +12,10 @@ public class BaseWindow extends JFrame {
     private CitiesPanel citiesPanel;
     private ContinentsPanel continentsPanel;
     private TeleportPanel teleportPanel;
-    private ConnectionController connectionController;
-    private UserController userController;
-    private WorldController worldController;
-    private ContinentController continentController;
-    private CityController cityController;
-    private MoveController moveController;
+    private Controllers controllers;
 
-
-
-    public BaseWindow(ConnectionController connectionController, UserController userController, WorldController worldController, ContinentController continentController, CityController cityController, MoveController moveController) {
-        this.connectionController = connectionController;
-        this.userController = userController;
-        this.worldController = worldController;
-        this.connectionController = connectionController;
-        this.cityController = cityController;
-        this.continentController = continentController;
-        this.moveController = moveController;
+    public BaseWindow(Controllers controllers) {
+        this.controllers = controllers;
         init();
     }
 
@@ -56,19 +42,19 @@ public class BaseWindow extends JFrame {
     private JPanel getMainPanel() {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        loginPanel = new LoginPanel(this, connectionController, userController);
+        loginPanel = new LoginPanel(controllers);
         mainPanel.add(loginPanel);
 
-        worldsPanel = new WorldsPanel(this, worldController);
+        worldsPanel = new WorldsPanel(controllers.getHalboClientController());
         mainPanel.add(worldsPanel);
 
-        continentsPanel = new ContinentsPanel(this, continentController);
+        continentsPanel = new ContinentsPanel(controllers.getHalboClientController());
         mainPanel.add(continentsPanel);
 
-        citiesPanel = new CitiesPanel(cityController);
+        citiesPanel = new CitiesPanel(controllers.getHalboClientController());
         mainPanel.add(citiesPanel);
 
-        teleportPanel = new TeleportPanel(moveController);
+        teleportPanel = new TeleportPanel(controllers.getHalboClientController());
         mainPanel.add(teleportPanel);
 
         return mainPanel;

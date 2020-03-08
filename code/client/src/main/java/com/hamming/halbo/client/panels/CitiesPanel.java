@@ -1,7 +1,6 @@
 package com.hamming.halbo.client.panels;
 
-import com.hamming.halbo.client.controllers.CityController;
-import com.hamming.halbo.client.interfaces.CityListener;
+import com.hamming.halbo.client.controllers.HALBOClientController;
 import com.hamming.halbo.model.dto.CityDto;
 
 import javax.swing.*;
@@ -9,16 +8,16 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.util.List;
 
-public class CitiesPanel extends JPanel implements CityListener {
+public class CitiesPanel extends JPanel {
 
     private DefaultListModel listModel;
+    private HALBOClientController controller;
     private JList<CityDto> listOfCities;
-    private CityController cityController;
 
-    public CitiesPanel(CityController cityController) {
-        this.cityController = cityController;
-        cityController.addCityListener(this);
+    public CitiesPanel(HALBOClientController controller) {
+        this.controller = controller;
         createPanel();
     }
 
@@ -32,7 +31,7 @@ public class CitiesPanel extends JPanel implements CityListener {
                 if ( !e.getValueIsAdjusting() ) { //Else this is called twice!
                     CityDto dto = listOfCities.getSelectedValue();
                     if (dto != null) {
-                        cityController.citySelected(dto);
+                        controller.citySelected(dto);
                     }
                 }
             }
@@ -44,11 +43,15 @@ public class CitiesPanel extends JPanel implements CityListener {
 
 
     public void empty() {
-        listModel.removeAllElements();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                listModel.removeAllElements();
+            }
+        });
     }
 
-    @Override
-    public void cityAdded(CityDto city) {
+    public void addCity(CityDto city) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -57,8 +60,19 @@ public class CitiesPanel extends JPanel implements CityListener {
         });
     }
 
-    @Override
-    public void cityDeleted(CityDto city) {
+    public void deleteCity(CityDto city) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                listModel.removeElement(city);
+            }
+        });
+    }
+
+    public void addCities(List<CityDto> cities) {
+        for (CityDto dto: cities) {
+            addCity(dto);
+        }
 
     }
 }
