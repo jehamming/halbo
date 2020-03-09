@@ -114,14 +114,24 @@ public class GameController implements Runnable {
                 if (location.getZ() > location.getBaseplate().getLength())
                     location.setZ(location.getBaseplate().getLength());
 */
-                // ViewAngle
-                location.setPitch(pitch);
-                location.setYaw(yaw);
+                // View Pitch / Yaw in degrees
+                location.setYaw(normalize(location.getYaw() + (yaw * ( 1.f / 10.f))));
+                location.setPitch(normalize(location.getPitch() + (pitch * ( 1.f / 10.f))));
                 gameState.setLocation(u, location);
                 fireGameStateEvent(GameStateEvent.Type.USERLOCATION, location);
             }
         }
     }
+
+    public float normalize(float angle) {
+        //Make angle between 0 and 360
+        angle%=360;
+        //Make angle between -179 and 180
+        if (angle>180) angle-=360;
+        return angle;
+    }
+
+
 
 
     private void fireGameStateEvent(GameStateEvent.Type type, BasicObject object) {

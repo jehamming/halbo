@@ -1,6 +1,7 @@
 package com.hamming.halbo.client.engine.renderengine;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.*;
 
 public class DisplayManager {
