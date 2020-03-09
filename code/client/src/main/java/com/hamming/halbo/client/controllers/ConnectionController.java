@@ -115,6 +115,6 @@ public class ConnectionController implements CommandReceiver {
     }
 
     public boolean isConnected() {
-        return client.isConnected();
+        return client != null && client.isConnected();
     }
 }
