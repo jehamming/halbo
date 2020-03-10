@@ -1,9 +1,6 @@
 package com.hamming.halbo.client.panels;
 
-import com.hamming.halbo.client.BaseWindow;
-import com.hamming.halbo.client.controllers.ContinentController;
 import com.hamming.halbo.client.controllers.HALBOClientController;
-import com.hamming.halbo.client.interfaces.ContinentListener;
 import com.hamming.halbo.model.dto.ContinentDto;
 
 import javax.swing.*;

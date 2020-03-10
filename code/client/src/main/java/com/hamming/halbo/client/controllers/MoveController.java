@@ -106,13 +106,6 @@ public class MoveController implements CommandReceiver {
         }
     }
 
-
-    public void moveRequest(boolean forward, boolean back, boolean left, boolean right, float pitch, float yaw) {
-        if ( connectionController.isConnected()) {
-            connectionController.send(protocolHandler.getMoveCommand(forward, back, left, right, pitch, yaw));
-        }
-    }
-
     public UserDto getCurrentUser() {
         return userController.getCurrentUser();
     }

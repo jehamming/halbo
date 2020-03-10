@@ -31,6 +31,7 @@ public class HALBOClientApplication {
         toolsWindow = new ToolsWindow(controllers);
         viewer = new GLViewer(controllers.getMoveController());
         viewController = new ViewController(viewer, controllers);
+
     }
 
     public static void main(String[] args) {

@@ -1,8 +1,6 @@
 package com.hamming.halbo.client.controllers;
 
-import com.hamming.halbo.client.interfaces.ContinentListener;
 import com.hamming.halbo.game.Protocol;
-import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.ContinentDto;
 import com.hamming.halbo.model.dto.WorldDto;
 import com.hamming.halbo.net.CommandReceiver;

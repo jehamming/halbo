@@ -10,7 +10,11 @@ public interface Viewer {
     public void addPlayer(String userId, String name);
     public void removePlayer(String userId);
 
-    //TODO Load LDRAW
-    // public void drawConstruction(String ldrawXML, x, y, z)
+    public boolean getForward();
+    public boolean getBack();
+    public boolean getLeft();
+    public boolean getRight();
+    public float getYaw();
+    public float getPitch();
 
 }

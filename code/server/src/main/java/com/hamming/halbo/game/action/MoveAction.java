@@ -7,7 +7,7 @@ import com.hamming.halbo.model.User;
 public class MoveAction implements Action {
     private GameController controller;
     private ClientConnection client;
-
+    private long sequence;
     private boolean forward = false;
     private boolean back = false;
     private boolean left = false;
@@ -24,18 +24,19 @@ public class MoveAction implements Action {
     @Override
     public void execute() {
         User u = client.getUser();
-        controller.handleMoveRequest(u, forward, back, left, right, pitch, yaw);
+        controller.handleMoveRequest(sequence, u, forward, back, left, right, pitch, yaw);
     }
 
     @Override
     public void setValues(String... values) {
-        if (values.length == 6 ) {
-            forward = Boolean.valueOf(values[0]);
-            back = Boolean.valueOf(values[1]);
-            left = Boolean.valueOf(values[2]);
-            right = Boolean.valueOf(values[3]);
-            pitch = Float.valueOf(values[4]);
-            yaw = Float.valueOf(values[5]);
+        if (values.length == 7 ) {
+            sequence = Long.valueOf(values[0]);
+            forward = Boolean.valueOf(values[1]);
+            back = Boolean.valueOf(values[2]);
+            left = Boolean.valueOf(values[3]);
+            right = Boolean.valueOf(values[4]);
+            pitch = Float.valueOf(values[5]);
+            yaw = Float.valueOf(values[6]);
         } else {
             System.out.println(this.getClass().getName() + ":" + "Error at "+getClass().getName()+", size not ok of: "+values);
         }

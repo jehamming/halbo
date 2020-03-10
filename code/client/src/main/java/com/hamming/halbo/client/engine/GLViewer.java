@@ -15,7 +15,6 @@ import com.hamming.halbo.client.engine.renderengine.Renderer;
 import com.hamming.halbo.client.engine.shaders.StaticShader;
 import com.hamming.halbo.client.engine.textures.ModelTexture;
 import com.hamming.halbo.client.interfaces.Viewer;
-import javafx.scene.input.MouseButton;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -33,6 +32,7 @@ public class GLViewer implements Viewer, Runnable {
     private Loader loader;
     private List<Player> players;
     private MoveController moveController;
+    private boolean initialized;
     private enum MouseButton {
         LEFT,
         RIGHT
@@ -44,6 +44,7 @@ public class GLViewer implements Viewer, Runnable {
         this.moveController = moveController;
         Thread t = new Thread(this);
         t.start();
+        initialized = false;
     }
 
     @Override
@@ -65,7 +66,7 @@ public class GLViewer implements Viewer, Runnable {
         dragon.setModel(staticModel);
         dragon.setPosition(new Vector3f(0, -5, -25));
         dragon.setScale(1);
-
+        initialized = true;
         while (!Display.isCloseRequested()) {
             checkMouseGrab();
             handleActions();
@@ -73,7 +74,6 @@ public class GLViewer implements Viewer, Runnable {
             renderEverything();
             renderer.render(dragon, shader);
             shader.stop();
-            handleMove();
             DisplayManager.updateDisplay();
         }
 
@@ -91,26 +91,6 @@ public class GLViewer implements Viewer, Runnable {
         if (Mouse.isButtonDown(MouseButton.LEFT.ordinal())) {
             Mouse.setGrabbed(true);
         }
-    }
-
-    private void handleMove() {
-        boolean forward = false, back = false, left = false, right = false;
-        if(Keyboard.isKeyDown(Keyboard.KEY_W)){
-            forward = true;
-        }
-        if(Keyboard.isKeyDown(Keyboard.KEY_S)){
-            back = true;
-        }
-        if(Keyboard.isKeyDown(Keyboard.KEY_D)){
-            right = true;
-        }
-        if(Keyboard.isKeyDown(Keyboard.KEY_A)){
-            left = true;
-        }
-        if ( forward || back || left || right || Mouse.getDY() > 0 || Mouse.getDX() > 0) {
-            moveController.moveRequest(forward, back, left, right, Mouse.getDY(), Mouse.getDX());
-        }
-
     }
 
     private void renderEverything() {
@@ -162,7 +142,10 @@ public class GLViewer implements Viewer, Runnable {
 
     @Override
     public void resetView() {
-
+        Action action = new SetCameraAction(this, 0, 0, 0, 0, 0);
+        synchronized (actions) {
+            actions.add(action);
+        }
     }
 
     @Override
@@ -178,6 +161,44 @@ public class GLViewer implements Viewer, Runnable {
         Action action = new RemovePlayerAction(this, userId);
         synchronized (actions) {
             actions.add(action);
+        }
+    }
+
+    @Override
+    public boolean getForward() {
+        return  initialized && Keyboard.isKeyDown(Keyboard.KEY_W);
+    }
+
+    @Override
+    public boolean getBack() {
+        return initialized && Keyboard.isKeyDown(Keyboard.KEY_S);
+    }
+
+    @Override
+    public boolean getLeft() {
+        return initialized && Keyboard.isKeyDown(Keyboard.KEY_A);
+    }
+
+    @Override
+    public boolean getRight() {
+        return initialized && Keyboard.isKeyDown(Keyboard.KEY_D);
+    }
+
+    @Override
+    public float getYaw() {
+        if (Mouse.isGrabbed() ) {
+            return Mouse.getDX();
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public float getPitch() {
+        if (Mouse.isGrabbed() ) {
+            return Mouse.getDY();
+        } else {
+            return 0;
         }
     }
 

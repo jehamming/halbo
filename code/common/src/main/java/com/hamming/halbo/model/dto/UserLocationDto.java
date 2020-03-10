@@ -9,13 +9,15 @@ public class UserLocationDto implements DTO {
     private String continentId;
     private String cityId;
     private String baseplateId;
+    private long sequence;
     private float x,y,z,pitch,yaw;
 
     public UserLocationDto(){
 
     }
 
-    public UserLocationDto(String userId, String worldId, String continentId, String cityId, String baseplateId, float x, float y, float z, float pitch, float yaw){
+    public UserLocationDto(long sequence, String userId, String worldId, String continentId, String cityId, String baseplateId, float x, float y, float z, float pitch, float yaw){
+        this.sequence = sequence;
         this.userId = userId;
         this.worldId = worldId;
         this.continentId = continentId;
@@ -30,7 +32,8 @@ public class UserLocationDto implements DTO {
 
     @Override
     public String toNetData() {
-        String data = userId + StringUtils.delimiter
+        String data = sequence + StringUtils.delimiter
+                + userId + StringUtils.delimiter
                 + worldId + StringUtils.delimiter
                 + continentId + StringUtils.delimiter
                 + cityId + StringUtils.delimiter
@@ -45,17 +48,18 @@ public class UserLocationDto implements DTO {
 
     @Override
     public void setValues(String... values) {
-        if ( values.length == 10) {
-            userId = values[0];
-            worldId = values[1];
-            continentId = values[2];
-            cityId = values[3];
-            baseplateId = values[4];
-            x = Float.valueOf(values[5]);
-            y = Float.valueOf(values[6]);
-            z = Float.valueOf(values[7]);
-            pitch = Float.valueOf(values[8]);
-            yaw = Float.valueOf(values[9]);
+        if ( values.length == 11) {
+            sequence = Long.valueOf(values[0]);
+            userId = values[1];
+            worldId = values[2];
+            continentId = values[3];
+            cityId = values[4];
+            baseplateId = values[5];
+            x = Float.valueOf(values[6]);
+            y = Float.valueOf(values[7]);
+            z = Float.valueOf(values[8]);
+            pitch = Float.valueOf(values[9]);
+            yaw = Float.valueOf(values[10]);
         }
     }
 
@@ -99,9 +103,14 @@ public class UserLocationDto implements DTO {
         return yaw;
     }
 
+    public long getSequence() {
+        return sequence;
+    }
+
     @Override
     public String toString() {
         return "UserLocationDto{" +
+                "sequence ='" + sequence + '\'' +
                 "userId='" + userId + '\'' +
                 ", worldId='" + worldId + '\'' +
                 ", continentId='" + continentId + '\'' +
