@@ -1,7 +1,6 @@
 package com.hamming.halbo.client.panels;
 
 import com.hamming.halbo.client.controllers.HALBOClientController;
-import com.hamming.halbo.client.interfaces.WorldListener;
 import com.hamming.halbo.model.dto.WorldDto;
 
 import javax.swing.*;

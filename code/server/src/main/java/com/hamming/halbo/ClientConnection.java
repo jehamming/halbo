@@ -25,17 +25,17 @@ public class ClientConnection implements Runnable, GameStateListener {
     private UserLocation userLocation;
     private Socket socket;
     private BufferedReader in;
-    private PrintWriter out;
     private boolean running = true;
     private GameController gameController;
     private ProtocolHandler protocolHandler;
+    private ClientSender clientSender;
 
     public ClientConnection(Socket s, BufferedReader in, PrintWriter out, GameController controller) {
         this.socket = s;
         this.in = in;
-        this.out = out;
         this.gameController = controller;
         this.protocolHandler = new ProtocolHandler(controller, this);
+        clientSender = new ClientSender(out);
     }
 
     @Override
@@ -68,8 +68,7 @@ public class ClientConnection implements Runnable, GameStateListener {
     }
 
     public void send(String s) {
-        System.out.println(this.getClass().getName() + ":" + "Client send:" + s);
-        out.println(s);
+        clientSender.enQueue(s);
     }
 
     public User getUser() {

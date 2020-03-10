@@ -1,6 +1,5 @@
 package com.hamming.halbo.client.controllers;
 
-import com.hamming.halbo.client.interfaces.WorldListener;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.WorldDto;
@@ -8,6 +7,8 @@ import com.hamming.halbo.net.CommandReceiver;
 
 import java.util.ArrayList;
 import java.util.List;
+
+;
 
 public class WorldController implements CommandReceiver {
 

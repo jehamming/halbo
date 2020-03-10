@@ -30,7 +30,6 @@ public class NetClient implements Runnable {
             socket = new Socket(ip, port);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
-
             // Do Protocol handshake
             doProtocolHandshake();
 
@@ -88,9 +87,9 @@ public class NetClient implements Runnable {
         System.out.println(this.getClass().getName() + ":" + "NetClient finished");
     }
 
-    public void send(String s) {
-        System.out.println(this.getClass().getName() + ":" + "Send:" +s );
-        out.println(s);
+    public void send(String data) {
+        System.out.println(this.getClass().getName() + ":" + "Send:" + data );
+        out.println(data);
     }
 
     public void received(String s) {

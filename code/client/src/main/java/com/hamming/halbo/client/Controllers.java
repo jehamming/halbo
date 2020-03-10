@@ -11,6 +11,7 @@ public class Controllers {
     private UserController userController;
     private WorldController worldController;
     private HALBOClientController halboClientController;
+    private ViewController viewController;
 
 
     public CityController getCityController() {
@@ -67,5 +68,13 @@ public class Controllers {
 
     public void setHalboClientController(HALBOClientController halboClientController) {
         this.halboClientController = halboClientController;
+    }
+
+    public ViewController getViewController() {
+        return viewController;
+    }
+
+    public void setViewController(ViewController viewController) {
+        this.viewController = viewController;
     }
 }

@@ -1,10 +1,7 @@
 package com.hamming.halbo.game;
 
 import com.hamming.halbo.game.Protocol;
-import com.hamming.halbo.model.dto.BaseplateDto;
-import com.hamming.halbo.model.dto.CityDto;
-import com.hamming.halbo.model.dto.ContinentDto;
-import com.hamming.halbo.model.dto.WorldDto;
+import com.hamming.halbo.model.dto.*;
 import com.hamming.halbo.util.StringUtils;
 
 import java.util.Arrays;
@@ -39,14 +36,9 @@ public class ProtocolHandler implements Protocol {
     }
 
 
-    public String getMoveCommand(boolean forward, boolean back, boolean left, boolean right, float pitch, float yaw) {
+    public String getMoveCommand(MovementDto dto) {
         String cmd = Command.MOVE.ordinal() + StringUtils.delimiter
-                + forward + StringUtils.delimiter
-                + back + StringUtils.delimiter
-                + left + StringUtils.delimiter
-                + right + StringUtils.delimiter
-                + pitch + StringUtils.delimiter
-                + yaw;
+                + dto.toNetData();
         return cmd;
     }
 

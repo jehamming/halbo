@@ -7,6 +7,7 @@ public class UserLocation extends BasicObject{
     private Continent continent;
     private City city;
     private Baseplate baseplate;
+    private long sequence;
     private float x,y,z,pitch,yaw;
 
     public UserLocation(HalboID id) {
@@ -91,5 +92,13 @@ public class UserLocation extends BasicObject{
 
     public void setYaw(float yaw) {
         this.yaw = yaw;
+    }
+
+    public long getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(long sequence) {
+        this.sequence = sequence;
     }
 }

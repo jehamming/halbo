@@ -1,7 +1,5 @@
 package com.hamming.halbo.client.controllers;
 
-import com.hamming.halbo.client.interfaces.CityListener;
-import com.hamming.halbo.client.interfaces.ConnectionListener;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.BaseplateDto;
