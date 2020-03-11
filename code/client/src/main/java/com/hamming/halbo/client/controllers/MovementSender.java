@@ -30,7 +30,7 @@ public class MovementSender implements Runnable {
     public void run() {
         running = true;
         while (running) {
-            MovementDto data = viewController.getCurrentMoveCommand();
+            MovementDto data = viewController.getCurrentMoveRequest();
             if (data != null) {
                 connectionController.send(protocolHandler.getMoveCommand(data));
             }

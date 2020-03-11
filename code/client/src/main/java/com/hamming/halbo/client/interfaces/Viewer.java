@@ -1,5 +1,7 @@
 package com.hamming.halbo.client.interfaces;
 
+import com.hamming.halbo.client.engine.entities.Camera;
+
 public interface Viewer {
 
     public void setLocation(float x, float y, float z, float pitch, float yaw );
@@ -16,5 +18,7 @@ public interface Viewer {
     public boolean getRight();
     public float getYaw();
     public float getPitch();
+
+    public Camera getCamera();
 
 }

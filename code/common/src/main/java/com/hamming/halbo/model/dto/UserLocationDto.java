@@ -103,6 +103,30 @@ public class UserLocationDto implements DTO {
         return yaw;
     }
 
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public void setZ(float z) {
+        this.z = z;
+    }
+
+    public void setPitch(float pitch) {
+        this.pitch = pitch;
+    }
+
+    public void setYaw(float yaw) {
+        this.yaw = yaw;
+    }
+
     public long getSequence() {
         return sequence;
     }
