@@ -1,0 +1,24 @@
+Import pom.xmls into IntelliJ
+
+Make a Run Configuration for the Client : HALBOClientApplication
+make sure that you set the -Djava.library.path to the resources/lib/natives/linux (or windows)
+make sure that the working dir is set to [..]/git/halbo/code/client
+
+Make a Run Configuration for the Server : HALBOServer
+make sure that the working dir is set to [..]/git/halbo/code/server
+
+
+# First time run:
+copy server/src/main/resources/server.properties to the server dir. 
+Make a Run Configuration for : CreateMinimalWorld
+make sure that the working dir is set to [..]/git/halbo/code/server
+run CreateMinimalWorld once, now you have the data files
+
+Run HALBOClientApplication. 
+Login with either jehamming/jehamming or lhhamming/lhhamming (user/password)
+Choose a World/Continent/City and press Teleport
+Click in the viewer window and use the Mouse/WSAD to move.
+
+
+
+
