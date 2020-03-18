@@ -2,3 +2,5 @@
 *.iml
 code/server/*.dat
 *.log
+out/
+target/
