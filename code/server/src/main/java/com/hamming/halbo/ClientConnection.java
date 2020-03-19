@@ -109,9 +109,14 @@ public class ClientConnection implements Runnable, GameStateListener {
             for (Continent continent : world.getContinents()) {
                 ContinentDto continentDto = DTOFactory.getInstance().getContinentDto(world.getId().toString(), continent);
                 send(Protocol.Command.GETCONTINENTS.ordinal() + StringUtils.delimiter + continentDto.toNetData());
+                // Cities
                 for (City city : continent.getCities()) {
                     CityDto cityDto = DTOFactory.getInstance().getCityDto(continent.getId().toString(), city);
                     send(Protocol.Command.GETCITIES.ordinal() + StringUtils.delimiter + cityDto.toNetData());
+                    Baseplate baseplate = city.getTeleportBaseplate();
+                    // For now, transmit the teleport baseplate
+                    BaseplateDto baseplateDto = DTOFactory.getInstance().getBaseplateDto(baseplate);
+                    send(Protocol.Command.GETBASEPLATES.ordinal() + StringUtils.delimiter + baseplateDto.toNetData());
                 }
             }
         }

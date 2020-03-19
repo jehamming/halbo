@@ -1,7 +1,8 @@
 package com.hamming.halbo.client.engine.actions;
 
 import com.hamming.halbo.client.engine.GLViewer;
-import com.hamming.halbo.client.engine.entities.Player;
+import com.wijlen.ter.halbo.lwjgl.entities.Player;
+
 
 public class AddPlayerAction implements Action {
 
@@ -16,7 +17,7 @@ public class AddPlayerAction implements Action {
 
     @Override
     public void execute() {
-        Player player = new Player(viewer.getLoader(), userId, name);
+        Player player = new Player(userId, viewer.getBasicPlayerTexture());
         viewer.getPlayers().add(player);
     }
 

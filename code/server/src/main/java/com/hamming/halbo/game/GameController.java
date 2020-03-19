@@ -12,6 +12,8 @@ public class GameController implements Runnable {
     private boolean running = true;
     private GameState gameState;
     private List<GameStateListener> listeners;
+    private static final float RUN_SPEED = 1;
+    private static final float TURN_SPEED = 7;
 
     public GameController() {
         gameState = new GameState();
@@ -92,39 +94,44 @@ public class GameController implements Runnable {
     }
 
 
-    public void handleMoveRequest(Long sequence, User u, boolean forward, boolean back, boolean left, boolean right, float pitch, float yaw) {
+    public void handleMoveRequest(Long sequence, User u, boolean forward, boolean back, boolean left, boolean right) {
         UserLocation location = gameState.getLocation(u);
         if (location != null) {
-            // First - lets try flat movement in the X/Y plane
-            if (forward) location.setZ(location.getZ() - 0.12f);
-            if (back) location.setZ(location.getZ() + 0.12f);
-            if (left) location.setX(location.getX() - 0.12f);
-            if (right) location.setX(location.getX() + 0.12f);
-            // Check out of bounds
-/*
-                if (location.getX() < 0) location.setX(0);
-                if (location.getY() < 0) location.setY(0);
-                if (location.getZ() < 0) location.setZ(0);
-                if (location.getX() > location.getBaseplate().getWidth())
-                    location.setX(location.getBaseplate().getWidth());
-                if (location.getZ() > location.getBaseplate().getLength())
-                    location.setZ(location.getBaseplate().getLength());
-*/
-            // View Pitch / Yaw in degrees
-            location.setYaw(normalize(location.getYaw() + (yaw * (1.f / 10.f))));
-            location.setPitch(normalize(location.getPitch() - (pitch * (1.f / 10.f))));
+            float currentSpeed = 0;
+            if (forward) {
+                currentSpeed = RUN_SPEED;
+            } else if (back) {
+                currentSpeed = -RUN_SPEED;
+            }
+            float currentTurnSpeed = 0;
+            if (right) {
+                currentTurnSpeed = -TURN_SPEED;
+            } else if (left) {
+                currentTurnSpeed = TURN_SPEED;
+            }
+
+            location = calculateNewPosition(location, currentSpeed, currentTurnSpeed);
+
             location.setSequence(sequence);
             gameState.setLocation(u, location);
             fireGameStateEvent(GameStateEvent.Type.USERLOCATION, location);
         }
     }
 
-    public static float normalize(float angle) {
-        //Make angle between 0 and 360
-        angle %= 360;
-        //Make angle between -179 and 180
-        if (angle > 180) angle -= 360;
-        return angle;
+    private UserLocation calculateNewPosition(UserLocation location, float currentSpeed, float currentTurnSpeed) {
+        // Calculate new position
+        location.setYaw(location.getYaw() + currentTurnSpeed);
+        float distance = currentSpeed;
+        float dx = (float) (distance * Math.sin(Math.toRadians(location.getYaw() + currentTurnSpeed)));
+        float dz = (float) (distance * Math.cos(Math.toRadians(location.getYaw() + currentTurnSpeed)));
+        increasePosition(location, dx, 0, dz);
+        return location;
+    }
+
+    public void increasePosition(UserLocation l, float dx, float dy, float dz) {
+        l.setX( l.getX() + dx );
+        l.setY(l.getY() +  dy );
+        l.setZ(l.getZ() + dz );
     }
 
     private void fireGameStateEvent(GameStateEvent.Type type, BasicObject object) {

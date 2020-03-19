@@ -127,10 +127,6 @@ public class UserController implements ConnectionListener, CommandReceiver {
         }
     }
 
-    public List<UserDto> getUsers() {
-        return users;
-    }
-
     public UserDto getUser(String userId) {
         UserDto user = findUserById(userId);
         if (user == null ) {

@@ -10,7 +10,7 @@ public class ClientSender implements Runnable {
     private PrintWriter out;
     boolean running = false;
     private Queue<String> itemsToSend;
-    private static int INTERVAL = 100; // Milliseconds
+    private static int INTERVAL = 50; // Milliseconds, 20Hz
 
     public ClientSender(PrintWriter out) {
         this.out = out;
