@@ -1,7 +1,7 @@
 package com.hamming.halbo.client.engine.actions;
 
 import com.hamming.halbo.client.engine.GLViewer;
-import com.hamming.halbo.client.engine.entities.Player;
+import com.wijlen.ter.halbo.lwjgl.entities.Player;
 
 public class RemovePlayerAction implements Action {
 

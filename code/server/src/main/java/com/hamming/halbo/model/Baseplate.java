@@ -14,9 +14,9 @@ public class Baseplate extends BasicObject   {
 
     public Baseplate(HalboID id) {
         super(id);
-        spawnPointX = 0;
-        spawnPointY = 0;
-        spawnPointX = 0;
+        spawnPointX = 25;
+        spawnPointY = 1;
+        spawnPointZ = -25;
         width = 50;
         length = 50;
     }

@@ -60,10 +60,6 @@ public class Entity {
 		return model;
 	}
 
-	public void setModel(TexturedModel model) {
-		this.model = model;
-	}
-
 	public Vector3f getPosition() {
 		return position;
 	}

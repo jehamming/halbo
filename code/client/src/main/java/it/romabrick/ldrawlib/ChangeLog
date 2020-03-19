@@ -1,0 +1,12 @@
+2014-09-16  Mario Pascucci  <mpascucci@gmail.com>
+
+	* LDrawParser.java (auxLinePattern): corrected Aux Line regex pattern
+
+2014-09-15  Mario Pascucci  <mpascucci@gmail.com>
+
+	* LDrawParser.java (auxLinePattern): modified regex to include third and fourth point
+		for aux lines 
+	(parseLineType5): added parsing for third and fourth point in aux lines
+	* LDPrimitive.java (newAuxLine): added third and fourth point 
+		to aux line, so a part contains all info to write down a new LDraw file
+	

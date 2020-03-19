@@ -1,12 +1,14 @@
 package com.hamming.halbo.client.interfaces;
 
-import com.hamming.halbo.client.engine.entities.Camera;
+
+import com.wijlen.ter.halbo.lwjgl.entities.Camera;
 
 public interface Viewer {
 
-    public void setLocation(float x, float y, float z, float pitch, float yaw );
-    public void setLocation(String userId, String name, float x, float y, float z, float pitch, float yaw );
-    public void setBaseplate(String name, int width, int length);
+    public void setLocation(String userId, float x, float y, float z, float pitch, float yaw );
+    public void followPlayer(String userId);
+    public void setBaseplate(String baseplateId, String name, int width, int length);
+    public String getCurrentBaseplateId();
     public void resetView();
 
     public void addPlayer(String userId, String name);
@@ -16,9 +18,4 @@ public interface Viewer {
     public boolean getBack();
     public boolean getLeft();
     public boolean getRight();
-    public float getYaw();
-    public float getPitch();
-
-    public Camera getCamera();
-
 }

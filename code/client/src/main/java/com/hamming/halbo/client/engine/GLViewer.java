@@ -2,19 +2,21 @@ package com.hamming.halbo.client.engine;
 
 import com.hamming.halbo.client.controllers.MoveController;
 import com.hamming.halbo.client.engine.actions.*;
-import com.hamming.halbo.client.engine.entities.Camera;
-import com.hamming.halbo.client.engine.entities.Entity;
-import com.hamming.halbo.client.engine.entities.Light;
-import com.hamming.halbo.client.engine.entities.Player;
-import com.hamming.halbo.client.engine.models.RawModel;
-import com.hamming.halbo.client.engine.models.TexturedModel;
-import com.hamming.halbo.client.engine.renderengine.DisplayManager;
-import com.hamming.halbo.client.engine.renderengine.Loader;
-import com.hamming.halbo.client.engine.renderengine.OBJLoader;
-import com.hamming.halbo.client.engine.renderengine.Renderer;
-import com.hamming.halbo.client.engine.shaders.StaticShader;
-import com.hamming.halbo.client.engine.textures.ModelTexture;
 import com.hamming.halbo.client.interfaces.Viewer;
+import com.wijlen.ter.halbo.lwjgl.entities.Camera;
+import com.wijlen.ter.halbo.lwjgl.entities.Light;
+import com.wijlen.ter.halbo.lwjgl.entities.Player;
+import com.wijlen.ter.halbo.lwjgl.models.RawModel;
+import com.wijlen.ter.halbo.lwjgl.models.TexturedModel;
+import com.wijlen.ter.halbo.lwjgl.renderEngine.DisplayManager;
+import com.wijlen.ter.halbo.lwjgl.renderEngine.Loader;
+import com.wijlen.ter.halbo.lwjgl.renderEngine.MasterRenderer;
+import com.wijlen.ter.halbo.lwjgl.renderEngine.OBJLoader;
+import com.wijlen.ter.halbo.lwjgl.terrains.FlatTerrain;
+import com.wijlen.ter.halbo.lwjgl.terrains.Terrain;
+import com.wijlen.ter.halbo.lwjgl.textures.ModelTexture;
+import com.wijlen.ter.halbo.lwjgl.textures.TerrainTexture;
+import com.wijlen.ter.halbo.lwjgl.textures.TerrainTexturePack;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -26,13 +28,14 @@ import java.util.*;
 public class GLViewer implements Viewer, Runnable {
     private Camera camera;
     private List<Action> actions;
-    private Renderer renderer;
-    private Light light;
-    private StaticShader shader;
-    private Loader loader;
     private List<Player> players;
     private MoveController moveController;
     private boolean initialized;
+    private TexturedModel basicPlayerTexture;
+    private String followedUserId;
+    private Terrain terrain;
+    private Loader loader;
+    private String currentBaseplateId;
     private enum MouseButton {
         LEFT,
         RIGHT
@@ -45,39 +48,46 @@ public class GLViewer implements Viewer, Runnable {
         Thread t = new Thread(this);
         t.start();
         initialized = false;
+        currentBaseplateId = null;
     }
 
     @Override
     public void run() {
         DisplayManager.createDisplay("GLViewer");
         loader = new Loader();
-        shader = new StaticShader();
-        renderer = new Renderer(shader);
-        light = new Light(new Vector3f(0, -5, -20), new Vector3f(1, 1, 1));
+
+
+        MasterRenderer renderer = new MasterRenderer(loader);
+
+        Light light = new Light(new Vector3f(0, 1000, -7000), new Vector3f(0.4f, 0.4f, 0.4f));
+        List<Light> lights = new ArrayList<>();
+        lights.add(light);
+        lights.add(new Light(new Vector3f(185,10,-293), new Vector3f(2,0,0), new Vector3f(1, 0.01f,0.002f)));
+        lights.add(new Light(new Vector3f(370,17,-300), new Vector3f(0,2,2), new Vector3f(1, 0.01f,0.002f)));
+        lights.add(new Light(new Vector3f(293,7,-305), new Vector3f(2,2,0), new Vector3f(1, 0.01f,0.002f)));
+
+
+        RawModel basicPlayerModel = OBJLoader.loadObjModel("person", loader);
+        basicPlayerTexture = new TexturedModel(basicPlayerModel, new ModelTexture(
+                loader.loadTexture("purple")));
+
         camera = new Camera();
 
-        // Dragon mag weg als players goed gerendered worden
-        RawModel model = OBJLoader.loadObjModel("dragon", loader);
-        TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("purple")));
-        ModelTexture texture = staticModel.getTexture();
-        texture.setShineDamper(10);
-        texture.setReflectivity(1);
-        Entity dragon = new Entity();
-        dragon.setModel(staticModel);
-        dragon.setPosition(new Vector3f(0, -5, -25));
-        dragon.setScale(1);
+
+
         initialized = true;
         while (!Display.isCloseRequested()) {
             checkMouseGrab();
             handleActions();
-            shader.start();
-            renderEverything();
-            renderer.render(dragon, shader);
-            shader.stop();
+            camera.move();
+            players.forEach(player -> renderer.processEntity(player));
+            if ( terrain != null ) {
+                renderer.processTerrain(terrain);
+            }
+            renderer.render(lights, camera);
             DisplayManager.updateDisplay();
         }
-
-        shader.cleanUp();
+        renderer.cleanUp();
         loader.cleanUp();
         DisplayManager.closeDisplay();
 
@@ -93,59 +103,47 @@ public class GLViewer implements Viewer, Runnable {
         }
     }
 
-    private void renderEverything() {
-        renderer.prepare();
-        shader.loadLight(light);
-        shader.loadViewMatrix(camera);
-        renderPlayers();
-    }
-
-    private void renderPlayers() {
-        for (Player player: players) {
-            if (player.getPosition() != null ) {
-                renderer.render(player, shader);
-            }
-        }
-    }
-
     private void handleActions() {
         synchronized (actions) {
-            Iterator<Action> iter = actions.iterator();
-            while (iter.hasNext()) {
-                Action cmd = iter.next();
-                cmd.execute();
+            actions.forEach(action -> action.execute());
+            actions.removeAll(actions);
+        }
+    }
+
+    @Override
+    public void setLocation(String userId, float x, float y, float z, float pitch, float yaw) {
+        Action action = new SetUserLocationAction(this, userId, x, y, z, pitch, yaw);
+        synchronized (actions) {
+            actions.add(action);
+        }
+    }
+
+    @Override
+    public void followPlayer(String userId) {
+        followedUserId = userId;
+    }
+
+
+    @Override
+    public void setBaseplate(String baseplateId, String name, int width, int length) {
+        if (currentBaseplateId == null || currentBaseplateId.equals(baseplateId)) {
+            Action action = new SetBaseplateAction(this, loader, baseplateId);
+            synchronized (actions) {
+                actions.add(action);
             }
         }
     }
 
     @Override
-    public void setLocation(float x, float y, float z, float pitch, float yaw) {
-        Action action = new SetCameraAction(this, x, y, z, pitch, yaw);
-        synchronized (actions) {
-            actions.add(action);
-        }
+    public String getCurrentBaseplateId() {
+        return currentBaseplateId;
     }
-
-    @Override
-    public void setLocation(String userId, String name, float x, float y, float z, float pitch, float yaw) {
-        Action action = new SetUserLocationAction(this, userId, name, x, y, z, pitch, yaw);
-        synchronized (actions) {
-            actions.add(action);
-        }
-    }
-
-    @Override
-    public void setBaseplate(String name, int width, int length) {
-
-    }
-
 
     @Override
     public void resetView() {
-        Action action = new SetCameraAction(this, 0, 0, 0, 0, 0);
-        synchronized (actions) {
-            actions.add(action);
-        }
+        terrain = null;
+        currentBaseplateId = null;
+        players = new ArrayList<Player>();
     }
 
     @Override
@@ -184,34 +182,28 @@ public class GLViewer implements Viewer, Runnable {
         return initialized && Keyboard.isKeyDown(Keyboard.KEY_D);
     }
 
-    @Override
-    public float getYaw() {
-        if (Mouse.isGrabbed() ) {
-            return Mouse.getDX();
-        } else {
-            return 0;
-        }
-    }
-
-    @Override
-    public float getPitch() {
-        if (Mouse.isGrabbed() ) {
-            return Mouse.getDY();
-        } else {
-            return 0;
-        }
-    }
-
-
-    public Camera getCamera() {
-        return camera;
-    }
 
     public List<Player> getPlayers() {
         return players;
     }
 
-    public Loader getLoader() {
-        return loader;
+    public TexturedModel getBasicPlayerTexture() {
+        return basicPlayerTexture;
     }
+
+    public String getFollowedUserId() {
+        return followedUserId;
+    }
+
+    public void followPlayer(Player p) {
+        camera.setPlayer(p);
+    }
+
+    public void setTerrain(String baseplateId, Terrain terrain) {
+        this.terrain = terrain;
+        this.currentBaseplateId = baseplateId;
+    }
+
+
+
 }

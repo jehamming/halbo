@@ -6,17 +6,14 @@ import com.hamming.halbo.util.StringUtils;
 public class MovementDto implements DTO {
     private long sequence;
     private boolean forward, back, left, right;
-    private float pitch, yaw;
 
 
-    public MovementDto(long sequence, boolean forward, boolean back, boolean left, boolean right, float pitch, float yaw) {
+    public MovementDto(long sequence, boolean forward, boolean back, boolean left, boolean right) {
         this.sequence = sequence;
         this.forward = forward;
         this.back = back;
         this.left =left;
         this.right = right;
-        this.pitch = pitch;
-        this.yaw = yaw;
     }
 
     @Override
@@ -25,22 +22,18 @@ public class MovementDto implements DTO {
                 + forward + StringUtils.delimiter
                 + back + StringUtils.delimiter
                 + left + StringUtils.delimiter
-                + right + StringUtils.delimiter
-                + pitch + StringUtils.delimiter
-                + yaw;
+                + right ;
         return cmd;
     }
 
     @Override
     public void setValues(String... values) {
-        if ( values.length == 7) {
+        if ( values.length == 5) {
             sequence = Long.valueOf(values[0]);
             forward = Boolean.valueOf(values[1]);
             back = Boolean.valueOf(values[2]);
             left = Boolean.valueOf(values[3]);
             right = Boolean.valueOf(values[4]);
-            pitch = Float.valueOf(values[5]);
-            yaw = Float.valueOf(values[6]);
         }
     }
 
@@ -82,21 +75,5 @@ public class MovementDto implements DTO {
 
     public void setRight(boolean right) {
         this.right = right;
-    }
-
-    public float getPitch() {
-        return pitch;
-    }
-
-    public void setPitch(float pitch) {
-        this.pitch = pitch;
-    }
-
-    public float getYaw() {
-        return yaw;
-    }
-
-    public void setYaw(float yaw) {
-        this.yaw = yaw;
     }
 }

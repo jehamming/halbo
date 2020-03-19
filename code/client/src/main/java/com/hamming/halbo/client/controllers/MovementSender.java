@@ -16,7 +16,7 @@ public class MovementSender implements Runnable {
     private ProtocolHandler protocolHandler;
     private ViewController viewController;
     boolean running = false;
-    private static int INTERVAL = 100; // Milliseconds
+    private static int INTERVAL = 50; // Milliseconds 20hz
 
     public MovementSender(ViewController viewController, ConnectionController connectionController) {
         this.connectionController = connectionController;
@@ -30,9 +30,11 @@ public class MovementSender implements Runnable {
     public void run() {
         running = true;
         while (running) {
-            MovementDto data = viewController.getCurrentMoveRequest();
-            if (data != null) {
-                connectionController.send(protocolHandler.getMoveCommand(data));
+            if (connectionController.isConnected()) {
+                MovementDto data = viewController.getCurrentMoveRequest();
+                if (data != null) {
+                    connectionController.send(protocolHandler.getMoveCommand(data));
+                }
             }
             try {
                 Thread.sleep(INTERVAL);
