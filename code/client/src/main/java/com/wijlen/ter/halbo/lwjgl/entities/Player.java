@@ -1,6 +1,7 @@
 package com.wijlen.ter.halbo.lwjgl.entities;
 
 import com.wijlen.ter.halbo.lwjgl.models.TexturedModel;
+import com.wijlen.ter.halbo.lwjgl.terrains.FlatTerrain;
 import com.wijlen.ter.halbo.lwjgl.terrains.HeightTerrain;
 import com.wijlen.ter.halbo.lwjgl.terrains.Terrain;
 import org.lwjgl.input.Keyboard;
@@ -35,7 +36,7 @@ public class Player extends Entity {
         this(userId, model, new Vector3f(100, 0, -50), 0, 0, 0, 0.5f);
     }
 
-    public void move(Terrain terrain) {
+    public void move(FlatTerrain terrain) {
         checkInputs();
         super.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
         float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
@@ -44,11 +45,10 @@ public class Player extends Entity {
         super.increasePosition(dx, 0, dz);
         upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
         super.increasePosition(0, upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
-        float terrainHeight = terrain.getHeightOfTerrain(super.getPosition().x, super.getPosition().z);
-        if (super.getPosition().y < terrainHeight) {
+        if (super.getPosition().y < 1) {
             upwardsSpeed = 0;
             isInAir = false;
-            super.getPosition().y = terrainHeight;
+            super.getPosition().y = 1;
         }
     }
 

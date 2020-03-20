@@ -13,34 +13,22 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class FlatTerrain implements Terrain {
+public class FlatTerrain {
 
-    private static final float SIZE = 200;
-    private static final float MAX_PIXEL_COLOUR = 256 * 256 * 256;
-
+    private int size = 200;
     private float x;
     private float z;
     private RawModel model;
-    private TerrainTexturePack texturePack;
-    private TerrainTexture blendMap;
+    private TerrainTexture texture;
 
-    private float[][] heights;
-
-    public FlatTerrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap) {
-        this.texturePack = texturePack;
-        this.blendMap = blendMap;
-        this.x = gridX * SIZE;
-        this.z = gridZ * SIZE;
+    public FlatTerrain(int size, int gridX, int gridZ, Loader loader, TerrainTexture texture) {
+        this.texture  = texture;
+        this.size = size * 2;
+        this.x = gridX * size;
+        this.z = gridZ * size;
         this.model = generateTerrain(loader);
     }
 
-    public TerrainTexturePack getTexturePack() {
-        return texturePack;
-    }
-
-    public TerrainTexture getBlendMap() {
-        return blendMap;
-    }
 
     public float getX() {
         return x;
@@ -54,44 +42,37 @@ public class FlatTerrain implements Terrain {
         return model;
     }
 
-    @Override
-    public float getHeightOfTerrain(float x, float z) {
-        return 1;
+    public TerrainTexture getTexture() {
+        return texture;
     }
 
-
     private RawModel generateTerrain(Loader loader) {
-        int VERTEX_COUNT = 100;
-        heights = new float[VERTEX_COUNT][VERTEX_COUNT];
-        int count = VERTEX_COUNT * VERTEX_COUNT;
+        int count = size * size;
         float[] vertices = new float[count * 3];
         float[] normals = new float[count * 3];
         float[] textureCoords = new float[count * 2];
-        int[] indices = new int[6 * (VERTEX_COUNT - 1) * (VERTEX_COUNT - 1)];
+        int[] indices = new int[6 * (size - 1) * (size - 1)];
         int vertexPointer = 0;
-        for (int i = 0; i < VERTEX_COUNT; i++) {
-            for (int j = 0; j < VERTEX_COUNT; j++) {
-                vertices[vertexPointer * 3] = (float) j / ((float) VERTEX_COUNT - 1) * SIZE;
-                float height = 1;
-                heights[j][i] = height;
-                vertices[vertexPointer * 3 + 1] = height;
-                vertices[vertexPointer * 3 + 2] = (float) i / ((float) VERTEX_COUNT - 1) * SIZE;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                vertices[vertexPointer * 3] = (float) j / ((float) size - 1) * size;
+                vertices[vertexPointer * 3 + 2] = (float) i / ((float) size - 1) * size;
                 Vector3f normal = new Vector3f(0, 2f, 0);
                 normal.normalise();
                 normals[vertexPointer * 3] = normal.x;
                 normals[vertexPointer * 3 + 1] = normal.y;
                 normals[vertexPointer * 3 + 2] = normal.z;
-                textureCoords[vertexPointer * 2] = (float) j / ((float) VERTEX_COUNT - 1);
-                textureCoords[vertexPointer * 2 + 1] = (float) i / ((float) VERTEX_COUNT - 1);
+                textureCoords[vertexPointer * 2] = (float) j / ((float) size - 1);
+                textureCoords[vertexPointer * 2 + 1] = (float) i / ((float) size - 1);
                 vertexPointer++;
             }
         }
         int pointer = 0;
-        for (int gz = 0; gz < VERTEX_COUNT - 1; gz++) {
-            for (int gx = 0; gx < VERTEX_COUNT - 1; gx++) {
-                int topLeft = (gz * VERTEX_COUNT) + gx;
+        for (int gz = 0; gz < size - 1; gz++) {
+            for (int gx = 0; gx < size- 1; gx++) {
+                int topLeft = (gz * size) + gx;
                 int topRight = topLeft + 1;
-                int bottomLeft = ((gz + 1) * VERTEX_COUNT) + gx;
+                int bottomLeft = ((gz + 1) * size) + gx;
                 int bottomRight = bottomLeft + 1;
                 indices[pointer++] = topLeft;
                 indices[pointer++] = bottomLeft;
