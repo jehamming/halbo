@@ -6,8 +6,8 @@ import java.awt.*;
 public class Baseplate extends BasicObject   {
 
     private BaseplateType type ;
-    private int width;
-    private int length;
+    private int width; // In Studs (noppen)
+    private int length; // In Studs (noppen)
     private float spawnPointX;
     private float spawnPointY;
     private float spawnPointZ;
@@ -17,8 +17,8 @@ public class Baseplate extends BasicObject   {
         spawnPointX = 25;
         spawnPointY = 1;
         spawnPointZ = -25;
-        width = 50;
-        length = 50;
+        width = 48;
+        length = 48;
     }
 
     public float getSpawnPointX() {

@@ -2,7 +2,6 @@ package com.hamming.halbo.client.engine;
 
 import com.hamming.halbo.client.controllers.MoveController;
 import com.hamming.halbo.client.engine.actions.*;
-import com.hamming.halbo.client.interfaces.Viewer;
 import com.wijlen.ter.halbo.lwjgl.entities.Camera;
 import com.wijlen.ter.halbo.lwjgl.entities.Light;
 import com.wijlen.ter.halbo.lwjgl.entities.Player;
@@ -15,17 +14,18 @@ import com.wijlen.ter.halbo.lwjgl.renderEngine.OBJLoader;
 import com.wijlen.ter.halbo.lwjgl.terrains.FlatTerrain;
 import com.wijlen.ter.halbo.lwjgl.terrains.Terrain;
 import com.wijlen.ter.halbo.lwjgl.textures.ModelTexture;
-import com.wijlen.ter.halbo.lwjgl.textures.TerrainTexture;
-import com.wijlen.ter.halbo.lwjgl.textures.TerrainTexturePack;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 
-public class GLViewer implements Viewer, Runnable {
+public class GLViewer implements Runnable {
     private Camera camera;
     private List<Action> actions;
     private List<Player> players;
@@ -33,7 +33,7 @@ public class GLViewer implements Viewer, Runnable {
     private boolean initialized;
     private TexturedModel basicPlayerTexture;
     private String followedUserId;
-    private Terrain terrain;
+    private FlatTerrain terrain;
     private Loader loader;
     private String currentBaseplateId;
     private enum MouseButton {
@@ -110,7 +110,6 @@ public class GLViewer implements Viewer, Runnable {
         }
     }
 
-    @Override
     public void setLocation(String userId, float x, float y, float z, float pitch, float yaw) {
         Action action = new SetUserLocationAction(this, userId, x, y, z, pitch, yaw);
         synchronized (actions) {
@@ -118,13 +117,11 @@ public class GLViewer implements Viewer, Runnable {
         }
     }
 
-    @Override
     public void followPlayer(String userId) {
         followedUserId = userId;
     }
 
 
-    @Override
     public void setBaseplate(String baseplateId, String name, int width, int length) {
         if (currentBaseplateId == null || currentBaseplateId.equals(baseplateId)) {
             Action action = new SetBaseplateAction(this, loader, baseplateId);
@@ -134,19 +131,16 @@ public class GLViewer implements Viewer, Runnable {
         }
     }
 
-    @Override
     public String getCurrentBaseplateId() {
         return currentBaseplateId;
     }
 
-    @Override
     public void resetView() {
         terrain = null;
         currentBaseplateId = null;
         players = new ArrayList<Player>();
     }
 
-    @Override
     public void addPlayer(String userId, String name) {
         Action action = new AddPlayerAction(this, userId, name);
         synchronized (actions) {
@@ -154,7 +148,6 @@ public class GLViewer implements Viewer, Runnable {
         }
     }
 
-    @Override
     public void removePlayer(String userId) {
         Action action = new RemovePlayerAction(this, userId);
         synchronized (actions) {
@@ -162,22 +155,18 @@ public class GLViewer implements Viewer, Runnable {
         }
     }
 
-    @Override
     public boolean getForward() {
         return  initialized && Keyboard.isKeyDown(Keyboard.KEY_W);
     }
 
-    @Override
     public boolean getBack() {
         return initialized && Keyboard.isKeyDown(Keyboard.KEY_S);
     }
 
-    @Override
     public boolean getLeft() {
         return initialized && Keyboard.isKeyDown(Keyboard.KEY_A);
     }
 
-    @Override
     public boolean getRight() {
         return initialized && Keyboard.isKeyDown(Keyboard.KEY_D);
     }
@@ -199,7 +188,7 @@ public class GLViewer implements Viewer, Runnable {
         camera.setPlayer(p);
     }
 
-    public void setTerrain(String baseplateId, Terrain terrain) {
+    public void setTerrain(String baseplateId, FlatTerrain terrain) {
         this.terrain = terrain;
         this.currentBaseplateId = baseplateId;
     }

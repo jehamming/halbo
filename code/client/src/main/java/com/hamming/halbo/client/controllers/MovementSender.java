@@ -1,14 +1,7 @@
 package com.hamming.halbo.client.controllers;
 
-import com.hamming.halbo.client.interfaces.Viewer;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.MovementDto;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.util.ArrayDeque;
-import java.util.Queue;
 
 public class MovementSender implements Runnable {
 

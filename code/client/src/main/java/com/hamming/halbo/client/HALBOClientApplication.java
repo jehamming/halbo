@@ -2,14 +2,13 @@ package com.hamming.halbo.client;
 
 import com.hamming.halbo.client.controllers.*;
 import com.hamming.halbo.client.engine.GLViewer;
-import com.hamming.halbo.client.interfaces.Viewer;
 
 public class HALBOClientApplication {
 
     private ToolsWindow toolsWindow;
     private BaseWindow baseWindow;
     private ViewController viewController;
-    private Viewer viewer;
+    private GLViewer viewer;
 
     //Controllers
     private Controllers controllers;
@@ -54,7 +53,7 @@ public class HALBOClientApplication {
         return toolsWindow;
     }
 
-    public Viewer getViewer() {
+    public GLViewer getViewer() {
         return viewer;
     }
 }

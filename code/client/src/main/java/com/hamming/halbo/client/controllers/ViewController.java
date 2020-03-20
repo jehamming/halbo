@@ -2,16 +2,14 @@ package com.hamming.halbo.client.controllers;
 
 import com.hamming.halbo.client.CalcTools;
 import com.hamming.halbo.client.Controllers;
+import com.hamming.halbo.client.engine.GLViewer;
 import com.hamming.halbo.client.interfaces.ConnectionListener;
 import com.hamming.halbo.client.interfaces.MovementListener;
-import com.hamming.halbo.client.interfaces.Viewer;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.BaseplateDto;
 import com.hamming.halbo.model.dto.MovementDto;
 import com.hamming.halbo.model.dto.UserDto;
 import com.hamming.halbo.model.dto.UserLocationDto;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +24,12 @@ public class ViewController implements MovementListener, ConnectionListener {
     private CityController cityController;
     private MoveController moveController;
     private MovementSender movementSender;
-    private Viewer viewer;
+    private GLViewer viewer;
     private long sequenceNumber;
     private List<MovementDto> movementRequests;
     private UserLocationDto lastreceivedLocation;
 
-    public ViewController(Viewer viewer, Controllers controllers) {
+    public ViewController(GLViewer viewer, Controllers controllers) {
         this.connectionController = controllers.getConnectionController();
         this.userController = controllers.getUserController();
         this.worldController = controllers.getWorldController();

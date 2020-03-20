@@ -23,15 +23,9 @@ public class SetBaseplateAction implements Action {
 
     @Override
     public void execute() {
-        TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy"));
-        TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirt"));
-        TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("pinkFlowers"));
-        TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path"));
+        TerrainTexture texture = new TerrainTexture(loader.loadTexture("baseplate"));
 
-        TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
-        TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
-
-        Terrain terrain = new FlatTerrain(0, -1, loader, texturePack, blendMap);
+        FlatTerrain terrain = new FlatTerrain(32, 0, -1, loader, texture);
         viewer.setTerrain(baseplateId, terrain);
     }
 

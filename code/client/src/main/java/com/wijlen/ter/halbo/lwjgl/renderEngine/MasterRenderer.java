@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.wijlen.ter.halbo.lwjgl.models.TexturedModel;
 
+import com.wijlen.ter.halbo.lwjgl.terrains.FlatTerrain;
 import com.wijlen.ter.halbo.lwjgl.terrains.HeightTerrain;
 import com.wijlen.ter.halbo.lwjgl.terrains.Terrain;
 import org.lwjgl.opengl.Display;
@@ -35,12 +36,12 @@ public class MasterRenderer {
 	private StaticShader shader = new StaticShader();
 	private EntityRenderer renderer;
 	
-	private TerrainRenderer terrainRenderer;
+	private FlatTerrainRenderer terrainRenderer;
 	private TerrainShader terrainShader = new TerrainShader();
 	
 	
 	private Map<TexturedModel,List<Entity>> entities = new HashMap<TexturedModel,List<Entity>>();
-	private List<Terrain> terrains = new ArrayList<Terrain>();
+	private List<FlatTerrain> terrains = new ArrayList<FlatTerrain>();
 
 	private SkyboxRenderer skyboxRenderer;
 
@@ -48,7 +49,7 @@ public class MasterRenderer {
 		enableCulling();
 		createProjectionMatrix();
 		renderer = new EntityRenderer(shader,projectionMatrix);
-		terrainRenderer = new TerrainRenderer(terrainShader,projectionMatrix);
+		terrainRenderer = new FlatTerrainRenderer(terrainShader,projectionMatrix);
 		skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
 	}
 
@@ -80,10 +81,11 @@ public class MasterRenderer {
 		entities.clear();
 	}
 	
-	public void processTerrain(Terrain terrain){
+	public void processTerrain(FlatTerrain terrain){
 		terrains.add(terrain);
 	}
-	
+
+
 	public void processEntity(Entity entity){
 		TexturedModel entityModel = entity.getModel();
 		List<Entity> batch = entities.get(entityModel);
