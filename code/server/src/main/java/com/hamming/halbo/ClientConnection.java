@@ -113,10 +113,6 @@ public class ClientConnection implements Runnable, GameStateListener {
                 for (City city : continent.getCities()) {
                     CityDto cityDto = DTOFactory.getInstance().getCityDto(continent.getId().toString(), city);
                     send(Protocol.Command.GETCITIES.ordinal() + StringUtils.delimiter + cityDto.toNetData());
-                    Baseplate baseplate = city.getTeleportBaseplate();
-                    // For now, transmit the teleport baseplate
-                    BaseplateDto baseplateDto = DTOFactory.getInstance().getBaseplateDto(baseplate);
-                    send(Protocol.Command.GETBASEPLATES.ordinal() + StringUtils.delimiter + baseplateDto.toNetData());
                 }
             }
         }
@@ -143,6 +139,10 @@ public class ClientConnection implements Runnable, GameStateListener {
 
     private void handleUserLocation(UserLocation loc) {
         if (loc.getUser().equals(user)) {
+            if ( userLocation == null || userLocation.getCity().getId().equals(loc.getCity().getId())) {
+                // New city! Send all the details
+                sendCityDetails(loc.getCity());
+            }
             // Location of this user!
             userLocation = loc;
         }
@@ -150,6 +150,16 @@ public class ClientConnection implements Runnable, GameStateListener {
             UserLocationDto dto = DTOFactory.getInstance().getUserLocationDTO(loc);
             send(Protocol.Command.LOCATION.ordinal() + StringUtils.delimiter + dto.toNetData());
         }
+    }
+
+    private void sendCityDetails(City city) {
+        city.getCityGrid().getAllBaseplates().forEach( cbp -> {
+            CityBaseplateDto dto = DTOFactory.getInstance().getCityBaseplateDto(city.getId().toString(),cbp);
+            send(Protocol.Command.CITYBASEPLATE.ordinal() + StringUtils.delimiter + dto.toNetData());
+            // Send also the Baseplate
+            BaseplateDto baseplateDto = DTOFactory.getInstance().getBaseplateDto(cbp.getBaseplate());
+            send(Protocol.Command.GETBASEPLATE.ordinal() + StringUtils.delimiter + baseplateDto.toNetData());
+        });
     }
 
     private void sendUserDetails(User u) {

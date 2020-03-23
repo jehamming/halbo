@@ -39,16 +39,21 @@ public class DTOFactory {
 
     public CityDto getCityDto(String continentID, City c) {
         CityDto dto;
-        if (c.getMayor() == null ) {
-            dto = new CityDto(continentID, c.getId().toString(), c.getName(), c.getCreator().getId().toString(), c.getOwner().getId().toString(), null);
-        } else {
-            dto = new CityDto(continentID, c.getId().toString(), c.getName(), c.getCreator().getId().toString(), c.getOwner().getId().toString(), c.getMayor().getId().toString());
+        String mayorId = null;
+        if (c.getMayor() != null ) {
+            mayorId = c.getMayor().getId().toString();
         }
+        dto = new CityDto(continentID, c.getId().toString(), c.getName(), c.getCreator().getId().toString(), c.getOwner().getId().toString(), mayorId, c.getCityGrid().getSize());
         return dto;
     }
 
     public UserDto getUserDTO(User u) {
         UserDto dto = new UserDto(u.getId().toString(), u.getName(), u.getEmail());
+        return dto;
+    }
+
+    public CityBaseplateDto getCityBaseplateDto(String cityId, CityBaseplate cb) {
+        CityBaseplateDto dto = new CityBaseplateDto(cityId, cb.getBaseplate().getId().toString(), cb.getRow(), cb.getCol());
         return dto;
     }
 

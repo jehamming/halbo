@@ -1,8 +1,10 @@
 package com.hamming.halbo.model;
 
-import java.awt.geom.Point2D;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class CityGrid {
+public class CityGrid implements Serializable  {
     public class GridPosition {
         public int row, col;
     }
@@ -138,6 +140,22 @@ public class CityGrid {
         return baseplate;
     }
 
+    public List<CityBaseplate> getAllBaseplates() {
+        List<CityBaseplate> cityBaseplates = new ArrayList<CityBaseplate>();
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
+                if (baseplates[row][col] != null) {
+                    CityBaseplate cbp = new CityBaseplate(baseplates[row][col], row, col);
+                    cityBaseplates.add(cbp);
+                }
+            }
+        }
+        return cityBaseplates;
+    }
+
+    public int getSize() {
+        return size;
+    }
 
     @Override
     public String toString() {

@@ -3,6 +3,7 @@ package com.hamming.halbo.client.controllers;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.BaseplateDto;
+import com.hamming.halbo.model.dto.CityBaseplateDto;
 import com.hamming.halbo.model.dto.CityDto;
 import com.hamming.halbo.model.dto.ContinentDto;
 import com.hamming.halbo.net.CommandReceiver;
@@ -24,7 +25,8 @@ public class CityController implements CommandReceiver {
         cities = new HashMap<>();
         connectionController.registerReceiver(Protocol.Command.GETCITIES, this);
         connectionController.registerReceiver(Protocol.Command.GETCITYDETAILS, this);
-        connectionController.registerReceiver(Protocol.Command.GETBASEPLATES, this);
+        connectionController.registerReceiver(Protocol.Command.CITYBASEPLATE, this);
+        connectionController.registerReceiver(Protocol.Command.GETBASEPLATE, this);
     }
 
     private void handleGetCities(String[] data) {
@@ -51,11 +53,24 @@ public class CityController implements CommandReceiver {
             case GETCITYDETAILS:
                 System.out.println(getClass().getName() + cmd + ": NOT IMPLEMENTED YET");
                 break;
-            case GETBASEPLATES:
+            case GETBASEPLATE:
                 handleGetBaseplates(data);
+                break;
+            case CITYBASEPLATE:
+                handleCityBaseplate(data);
                 break;
         }
     }
+
+    private void handleCityBaseplate(String[] data) {
+        CityBaseplateDto dto = new CityBaseplateDto();
+        dto.setValues(data);
+        CityDto city = getCity(dto.getCityId());
+        if ( city != null ) {
+            city.getCityGrid().setBaseplate(dto.getBaseplateId(), dto.getRow(), dto.getCol());
+        }
+    }
+
 
     private void handleGetBaseplates(String[] data) {
         BaseplateDto dto = new BaseplateDto();
@@ -67,14 +82,25 @@ public class CityController implements CommandReceiver {
         baseplates.add(dto);
     }
 
-
-
     public BaseplateDto getBaseplate(String baseplateId) {
         BaseplateDto found = null;
         for (BaseplateDto b : baseplates) {
             if (b.getId().equals(baseplateId)) {
                 found = b;
                 break;
+            }
+        }
+        return found;
+    }
+
+    public CityDto getCity( String cityId ) {
+        CityDto found = null;
+        for (List<CityDto> citiesForContinent : cities.values()) {
+            for (CityDto city: citiesForContinent) {
+                if ( city.getId().toString().equals(cityId)) {
+                    found = city;
+                    break;
+                }
             }
         }
         return found;
