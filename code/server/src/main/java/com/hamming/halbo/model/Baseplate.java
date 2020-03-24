@@ -6,19 +6,19 @@ import java.awt.*;
 public class Baseplate extends BasicObject   {
 
     private BaseplateType type ;
-    private int width; // In Studs (noppen)
-    private int length; // In Studs (noppen)
+    private int width;
+    private int length;
     private float spawnPointX;
     private float spawnPointY;
     private float spawnPointZ;
 
     public Baseplate(HalboID id) {
         super(id);
-        spawnPointX = 25;
-        spawnPointY = 1;
-        spawnPointZ = -25;
-        width = 48;
-        length = 48;
+        spawnPointX = 0;
+        spawnPointY = 0;
+        spawnPointZ = 0;
+        width = 80;
+        length = 80;
     }
 
     public float getSpawnPointX() {

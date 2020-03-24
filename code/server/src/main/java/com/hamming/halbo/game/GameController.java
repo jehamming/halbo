@@ -112,10 +112,20 @@ public class GameController implements Runnable {
 
             location = calculateNewPosition(location, currentSpeed, currentTurnSpeed);
 
+            checkBaseplateBounds(location);
+
             location.setSequence(sequence);
             gameState.setLocation(u, location);
             fireGameStateEvent(GameStateEvent.Type.USERLOCATION, location);
         }
+    }
+
+    private void checkBaseplateBounds(UserLocation l) {
+        Baseplate b = l.getBaseplate();
+        if ( l.getX() > b.getLength()) l.setX(b.getLength());
+        if ( l.getX() < 0 ) l.setX(0);
+        if ( l.getZ() > b.getWidth()) l.setZ(b.getWidth());
+        if ( l.getZ() < 0 ) l.setZ(0);
     }
 
     private UserLocation calculateNewPosition(UserLocation location, float currentSpeed, float currentTurnSpeed) {
@@ -124,13 +134,13 @@ public class GameController implements Runnable {
         float distance = currentSpeed;
         float dx = (float) (distance * Math.sin(Math.toRadians(location.getYaw() + currentTurnSpeed)));
         float dz = (float) (distance * Math.cos(Math.toRadians(location.getYaw() + currentTurnSpeed)));
-        increasePosition(location, dx, 0, dz);
+        increasePosition(location, -dx, 0, dz);
         return location;
     }
 
     public void increasePosition(UserLocation l, float dx, float dy, float dz) {
-        l.setX( l.getX() + dx );
-        l.setY(l.getY() +  dy );
+        l.setX(l.getX() + dx );
+        l.setY(l.getY() + dy );
         l.setZ(l.getZ() + dz );
     }
 

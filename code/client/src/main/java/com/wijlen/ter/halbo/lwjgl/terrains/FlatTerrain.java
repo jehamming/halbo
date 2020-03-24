@@ -23,9 +23,9 @@ public class FlatTerrain {
 
     public FlatTerrain(int size, int gridX, int gridZ, Loader loader, TerrainTexture texture) {
         this.texture  = texture;
-        this.size = size * 2;
-        this.x = gridX * size;
-        this.z = gridZ * size;
+        this.size = size;
+        this.x = gridX - this.size;
+        this.z = gridZ;
         this.model = generateTerrain(loader);
     }
 

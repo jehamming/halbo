@@ -31,10 +31,7 @@ public class TeleportAction implements Action {
         UserLocation location = controller.handleTeleportRequest(userId, worldId, continentId, cityId);
 
         if ( location != null )  {
-            // First, send Baseplate details
-            BaseplateDto baseplateDto = DTOFactory.getInstance().getBaseplateDto(location.getBaseplate());
-            client.send(Protocol.Command.GETBASEPLATES.ordinal() + StringUtils.delimiter + baseplateDto.toNetData());
-
+            client.sendCityDetails(location.getCity());
             UserLocationDto dto = DTOFactory.getInstance().getUserLocationDTO(location);
             client.send(Protocol.Command.TELEPORT.ordinal() + StringUtils.delimiter + Protocol.SUCCESS + StringUtils.delimiter + dto.toNetData());
         } else {

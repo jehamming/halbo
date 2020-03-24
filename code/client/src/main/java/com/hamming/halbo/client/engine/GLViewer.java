@@ -12,7 +12,6 @@ import com.wijlen.ter.halbo.lwjgl.renderEngine.Loader;
 import com.wijlen.ter.halbo.lwjgl.renderEngine.MasterRenderer;
 import com.wijlen.ter.halbo.lwjgl.renderEngine.OBJLoader;
 import com.wijlen.ter.halbo.lwjgl.terrains.FlatTerrain;
-import com.wijlen.ter.halbo.lwjgl.terrains.Terrain;
 import com.wijlen.ter.halbo.lwjgl.textures.ModelTexture;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -33,9 +32,8 @@ public class GLViewer implements Runnable {
     private boolean initialized;
     private TexturedModel basicPlayerTexture;
     private String followedUserId;
-    private FlatTerrain terrain;
+    private List<FlatTerrain> terrains;
     private Loader loader;
-    private String currentBaseplateId;
     private enum MouseButton {
         LEFT,
         RIGHT
@@ -48,7 +46,7 @@ public class GLViewer implements Runnable {
         Thread t = new Thread(this);
         t.start();
         initialized = false;
-        currentBaseplateId = null;
+        terrains = new ArrayList<FlatTerrain>();
     }
 
     @Override
@@ -81,9 +79,7 @@ public class GLViewer implements Runnable {
             handleActions();
             camera.move();
             players.forEach(player -> renderer.processEntity(player));
-            if ( terrain != null ) {
-                renderer.processTerrain(terrain);
-            }
+            terrains.forEach(terrain -> renderer.processTerrain(terrain));
             renderer.render(lights, camera);
             DisplayManager.updateDisplay();
         }
@@ -111,7 +107,7 @@ public class GLViewer implements Runnable {
     }
 
     public void setLocation(String userId, float x, float y, float z, float pitch, float yaw) {
-        Action action = new SetUserLocationAction(this, userId, x, y, z, pitch, yaw);
+        Action action = new SetUserLocationAction(this, userId, -x, y, z, pitch, yaw);
         synchronized (actions) {
             actions.add(action);
         }
@@ -122,23 +118,16 @@ public class GLViewer implements Runnable {
     }
 
 
-    public void setBaseplate(String baseplateId, String name, int width, int length) {
-        if (currentBaseplateId == null || currentBaseplateId.equals(baseplateId)) {
-            Action action = new SetBaseplateAction(this, loader, baseplateId);
-            synchronized (actions) {
-                actions.add(action);
-            }
+    public void addBaseplate(String baseplateId, String name, int size, int row, int col) {
+        Action action = new AddBaseplateAction(this, loader, baseplateId, size, row, col );
+        synchronized (actions) {
+            actions.add(action);
         }
     }
 
-    public String getCurrentBaseplateId() {
-        return currentBaseplateId;
-    }
-
     public void resetView() {
-        terrain = null;
-        currentBaseplateId = null;
         players = new ArrayList<Player>();
+        terrains = new ArrayList<FlatTerrain>();
     }
 
     public void addPlayer(String userId, String name) {
@@ -188,9 +177,8 @@ public class GLViewer implements Runnable {
         camera.setPlayer(p);
     }
 
-    public void setTerrain(String baseplateId, FlatTerrain terrain) {
-        this.terrain = terrain;
-        this.currentBaseplateId = baseplateId;
+    public void addTerrain(FlatTerrain terrain) {
+        terrains.add(terrain);
     }
 
 

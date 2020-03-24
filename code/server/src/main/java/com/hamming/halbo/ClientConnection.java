@@ -139,7 +139,7 @@ public class ClientConnection implements Runnable, GameStateListener {
 
     private void handleUserLocation(UserLocation loc) {
         if (loc.getUser().equals(user)) {
-            if ( userLocation == null || userLocation.getCity().getId().equals(loc.getCity().getId())) {
+            if ( userLocation == null || !userLocation.getCity().getId().equals(loc.getCity().getId())) {
                 // New city! Send all the details
                 sendCityDetails(loc.getCity());
             }
@@ -152,7 +152,7 @@ public class ClientConnection implements Runnable, GameStateListener {
         }
     }
 
-    private void sendCityDetails(City city) {
+    public void sendCityDetails(City city) {
         city.getCityGrid().getAllBaseplates().forEach( cbp -> {
             CityBaseplateDto dto = DTOFactory.getInstance().getCityBaseplateDto(city.getId().toString(),cbp);
             send(Protocol.Command.CITYBASEPLATE.ordinal() + StringUtils.delimiter + dto.toNetData());

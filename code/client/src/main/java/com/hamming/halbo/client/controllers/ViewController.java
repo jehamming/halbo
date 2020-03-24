@@ -50,7 +50,7 @@ public class ViewController implements MovementListener, ConnectionListener {
         if (user.equals(moveController.getCurrentUser())) {
             if (!l.getBaseplateId().equals(viewer.getCurrentBaseplateId())) {
                 BaseplateDto baseplate = cityController.getBaseplate(l.getBaseplateId());
-                viewer.setBaseplate(baseplate.getId(), baseplate.getName(), baseplate.getLength(), baseplate.getWidth());
+                viewer.addBaseplate((baseplate.getId(), baseplate.getName(), baseplate.getLength(), baseplate.getWidth());
             }
             lastreceivedLocation = l;
             moveCurrentUser(l);
@@ -68,7 +68,8 @@ public class ViewController implements MovementListener, ConnectionListener {
         deleteRequestsUpTO(l.getSequence());
         // Apply all the requests that server has not processed yet.
 
-        applyMoveRequests(l);
+        // FIXME Remove comment
+       // applyMoveRequests(l);
     }
 
     private void deleteRequestsUpTO(long sequence) {
@@ -111,7 +112,8 @@ public class ViewController implements MovementListener, ConnectionListener {
             synchronized (movementRequests) {
                 movementRequests.add(dto);
             }
-            applyMoveRequest(dto, lastreceivedLocation);
+            // FIXME Remove comment
+//            applyMoveRequest(dto, lastreceivedLocation);
         }
         return  dto;
     }
