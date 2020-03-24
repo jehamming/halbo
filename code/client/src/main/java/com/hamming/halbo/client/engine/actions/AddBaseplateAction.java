@@ -14,18 +14,20 @@ public class SetBaseplateAction implements Action {
     private GLViewer viewer;
     private String baseplateId;
     private Loader loader;
+    private int size;
 
-    public SetBaseplateAction(GLViewer viewer, Loader loader, String baseplateId) {
+    public SetBaseplateAction(GLViewer viewer, Loader loader, String baseplateId, int size) {
         this.loader = loader;
         this.viewer = viewer;
         this.baseplateId = baseplateId;
+        this.size = size;
     }
 
     @Override
     public void execute() {
         TerrainTexture texture = new TerrainTexture(loader.loadTexture("baseplate"));
 
-        FlatTerrain terrain = new FlatTerrain(32, 0, -1, loader, texture);
+        FlatTerrain terrain = new FlatTerrain(size, 0, 0, loader, texture);
         viewer.setTerrain(baseplateId, terrain);
     }
 
