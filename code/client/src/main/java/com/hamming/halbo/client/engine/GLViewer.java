@@ -106,8 +106,8 @@ public class GLViewer implements Runnable {
         }
     }
 
-    public void setLocation(String userId, float x, float y, float z, float pitch, float yaw) {
-        Action action = new SetUserLocationAction(this, userId, -x, y, z, pitch, yaw);
+    public void setLocation(String userId, Vector3f loc, float pitch, float yaw) {
+        Action action = new SetUserLocationAction(this, userId, loc, pitch, yaw);
         synchronized (actions) {
             actions.add(action);
         }
@@ -127,6 +127,9 @@ public class GLViewer implements Runnable {
 
     public void resetView() {
         players = new ArrayList<Player>();
+    }
+
+    public void resetTerrains() {
         terrains = new ArrayList<FlatTerrain>();
     }
 
@@ -178,6 +181,7 @@ public class GLViewer implements Runnable {
     }
 
     public void addTerrain(FlatTerrain terrain) {
+        System.out.println(getClass().getName() + ": AddTerrain at :" +terrain.getX() +","  +terrain.getZ());
         terrains.add(terrain);
     }
 

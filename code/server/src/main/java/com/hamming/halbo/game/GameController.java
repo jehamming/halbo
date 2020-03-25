@@ -77,7 +77,7 @@ public class GameController implements Runnable {
             loc.setPitch(0);
             loc.setYaw(0);
             gameState.setLocation(u, loc);
-            fireGameStateEvent(GameStateEvent.Type.USERLOCATION, loc);
+            fireGameStateEvent(GameStateEvent.Type.USERTELEPORTED, loc);
         }
         return loc;
     }
@@ -122,9 +122,9 @@ public class GameController implements Runnable {
 
     private void checkBaseplateBounds(UserLocation l) {
         Baseplate b = l.getBaseplate();
-        if ( l.getX() > b.getLength()) l.setX(b.getLength());
+        if ( l.getX() > b.getSize()) l.setX(b.getSize());
         if ( l.getX() < 0 ) l.setX(0);
-        if ( l.getZ() > b.getWidth()) l.setZ(b.getWidth());
+        if ( l.getZ() > b.getSize()) l.setZ(b.getSize());
         if ( l.getZ() < 0 ) l.setZ(0);
     }
 

@@ -86,6 +86,11 @@ public class ClientConnection implements Runnable, GameStateListener {
         if (isLoggedIn()) {
             // World data
             sendWorldData();
+            // City Grid of baseplates
+            userLocation = gameController.getGameState().getLocation(user);
+            if (userLocation != null ) {
+                sendCityDetails(userLocation.getCity());
+            }
             // Logged in Users;
             for ( User u: gameController.getGameState().getOnlineUsers()) {
                 if (!u.getId().equals(user.getId())) {
@@ -134,15 +139,22 @@ public class ClientConnection implements Runnable, GameStateListener {
                 break;
             case USERLOCATION:
                 handleUserLocation((UserLocation) event.getObject());
+                break;
+            case USERTELEPORTED:
+                handleTeleported((UserLocation) event.getObject());
+                break;
+        }
+    }
+
+    private void handleTeleported(UserLocation loc) {
+        if (loc.getUser().equals(user)) {
+            sendCityDetails(loc.getCity());
+            userLocation = loc;
         }
     }
 
     private void handleUserLocation(UserLocation loc) {
         if (loc.getUser().equals(user)) {
-            if ( userLocation == null || !userLocation.getCity().getId().equals(loc.getCity().getId())) {
-                // New city! Send all the details
-                sendCityDetails(loc.getCity());
-            }
             // Location of this user!
             userLocation = loc;
         }

@@ -6,8 +6,7 @@ import java.awt.*;
 public class Baseplate extends BasicObject   {
 
     private BaseplateType type ;
-    private int width;
-    private int length;
+    private int size;
     private float spawnPointX;
     private float spawnPointY;
     private float spawnPointZ;
@@ -17,8 +16,7 @@ public class Baseplate extends BasicObject   {
         spawnPointX = 0;
         spawnPointY = 0;
         spawnPointZ = 0;
-        width = 80;
-        length = 80;
+        size = 80;
     }
 
     public float getSpawnPointX() {
@@ -45,28 +43,19 @@ public class Baseplate extends BasicObject   {
         this.spawnPointZ = spawnPointZ;
     }
 
-    public int getWidth() {
-        return width;
+    public int getSize() {
+        return size;
     }
 
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
+    public void setSize(int size) {
+        this.size = size;
     }
 
     @Override
     public String toString() {
         return "Baseplate{" +
                 "type=" + type +
-                ", width=" + width +
-                ", length=" + length +
+                ", size=" + size +
                 ", spawnPointX=" + spawnPointX +
                 ", spawnPointY=" + spawnPointY +
                 ", spawnPointZ=" + spawnPointZ +
