@@ -8,20 +8,18 @@ public class BaseplateDto implements DTO {
     private String name;
     private String creatorID;
     private String ownerID;
-    private int width;
-    private int length;
+    private int size;
 
     public BaseplateDto(){
 
     }
 
-    public BaseplateDto(String id, String name, String creatorID, String ownerID, int width, int length){
+    public BaseplateDto(String id, String name, String creatorID, String ownerID, int size){
         this.id = id;
         this.name = name;
         this.creatorID = creatorID;
         this.ownerID = ownerID;
-        this.width = width;
-        this.length = length;
+        this.size = size;
     }
 
     @Override
@@ -30,20 +28,18 @@ public class BaseplateDto implements DTO {
                 + name + StringUtils.delimiter
                 + creatorID + StringUtils.delimiter
                 + ownerID + StringUtils.delimiter
-                + width + StringUtils.delimiter
-                + length;
+                + size ;
         return data;
     }
 
     @Override
     public void setValues(String... values) {
-        if ( values.length == 6) {
+        if ( values.length == 5) {
             id = values[0];
             name = values[1];
             creatorID = values[2];
             ownerID = values[3];
-            width = Integer.valueOf(values[4]);
-            length = Integer.valueOf(values[5]);
+            size = Integer.valueOf(values[4]);
         }
     }
 
@@ -63,12 +59,8 @@ public class BaseplateDto implements DTO {
         return ownerID;
     }
 
-    public int getWidth() {
-        return width;
-    }
-
-    public int getLength() {
-        return length;
+    public int getSize() {
+        return size;
     }
 
     @Override

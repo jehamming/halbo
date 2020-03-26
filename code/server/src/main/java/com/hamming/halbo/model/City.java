@@ -6,24 +6,17 @@ package com.hamming.halbo.model;
 //
 public class City extends BasicObject {
 
+    public static final int CITYSIZE = 50;
+
     private User mayor;
     private Baseplate teleportBaseplate;
+    private CityGrid cityGrid;
 
     public City(HalboID id, String name, Baseplate teleportBaseplate) {
         super(id);
         setName(name);
         this.teleportBaseplate = teleportBaseplate;
-    }
-
-
-    public long getSizeX() {
-        //TODO Implement
-        return 0;
-    }
-
-    public long getSizeY() {
-        //TODO Implement
-        return 0;
+        this.cityGrid = new CityGrid(CITYSIZE, teleportBaseplate,Math.round(CITYSIZE/2), Math.round(CITYSIZE/2));
     }
 
     public User getMayor() {
@@ -38,10 +31,15 @@ public class City extends BasicObject {
         return teleportBaseplate;
     }
 
+    public CityGrid getCityGrid() {
+        return cityGrid;
+    }
+
     @Override
     public String toString() {
         return "City{" +
                 "mayor=" + mayor +
+                ", CityGrid=\n" + cityGrid + "\n" +
                 super.toString() +
                 '}';
     }

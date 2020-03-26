@@ -16,6 +16,7 @@ public interface Protocol {
         GETWORLDS,
         GETCONTINENTS,
         GETCITIES,
+        CITYBASEPLATE,
         GETCITYDETAILS,
         GETBASEPLATES,
         GETBASEPLATE,

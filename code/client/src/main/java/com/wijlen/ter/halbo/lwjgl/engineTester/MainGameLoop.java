@@ -42,7 +42,7 @@ public class MainGameLoop {
         RawModel dragonModel = OBJLoader.loadObjModel("person", loader);
         TexturedModel playerModel = new TexturedModel(dragonModel, new ModelTexture(loader.loadTexture("purple")));
 
-        Player player = new Player("PLAYER", playerModel, new Vector3f(10, 0, -10), 0, 0, 0, 0.5f);
+        Player player = new Player("PLAYER", playerModel, new Vector3f(0, 1, -0), 0, 0, 0, 0.5f);
 
         Camera camera = new Camera();
         camera.setPlayer(player);

@@ -77,7 +77,7 @@ public class GameController implements Runnable {
             loc.setPitch(0);
             loc.setYaw(0);
             gameState.setLocation(u, loc);
-            fireGameStateEvent(GameStateEvent.Type.USERLOCATION, loc);
+            fireGameStateEvent(GameStateEvent.Type.USERTELEPORTED, loc);
         }
         return loc;
     }
@@ -112,9 +112,60 @@ public class GameController implements Runnable {
 
             location = calculateNewPosition(location, currentSpeed, currentTurnSpeed);
 
+            checkBaseplateBounds(location);
+
             location.setSequence(sequence);
             gameState.setLocation(u, location);
             fireGameStateEvent(GameStateEvent.Type.USERLOCATION, location);
+        }
+    }
+
+    private void checkBaseplateBounds(UserLocation l) {
+        Baseplate b = l.getBaseplate();
+        if ( l.getX() > b.getSize()) {
+            // Switch to baseplate to the right(EAST)
+            Baseplate eastBaseplate = l.getCity().getCityGrid().getBaseplate(l.getBaseplate(), CityGrid.Direction.EAST);
+            if (eastBaseplate != null ) {
+                float x = l.getX() - l.getBaseplate().getSize();
+                l.setBaseplate(eastBaseplate);
+                l.setX(x);
+            } else {
+                l.setX(b.getSize());
+            }
+        }
+        if ( l.getX() < 0 ) {
+            // Switch to baseplate to the left(WEST)
+            Baseplate westBaseplate = l.getCity().getCityGrid().getBaseplate(l.getBaseplate(), CityGrid.Direction.WEST);
+            if (westBaseplate != null ) {
+                float x = westBaseplate.getSize() + l.getX();
+                l.setBaseplate(westBaseplate);
+                l.setX(x);
+            } else {
+                l.setX(0);
+            }
+        }
+        if ( l.getZ() > b.getSize()) {
+            // Switch to baseplate to the top(NORTH)
+            Baseplate northBaseplate = l.getCity().getCityGrid().getBaseplate(l.getBaseplate(), CityGrid.Direction.NORTH);
+            if (northBaseplate != null ) {
+                float z = l.getZ() - l.getBaseplate().getSize();
+                l.setBaseplate(northBaseplate);
+                l.setZ(z);
+            } else {
+                l.setZ(b.getSize());
+            }
+        }
+        if ( l.getZ() < 0 ) {
+            // Switch to baseplate to the bottom(SOUTH)
+            Baseplate southBaseplate = l.getCity().getCityGrid().getBaseplate(l.getBaseplate(), CityGrid.Direction.SOUTH);
+            if (southBaseplate != null ) {
+                float z = southBaseplate.getSize() + l.getZ();
+                l.setBaseplate(southBaseplate);
+                l.setZ(z);
+            } else {
+                l.setZ(0);
+            }
+
         }
     }
 
@@ -124,13 +175,13 @@ public class GameController implements Runnable {
         float distance = currentSpeed;
         float dx = (float) (distance * Math.sin(Math.toRadians(location.getYaw() + currentTurnSpeed)));
         float dz = (float) (distance * Math.cos(Math.toRadians(location.getYaw() + currentTurnSpeed)));
-        increasePosition(location, dx, 0, dz);
+        increasePosition(location, -dx, 0, dz);
         return location;
     }
 
     public void increasePosition(UserLocation l, float dx, float dy, float dz) {
-        l.setX( l.getX() + dx );
-        l.setY(l.getY() +  dy );
+        l.setX(l.getX() + dx );
+        l.setY(l.getY() + dy );
         l.setZ(l.getZ() + dz );
     }
 

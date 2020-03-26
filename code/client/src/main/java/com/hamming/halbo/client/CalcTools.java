@@ -35,7 +35,7 @@ public class CalcTools {
         float distance = currentSpeed;
         float dx = (float) (distance * Math.sin(Math.toRadians(location.getYaw() + currentTurnSpeed)));
         float dz = (float) (distance * Math.cos(Math.toRadians(location.getYaw() + currentTurnSpeed)));
-        increasePosition(location, dx, 0, dz);
+        increasePosition(location, -dx, 0, dz);
         return location;
     }
 

@@ -86,6 +86,11 @@ public class ClientConnection implements Runnable, GameStateListener {
         if (isLoggedIn()) {
             // World data
             sendWorldData();
+            // City Grid of baseplates
+            userLocation = gameController.getGameState().getLocation(user);
+            if (userLocation != null ) {
+                sendCityDetails(userLocation.getCity());
+            }
             // Logged in Users;
             for ( User u: gameController.getGameState().getOnlineUsers()) {
                 if (!u.getId().equals(user.getId())) {
@@ -113,10 +118,6 @@ public class ClientConnection implements Runnable, GameStateListener {
                 for (City city : continent.getCities()) {
                     CityDto cityDto = DTOFactory.getInstance().getCityDto(continent.getId().toString(), city);
                     send(Protocol.Command.GETCITIES.ordinal() + StringUtils.delimiter + cityDto.toNetData());
-                    Baseplate baseplate = city.getTeleportBaseplate();
-                    // For now, transmit the teleport baseplate
-                    BaseplateDto baseplateDto = DTOFactory.getInstance().getBaseplateDto(baseplate);
-                    send(Protocol.Command.GETBASEPLATES.ordinal() + StringUtils.delimiter + baseplateDto.toNetData());
                 }
             }
         }
@@ -138,6 +139,17 @@ public class ClientConnection implements Runnable, GameStateListener {
                 break;
             case USERLOCATION:
                 handleUserLocation((UserLocation) event.getObject());
+                break;
+            case USERTELEPORTED:
+                handleTeleported((UserLocation) event.getObject());
+                break;
+        }
+    }
+
+    private void handleTeleported(UserLocation loc) {
+        if (loc.getUser().equals(user)) {
+            sendCityDetails(loc.getCity());
+            userLocation = loc;
         }
     }
 
@@ -150,6 +162,16 @@ public class ClientConnection implements Runnable, GameStateListener {
             UserLocationDto dto = DTOFactory.getInstance().getUserLocationDTO(loc);
             send(Protocol.Command.LOCATION.ordinal() + StringUtils.delimiter + dto.toNetData());
         }
+    }
+
+    public void sendCityDetails(City city) {
+        city.getCityGrid().getAllBaseplates().forEach( cbp -> {
+            CityBaseplateDto dto = DTOFactory.getInstance().getCityBaseplateDto(city.getId().toString(),cbp);
+            send(Protocol.Command.CITYBASEPLATE.ordinal() + StringUtils.delimiter + dto.toNetData());
+            // Send also the Baseplate
+            BaseplateDto baseplateDto = DTOFactory.getInstance().getBaseplateDto(cbp.getBaseplate());
+            send(Protocol.Command.GETBASEPLATE.ordinal() + StringUtils.delimiter + baseplateDto.toNetData());
+        });
     }
 
     private void sendUserDetails(User u) {

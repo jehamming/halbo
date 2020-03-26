@@ -7,6 +7,7 @@ public class GameStateEvent {
     public enum Type {
         USERCONNECTED,
         USERDISCONNECTED,
+        USERTELEPORTED,
         USERLOCATION
     }
 
