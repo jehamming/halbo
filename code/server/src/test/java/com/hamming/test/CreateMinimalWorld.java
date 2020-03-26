@@ -27,13 +27,28 @@ public class CreateMinimalWorld {
         w2.addContinent(cn2);
         Baseplate teleportJanBaseplate = BaseplateFactory.getInstance().createBaseplate("Baseplate002", u2);
         City c2 = CityFactory.getInstance().createCity("City002", u2, teleportJanBaseplate);
-
         Baseplate baseplateJan1 = BaseplateFactory.getInstance().createBaseplate("BaseplateJan001", u1);
         c2.getCityGrid().addBasePlate(baseplateJan1, teleportJanBaseplate, CityGrid.Direction.EAST);
         Baseplate baseplateJan2 = BaseplateFactory.getInstance().createBaseplate("BaseplateJan002", u1);
         c2.getCityGrid().addBasePlate(baseplateJan2, teleportJanBaseplate, CityGrid.Direction.WEST);
-
         cn2.addCity(c2);
+
+        // 3rd World
+        User u3 = UserFactory.getInstance().addUser("User1", "user1", "user1", "user1@hotmail.com");
+        World w3 = WorldFactory.getInstance().createWorld(u1,"World003");
+        Continent cn3 = ContinentFactory.getInstance().createContinent("Continent003", u3);
+        w3.addContinent(cn3);
+        Baseplate teleportBaseplate3 = BaseplateFactory.getInstance().createBaseplate("Baseplate033", u3);
+        City c3 = CityFactory.getInstance().createCity("City003", u2, teleportBaseplate3);
+        Baseplate baseplate31 = BaseplateFactory.getInstance().createBaseplate("EAST", u3);
+        c3.getCityGrid().addBasePlate(baseplate31, teleportBaseplate3, CityGrid.Direction.EAST);
+        Baseplate baseplate32 = BaseplateFactory.getInstance().createBaseplate("WEST", u3);
+        c3.getCityGrid().addBasePlate(baseplate32, teleportBaseplate3, CityGrid.Direction.WEST);
+        Baseplate baseplate33 = BaseplateFactory.getInstance().createBaseplate("NORTH", u3);
+        c3.getCityGrid().addBasePlate(baseplate33, teleportBaseplate3, CityGrid.Direction.NORTH);
+        Baseplate baseplate34 = BaseplateFactory.getInstance().createBaseplate("SOUTH", u3);
+        c3.getCityGrid().addBasePlate(baseplate34, teleportBaseplate3, CityGrid.Direction.SOUTH);
+        cn3.addCity(c3);
 
         storeEverything();
     }

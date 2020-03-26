@@ -118,8 +118,8 @@ public class GLViewer implements Runnable {
     }
 
 
-    public void addBaseplate(String baseplateId, String name, int size, int row, int col) {
-        Action action = new AddBaseplateAction(this, loader, baseplateId, size, row, col );
+    public void addBaseplate(String baseplateId, String name, int baseplateSize, int gridSize, int x, int z) {
+        Action action = new AddBaseplateAction(this, loader, baseplateId, name, baseplateSize, gridSize, x, z );
         synchronized (actions) {
             actions.add(action);
         }
@@ -181,7 +181,6 @@ public class GLViewer implements Runnable {
     }
 
     public void addTerrain(FlatTerrain terrain) {
-        System.out.println(getClass().getName() + ": AddTerrain at :" +terrain.getX() +","  +terrain.getZ());
         terrains.add(terrain);
     }
 

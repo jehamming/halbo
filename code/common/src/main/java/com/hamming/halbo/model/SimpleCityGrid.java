@@ -6,7 +6,7 @@ import java.util.List;
 public class SimpleCityGrid {
 
     public class GridPosition {
-        public int row, col;
+        public int x, y;
     }
 
     private int size = 0;
@@ -17,17 +17,17 @@ public class SimpleCityGrid {
         this.baseplateIds = new String[size][size];
     }
 
-    public void setBaseplate(String baseplateId, int row, int col) {
-        baseplateIds[row][col] = baseplateId;
+    public void setBaseplate(String baseplateId, int x, int y) {
+        baseplateIds[x][y] = baseplateId;
     }
 
     public GridPosition getPosition(String baseplateId) {
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
-                if (baseplateIds[row][col] != null && baseplateIds[row][col].toString().equals(baseplateId)) {
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+                if (baseplateIds[x][y] != null && baseplateIds[x][y].toString().equals(baseplateId)) {
                     GridPosition pos = new GridPosition();
-                    pos.row = row;
-                    pos.col = col;
+                    pos.x = x;
+                    pos.y = y;
                     return pos;
                 }
             }
@@ -37,14 +37,17 @@ public class SimpleCityGrid {
 
     public List<String> getBaseplateIds() {
         List<String> retval = new ArrayList<String>();
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
-                if (baseplateIds[row][col] != null) {
-                    retval.add(baseplateIds[row][col]);
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+                if (baseplateIds[x][y] != null) {
+                    retval.add(baseplateIds[x][y]);
                 }
             }
         }
         return retval;
     }
 
+    public int getSize() {
+        return size;
+    }
 }

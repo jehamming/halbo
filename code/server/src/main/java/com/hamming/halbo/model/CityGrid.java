@@ -6,7 +6,7 @@ import java.util.List;
 
 public class CityGrid implements Serializable  {
     public class GridPosition {
-        public int row, col;
+        public int x, y;
     }
 
     public enum Direction {
@@ -19,10 +19,10 @@ public class CityGrid implements Serializable  {
     private int size = 0;
     private Baseplate[][] baseplates;
 
-    public CityGrid(int size, Baseplate startBaseplate, int startRow, int startCol) {
+    public CityGrid(int size, Baseplate startBaseplate, int startX, int startY) {
         this.size = size;
         this.baseplates = new Baseplate[size][size];
-        baseplates[startRow][startCol] = startBaseplate;
+        baseplates[startX][startY] = startBaseplate;
     }
 
     public void addBasePlate(Baseplate baseplate, Baseplate refBaseplate, Direction dir) throws CityGridException {
@@ -30,23 +30,23 @@ public class CityGrid implements Serializable  {
         if (pos == null) throw new CityGridException("Referenced baseplate not found");
         switch (dir) {
             case NORTH:
-                pos.row -= 1;
-                if (pos.row <= 0) throw new CityGridException("Row out of bounds < 0 ");
+                pos.y += 1;
+                if (pos.y >= size) throw new CityGridException("Row out of bounds");
                 break;
             case SOUTH:
-                pos.row += 1;
-                if (pos.row >= size) throw new CityGridException("Row out of bounds > " + size);
+                pos.y -= 1;
+                if (pos.y < 0) throw new CityGridException("Row out of bounds");
                 break;
             case EAST:
-                pos.col += 1;
-                if (pos.col >= size) throw new CityGridException("Col out of bounds > " + size);
+                pos.x += 1;
+                if (pos.x >= size) throw new CityGridException("Col out of bounds");
                 break;
             case WEST:
-                pos.col -= 1;
-                if (pos.col <= 0) throw new CityGridException("Col out of bounds < 0 ");
+                pos.x -= 1;
+                if (pos.x < 0) throw new CityGridException("Col out of boundss");
                 break;
         }
-        addBasePlate(baseplate, pos.row, pos.col);
+        addBasePlate(baseplate, pos.x, pos.y);
     }
 
     public void addBasePlate(Baseplate baseplate, int row, int col) throws CityGridException {
@@ -86,21 +86,28 @@ public class CityGrid implements Serializable  {
         return hasConnection;
     }
 
-    public Baseplate getBaseplate(Baseplate refBaseplate, Direction dir) throws CityGridException {
+    public Baseplate getBaseplate(Baseplate refBaseplate, Direction dir) {
+        Baseplate baseplate = null ;
         GridPosition position = findBaseplatePosition(refBaseplate);
-        if (position == null) throw new CityGridException("Referenced baseplate not found");
-        return getBaseplate(position.row, position.col, dir);
+        if (position != null) {
+            try {
+                baseplate = getBaseplate(position.x, position.y, dir);
+            } catch (CityGridException e) {
+                e.printStackTrace();
+            }
+        }
+        return baseplate;
     }
 
     private GridPosition findBaseplatePosition(Baseplate refBaseplate) {
         GridPosition pos = null;
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
-                Baseplate b = baseplates[row][col];
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+                Baseplate b = baseplates[x][y];
                 if (b != null && b.getId().equals(refBaseplate.getId())) {
                     pos = new GridPosition();
-                    pos.row = row;
-                    pos.col = col;
+                    pos.x = x;
+                    pos.y = y;
                     break;
                 }
             }
@@ -109,31 +116,31 @@ public class CityGrid implements Serializable  {
     }
 
 
-    public Baseplate getBaseplate(int row, int col, Direction dir) throws CityGridException {
+    public Baseplate getBaseplate(int x, int y, Direction dir) throws CityGridException {
         Baseplate baseplate = null;
-        if (row > size || col > size) {
-            String msg = "(" + row + ", " + col + ") is out of bounds, Gridsize=" + size;
+        if (x > size || y > size) {
+            String msg = "(" + x + ", " + y + ") is out of bounds, Gridsize=" + size;
             throw new CityGridException(msg);
         }
         if (dir == null) {
-            baseplate = baseplates[row][col];
+            baseplate = baseplates[x][y];
         } else {
             switch (dir) {
                 case NORTH:
-                    if (row == 0) throw new CityGridException("Row out of bounds < 0 ");
-                    baseplate = baseplates[row - 1][col];
+                    if (y == size) throw new CityGridException("Row out of bounds");
+                    baseplate = baseplates[x][y+1];
                     break;
                 case SOUTH:
-                    if (row == size) throw new CityGridException("Row out of bounds > " + size);
-                    baseplate = baseplates[row + 1][col];
+                    if (y <= 0) throw new CityGridException("Row out of bounds");
+                    baseplate = baseplates[x][y-1];
                     break;
                 case EAST:
-                    if (col == size) throw new CityGridException("Col out of bounds > " + size);
-                    baseplate = baseplates[row][col + 1];
+                    if (x == size) throw new CityGridException("Col out of bounds");
+                    baseplate = baseplates[x+1][y];
                     break;
                 case WEST:
-                    if (col == 0) throw new CityGridException("Col out of bounds < 0 ");
-                    baseplate = baseplates[row][col - 1];
+                    if (x <= 0) throw new CityGridException("Col out of bounds");
+                    baseplate = baseplates[x-1][y];
                     break;
             }
         }

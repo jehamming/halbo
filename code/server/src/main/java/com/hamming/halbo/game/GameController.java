@@ -122,10 +122,51 @@ public class GameController implements Runnable {
 
     private void checkBaseplateBounds(UserLocation l) {
         Baseplate b = l.getBaseplate();
-        if ( l.getX() > b.getSize()) l.setX(b.getSize());
-        if ( l.getX() < 0 ) l.setX(0);
-        if ( l.getZ() > b.getSize()) l.setZ(b.getSize());
-        if ( l.getZ() < 0 ) l.setZ(0);
+        if ( l.getX() > b.getSize()) {
+            // Switch to baseplate to the right(EAST)
+            Baseplate eastBaseplate = l.getCity().getCityGrid().getBaseplate(l.getBaseplate(), CityGrid.Direction.EAST);
+            if (eastBaseplate != null ) {
+                float x = l.getX() - l.getBaseplate().getSize();
+                l.setBaseplate(eastBaseplate);
+                l.setX(x);
+            } else {
+                l.setX(b.getSize());
+            }
+        }
+        if ( l.getX() < 0 ) {
+            // Switch to baseplate to the left(WEST)
+            Baseplate westBaseplate = l.getCity().getCityGrid().getBaseplate(l.getBaseplate(), CityGrid.Direction.WEST);
+            if (westBaseplate != null ) {
+                float x = westBaseplate.getSize() + l.getX();
+                l.setBaseplate(westBaseplate);
+                l.setX(x);
+            } else {
+                l.setX(0);
+            }
+        }
+        if ( l.getZ() > b.getSize()) {
+            // Switch to baseplate to the top(NORTH)
+            Baseplate northBaseplate = l.getCity().getCityGrid().getBaseplate(l.getBaseplate(), CityGrid.Direction.NORTH);
+            if (northBaseplate != null ) {
+                float z = l.getZ() - l.getBaseplate().getSize();
+                l.setBaseplate(northBaseplate);
+                l.setZ(z);
+            } else {
+                l.setZ(b.getSize());
+            }
+        }
+        if ( l.getZ() < 0 ) {
+            // Switch to baseplate to the bottom(SOUTH)
+            Baseplate southBaseplate = l.getCity().getCityGrid().getBaseplate(l.getBaseplate(), CityGrid.Direction.SOUTH);
+            if (southBaseplate != null ) {
+                float z = southBaseplate.getSize() + l.getZ();
+                l.setBaseplate(southBaseplate);
+                l.setZ(z);
+            } else {
+                l.setZ(0);
+            }
+
+        }
     }
 
     private UserLocation calculateNewPosition(UserLocation location, float currentSpeed, float currentTurnSpeed) {

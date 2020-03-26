@@ -66,7 +66,7 @@ public class ViewController implements MovementListener, ConnectionListener {
         baseplateIds.forEach(baseplateId -> {
             BaseplateDto baseplate = cityController.getBaseplate(baseplateId);
             SimpleCityGrid.GridPosition pos = cityGrid.getPosition(baseplateId);
-            viewer.addBaseplate(baseplateId, baseplate.getName(), baseplate.getSize(), pos.row, pos.col );
+            viewer.addBaseplate(baseplateId, baseplate.getName(), baseplate.getSize(), cityGrid.getSize(), pos.x, pos.y );
         });
     }
 
@@ -79,19 +79,17 @@ public class ViewController implements MovementListener, ConnectionListener {
         // Remove all the request before this sequence (if any)
         deleteRequestsUpTO(l.getSequence());
         // Apply all the requests that server has not processed yet.
-
-        // FIXME Remove comment
-       // applyMoveRequests(l);
+        applyMoveRequests(l);
     }
 
     private Vector3f getViewerLocation(UserLocationDto l) {
         CityDto city = cityController.getCity(l.getCityId());
         BaseplateDto baseplate = cityController.getBaseplate(l.getBaseplateId());
         SimpleCityGrid.GridPosition pos = city.getCityGrid().getPosition(l.getBaseplateId());
-        int baseplateX = pos.col * baseplate.getSize();
-        int baseplateZ = pos.row * baseplate.getSize();
-        Vector3f newLocation = new Vector3f( baseplateX + l.getX() , 0, -(baseplateZ-l.getZ()));
-        System.out.println(getClass().getName() + ": New viewer location:" +newLocation.x + ","  +newLocation.y+","+newLocation.z);
+        float viewerX = ((city.getCityGrid().getSize()+1 - pos.x) * baseplate.getSize()) - l.getX();
+        float viewerZ = (pos.y * baseplate.getSize()) + l.getZ();
+        Vector3f newLocation = new Vector3f( viewerX , 0, viewerZ);
+        System.out.println(getClass().getName() + ": New viewer location: Baseplate "+baseplate.getName()+":" +newLocation.x + ","  +newLocation.y+","+newLocation.z);
         return newLocation;
     }
 
@@ -123,6 +121,8 @@ public class ViewController implements MovementListener, ConnectionListener {
         lastreceivedLocation = location;
         CityDto city = cityController.getCity(location.getCityId());
         setCityGrid(city.getCityGrid());
+        Vector3f viewerLocation = getViewerLocation(location);
+        viewer.setLocation(location.getUserId(), viewerLocation, location.getPitch(), location.getYaw());
     }
 
     public MovementDto getCurrentMoveRequest() {
@@ -136,8 +136,7 @@ public class ViewController implements MovementListener, ConnectionListener {
             synchronized (movementRequests) {
                 movementRequests.add(dto);
             }
-            // FIXME Remove comment
-//            applyMoveRequest(dto, lastreceivedLocation);
+            applyMoveRequest(dto, lastreceivedLocation);
         }
         return  dto;
     }
