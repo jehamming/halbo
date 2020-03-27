@@ -33,7 +33,7 @@ public class AddBaseplateAction implements Action {
     public void execute() {
         int gridZ = z * baseplateSize;
         int gridX = (gridSize - x) * baseplateSize;
-        TerrainTexture texture = new TerrainTexture(loader.loadTexture("baseplate"));
+        TerrainTexture texture = new TerrainTexture(loader.loadTexture("baseplate2"));
         FlatTerrain terrain = new FlatTerrain(baseplateSize, gridX, gridZ, loader, texture);
         System.out.println(getClass().getName() + ": AddTerrain '"+ baseplateId+"'("+name+") at :" +terrain.getX() +","  +terrain.getZ());
         viewer.addTerrain(terrain);

@@ -1,5 +1,7 @@
 package com.hamming.halbo.model;
 
+import java.util.Objects;
+
 // A City is a collection of connected baseplates
 //
 // "The world is flat"
@@ -44,4 +46,16 @@ public class City extends BasicObject {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        City city = (City) o;
+        return Objects.equals(getId(), city.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mayor);
+    }
 }

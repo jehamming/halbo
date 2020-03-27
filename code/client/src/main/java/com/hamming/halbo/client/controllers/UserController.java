@@ -5,11 +5,10 @@ import com.hamming.halbo.client.interfaces.UserListener;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.UserDto;
+import com.hamming.halbo.model.dto.UserLocationDto;
 import com.hamming.halbo.net.CommandReceiver;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class UserController implements ConnectionListener, CommandReceiver {
 
@@ -17,6 +16,7 @@ public class UserController implements ConnectionListener, CommandReceiver {
     private ConnectionController connectionController;
     private List<UserListener> userListeners;
     private List<UserDto> users;
+    private Map<String, UserLocationDto> userLocations;
     private UserDto currentUser;
 
     public UserController(ConnectionController connectionController) {
@@ -25,6 +25,7 @@ public class UserController implements ConnectionListener, CommandReceiver {
         protocolHandler = new ProtocolHandler();
         userListeners = new ArrayList<UserListener>();
         users = new ArrayList<UserDto>();
+        userLocations = new HashMap<String, UserLocationDto>();
         connectionController.registerReceiver(Protocol.Command.LOGIN,this);
         connectionController.registerReceiver(Protocol.Command.USERCONNECTED,this);
         connectionController.registerReceiver(Protocol.Command.USERDISCONNECTED,this);
@@ -54,6 +55,7 @@ public class UserController implements ConnectionListener, CommandReceiver {
         if (Protocol.SUCCESS.equals(status)) {
             currentUser = new UserDto();
             currentUser.setValues(values);
+            users.add(currentUser);
             success = true;
         } else {
             currentUser = null;
@@ -122,6 +124,7 @@ public class UserController implements ConnectionListener, CommandReceiver {
         UserDto user = new UserDto();
         user.setValues(data);
         users.remove(user);
+        userLocations.remove(user.getId());
         for (UserListener l: userListeners) {
             l.userDisconnected(user);
         }
@@ -134,6 +137,14 @@ public class UserController implements ConnectionListener, CommandReceiver {
             // TODO Wait for user details?
         }
         return user;
+    }
+
+    public void setUserLocation(UserLocationDto loc) {
+        userLocations.put(loc.getUserId(), loc);
+    }
+
+    public UserLocationDto getUserLocation(String userId) {
+        return userLocations.get(userId);
     }
 
     private UserDto findUserById(String userId) {

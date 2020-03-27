@@ -32,9 +32,9 @@ public class TeleportAction implements Action {
 
         if ( location != null )  {
             UserLocationDto dto = DTOFactory.getInstance().getUserLocationDTO(location);
-            client.send(Protocol.Command.TELEPORT.ordinal() + StringUtils.delimiter + Protocol.SUCCESS + StringUtils.delimiter + dto.toNetData());
+            client.send(Protocol.Command.TELEPORT,Protocol.SUCCESS + StringUtils.delimiter + dto.toNetData());
         } else {
-            client.send(Protocol.Command.TELEPORT.ordinal() + StringUtils.delimiter + Protocol.FAILED + StringUtils.delimiter + "Teleport Failed!");
+            client.send(Protocol.Command.TELEPORT,Protocol.FAILED + StringUtils.delimiter + "Teleport Failed!");
         }
 
     }

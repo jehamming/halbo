@@ -76,12 +76,12 @@ public class HALBOClientController implements UserListener, ConnectionListener {
 
     @Override
     public void userConnected(UserDto user) {
-        application.getViewer().addPlayer(user.getId(), user.getName());
+        //TODO not used
     }
 
     @Override
     public void userDisconnected(UserDto user) {
-        application.getViewer().removePlayer(user.getId());
+        //TODO Not used
     }
 
     @Override

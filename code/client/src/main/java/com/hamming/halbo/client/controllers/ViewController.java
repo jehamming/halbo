@@ -5,6 +5,7 @@ import com.hamming.halbo.client.Controllers;
 import com.hamming.halbo.client.engine.GLViewer;
 import com.hamming.halbo.client.interfaces.ConnectionListener;
 import com.hamming.halbo.client.interfaces.MovementListener;
+import com.hamming.halbo.client.interfaces.UserListener;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.SimpleCityGrid;
 import com.hamming.halbo.model.dto.*;
@@ -13,7 +14,7 @@ import org.lwjgl.util.vector.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewController implements MovementListener, ConnectionListener {
+public class ViewController implements MovementListener, ConnectionListener, UserListener {
 
     private ProtocolHandler protocolHandler;
     private ConnectionController connectionController;
@@ -39,6 +40,7 @@ public class ViewController implements MovementListener, ConnectionListener {
         protocolHandler = new ProtocolHandler();
         moveController.addMovementListener(this);
         connectionController.addConnectionListener(this);
+        userController.addUserListener(this);
         movementSender = new MovementSender(this, connectionController);
         sequenceNumber = 0;
         movementRequests = new ArrayList<MovementDto>();
@@ -46,7 +48,7 @@ public class ViewController implements MovementListener, ConnectionListener {
 
     @Override
     public void userMoved(UserDto user, UserLocationDto l) {
-        if (user.equals(moveController.getCurrentUser())) {
+        if (user.equals(userController.getCurrentUser())) {
             if (lastreceivedLocation == null || !lastreceivedLocation.getCityId().equals(l.getCityId())) {
                 // New City, resetViewer and send the grid to the viewer
                 CityDto city = cityController.getCity(l.getCityId());
@@ -55,6 +57,9 @@ public class ViewController implements MovementListener, ConnectionListener {
             lastreceivedLocation = l;
             moveCurrentUser(l);
         } else {
+            if ( viewer.getPlayer(user.getId()) == null) {
+                viewer.addPlayer(user.getId(), user.getName());
+            }
             Vector3f viewerLocation = getViewerLocation(l);
             viewer.setLocation(user.getId(), viewerLocation, l.getPitch(), l.getYaw());
         }
@@ -118,11 +123,21 @@ public class ViewController implements MovementListener, ConnectionListener {
 
     @Override
     public void teleported(UserLocationDto location) {
-        lastreceivedLocation = location;
-        CityDto city = cityController.getCity(location.getCityId());
-        setCityGrid(city.getCityGrid());
-        Vector3f viewerLocation = getViewerLocation(location);
-        viewer.setLocation(location.getUserId(), viewerLocation, location.getPitch(), location.getYaw());
+        UserDto currentUser = userController.getCurrentUser();
+        UserLocationDto currentUserLocation = userController.getUserLocation(currentUser.getId());
+        UserDto user = userController.getUser(location.getUserId());
+        if ( location.getUserId().equals(currentUser)) {
+            viewer.resetView();
+            CityDto city = cityController.getCity(location.getCityId());
+            setCityGrid(city.getCityGrid());
+        }
+        if ( location.getCityId().equals(currentUserLocation.getCityId())) {
+            userMoved(user, location);
+        } else {
+            // A user teleported to another city
+            // RemovePlayer (if present)
+            viewer.removePlayer(user.getId());
+        }
     }
 
     public MovementDto getCurrentMoveRequest() {
@@ -155,8 +170,25 @@ public class ViewController implements MovementListener, ConnectionListener {
     @Override
     public void disconnected() {
         viewer.resetView();
+        lastreceivedLocation = null;
+        sequenceNumber = 0;
     }
 
+    @Override
+    public void userConnected(UserDto user) {
+        // No actions in here
+    }
 
+    @Override
+    public void userDisconnected(UserDto user) {
+        viewer.removePlayer(user.getId());
+    }
 
+    @Override
+    public void loginResult(boolean success, String message) {
+        if (success) {
+            UserDto user = userController.getCurrentUser();
+            viewer.addPlayer(user.getId(), user.getName());
+        }
+    }
 }

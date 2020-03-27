@@ -21,7 +21,7 @@ public class SetUserLocationAction implements Action {
 
     @Override
     public void execute() {
-        Player p = findOrCreatePlayer();
+        Player p = viewer.getPlayer(userId);
         p.setPosition(position);
         if (p.getUserId().equals(viewer.getFollowedUserId())) {
             viewer.followPlayer(p);
@@ -29,21 +29,6 @@ public class SetUserLocationAction implements Action {
         //TODO Pitch an Yaw?
         p.setPitch(pitch);
         p.setYaw(yaw);
-    }
-
-    private Player findOrCreatePlayer() {
-        Player player = null;
-        for ( Player p: viewer.getPlayers()) {
-            if ( p.getUserId().equals(userId)) {
-                player = p;
-                break;
-            }
-        }
-        if (player == null) {
-            player = new Player(userId, viewer.getBasicPlayerTexture());
-            viewer.getPlayers().add(player);
-        }
-        return player;
     }
 
 

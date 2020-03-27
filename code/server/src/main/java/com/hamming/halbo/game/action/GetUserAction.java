@@ -30,9 +30,9 @@ public class GetUserAction implements Action {
         User user = UserFactory.getInstance().findUserById(userId);
         if ( user != null ) {
             UserDto dto = DTOFactory.getInstance().getUserDTO(user);
-            client.send(Protocol.Command.GETUSER.ordinal() + StringUtils.delimiter + Protocol.SUCCESS + StringUtils.delimiter + dto.toNetData());
+            client.send(Protocol.Command.GETUSER,Protocol.SUCCESS + StringUtils.delimiter + dto.toNetData());
         } else {
-            client.send(Protocol.Command.GETUSER.ordinal() + StringUtils.delimiter + Protocol.FAILED + StringUtils.delimiter + "User not found!");
+            client.send(Protocol.Command.GETUSER,Protocol.FAILED + StringUtils.delimiter + "User not found!");
         }
     }
 

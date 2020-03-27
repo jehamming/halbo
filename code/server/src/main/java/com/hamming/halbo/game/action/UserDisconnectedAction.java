@@ -24,7 +24,7 @@ public class UserDisconnectedAction implements Action {
     public void execute() {
         User u = UserFactory.getInstance().findUserById(userId);;
         UserDto dto = DTOFactory.getInstance().getUserDTO(u);
-        client.send(Protocol.Command.USERDISCONNECTED.ordinal() + StringUtils.delimiter + dto.toNetData());
+        client.send(Protocol.Command.USERDISCONNECTED,dto.toNetData());
     }
 
     public void setUserId(String userId) {

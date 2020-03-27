@@ -30,6 +30,7 @@ public class MoveController implements CommandReceiver {
         protocolHandler = new ProtocolHandler();
         movementListeners = new ArrayList<MovementListener>();
         connectionController.registerReceiver(Protocol.Command.TELEPORT, this);
+        connectionController.registerReceiver(Protocol.Command.USERTELEPORTED, this);
         connectionController.registerReceiver(Protocol.Command.LOCATION, this);
         connectionController.registerReceiver(Protocol.Command.MOVE, this);
     }
@@ -53,11 +54,11 @@ public class MoveController implements CommandReceiver {
     @Override
     public void receiveCommand(Protocol.Command cmd, String[] data) {
         switch (cmd) {
-            case MOVE:
-                System.out.println(getClass().getName() + ":" + cmd + ": NOT IMPLEMENTED YET");
-                break;
             case TELEPORT:
                 teleportResult(data);
+                break;
+            case USERTELEPORTED:
+                userTeleported(data);
                 break;
             case LOCATION:
                 handleLocation(data);
@@ -68,6 +69,7 @@ public class MoveController implements CommandReceiver {
     private void handleLocation(String[] data) {
         UserLocationDto loc = new UserLocationDto();
         loc.setValues(data);
+        userController.setUserLocation(loc);
         if (userController.getCurrentUser().getId().equals( loc.getUserId())) {
             // Current logged in user!
             move(userController.getCurrentUser(), loc);
@@ -87,12 +89,21 @@ public class MoveController implements CommandReceiver {
         if (Protocol.SUCCESS.equals(status)) {
             UserLocationDto loc = new UserLocationDto();
             loc.setValues(values);
+            userController.setUserLocation(loc);
             teleported(loc);
         } else {
             msg = Arrays.toString(values);
             System.out.println("Teleport failed: " + msg);
         }
     }
+
+    private void userTeleported(String[] data) {
+        UserLocationDto loc = new UserLocationDto();
+        loc.setValues(data);
+        userController.setUserLocation(loc);
+        teleported(loc);
+    }
+
 
     private void teleported(UserLocationDto location) {
         for (MovementListener l: movementListeners) {
@@ -105,9 +116,4 @@ public class MoveController implements CommandReceiver {
             l.userMoved(user,location);
         }
     }
-
-    public UserDto getCurrentUser() {
-        return userController.getCurrentUser();
-    }
-
 }

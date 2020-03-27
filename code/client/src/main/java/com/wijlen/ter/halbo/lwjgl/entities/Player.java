@@ -33,7 +33,7 @@ public class Player extends Entity {
     }
 
     public Player(String userId, TexturedModel model) {
-        this(userId, model, new Vector3f(100, 0, -50), 0, 0, 0, 0.5f);
+        this(userId, model, null, 0, 0, 0, 0.5f);
     }
 
     public void move(FlatTerrain terrain) {

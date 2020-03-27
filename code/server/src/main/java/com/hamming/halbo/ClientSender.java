@@ -26,7 +26,6 @@ public class ClientSender implements Runnable {
             long start = System.currentTimeMillis();
             while (!itemsToSend.isEmpty()) {
                 String data = itemsToSend.remove();
-                System.out.println(this.getClass().getName() + ":" + "Client send:" + data);
                 out.println(data);
             }
             long stop = System.currentTimeMillis();

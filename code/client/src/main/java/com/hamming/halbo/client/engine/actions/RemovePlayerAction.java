@@ -15,17 +15,8 @@ public class RemovePlayerAction implements Action {
 
     @Override
     public void execute() {
-        Player player = null;
-        for ( Player p: viewer.getPlayers()) {
-            if ( p.getUserId().equals(userId)) {
-                player = p;
-                break;
-            }
-        }
-        if (player != null) {
-            // Found!
-            viewer.getPlayers().remove(player);
-        }
+        Player player = viewer.getPlayer(userId);
+        viewer.removePlayer(player);
     }
 
 }

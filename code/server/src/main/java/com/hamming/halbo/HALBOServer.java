@@ -13,6 +13,7 @@ public class HALBOServer extends Server {
 
     private int port = 3131;
     private GameController controller;
+    private int clients = 0;
 
     public HALBOServer() {
         super("HALBO");
@@ -49,7 +50,8 @@ public class HALBOServer extends Server {
     @Override
     protected void clientConnected(Socket s, BufferedReader in, PrintWriter out) {
         try {
-            ClientConnection client = new ClientConnection(s, in, out, controller);
+            clients++;
+            ClientConnection client = new ClientConnection("Client-"+clients, s, in, out, controller);
             Thread clientThread = new Thread(client);
             controller.addListener(client);
             clientThread.setDaemon(true);

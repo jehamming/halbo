@@ -52,8 +52,4 @@ public class HALBOClientApplication {
     public ToolsWindow getToolsWindow() {
         return toolsWindow;
     }
-
-    public GLViewer getViewer() {
-        return viewer;
-    }
 }
