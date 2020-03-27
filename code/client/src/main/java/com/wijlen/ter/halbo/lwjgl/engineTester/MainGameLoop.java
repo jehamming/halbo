@@ -26,7 +26,7 @@ public class MainGameLoop {
         DisplayManager.createDisplay("TTW Game!");
         Loader loader = new Loader();
 
-        TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("baseplate"));
+        TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("baseplate2"));
 
         FlatTerrain terrain = new FlatTerrain(48, 0, -1, loader, backgroundTexture);
 

@@ -29,10 +29,10 @@ public class GetContinentAction implements Action {
         if ( w != null ) {
             for ( Continent continent : w.getContinents() ) {
                 ContinentDto dto = DTOFactory.getInstance().getContinentDto(worldId, continent);
-                client.send(Protocol.Command.GETCONTINENTS.ordinal() + StringUtils.delimiter + dto.toNetData());
+                client.send(Protocol.Command.GETCONTINENTS,dto.toNetData());
             }
         } else {
-            client.send(Protocol.Command.GETCONTINENTS.ordinal() + StringUtils.delimiter + Protocol.FAILED);
+            client.send(Protocol.Command.GETCONTINENTS,Protocol.FAILED);
         }
     }
 

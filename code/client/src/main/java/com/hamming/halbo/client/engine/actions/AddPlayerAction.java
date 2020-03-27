@@ -18,7 +18,7 @@ public class AddPlayerAction implements Action {
     @Override
     public void execute() {
         Player player = new Player(userId, viewer.getBasicPlayerTexture());
-        viewer.getPlayers().add(player);
+        viewer.addPlayer(player);
     }
 
 }

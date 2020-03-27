@@ -12,6 +12,8 @@ public interface Protocol {
         LOGIN,
         USERCONNECTED,
         USERDISCONNECTED,
+        USERONLINE,
+        USERTELEPORTED,
         GETUSER,
         GETWORLDS,
         GETCONTINENTS,

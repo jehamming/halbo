@@ -34,6 +34,8 @@ public class GLViewer implements Runnable {
     private String followedUserId;
     private List<FlatTerrain> terrains;
     private Loader loader;
+
+
     private enum MouseButton {
         LEFT,
         RIGHT
@@ -78,7 +80,11 @@ public class GLViewer implements Runnable {
             checkMouseGrab();
             handleActions();
             camera.move();
-            players.forEach(player -> renderer.processEntity(player));
+            players.forEach(player -> {
+                if (player.getPosition() != null) {
+                    renderer.processEntity(player);
+                }
+            });
             terrains.forEach(terrain -> renderer.processTerrain(terrain));
             renderer.render(lights, camera);
             DisplayManager.updateDisplay();
@@ -127,6 +133,7 @@ public class GLViewer implements Runnable {
 
     public void resetView() {
         players = new ArrayList<Player>();
+        resetTerrains();
     }
 
     public void resetTerrains() {
@@ -138,6 +145,17 @@ public class GLViewer implements Runnable {
         synchronized (actions) {
             actions.add(action);
         }
+    }
+
+    public Player getPlayer(String playerId) {
+        Player player = null;
+        for (Player p : players) {
+            if (p.getUserId().equals(playerId)) {
+                player = p;
+                break;
+            }
+        }
+        return  player;
     }
 
     public void removePlayer(String userId) {
@@ -163,11 +181,6 @@ public class GLViewer implements Runnable {
         return initialized && Keyboard.isKeyDown(Keyboard.KEY_D);
     }
 
-
-    public List<Player> getPlayers() {
-        return players;
-    }
-
     public TexturedModel getBasicPlayerTexture() {
         return basicPlayerTexture;
     }
@@ -184,6 +197,13 @@ public class GLViewer implements Runnable {
         terrains.add(terrain);
     }
 
+    public void addPlayer(Player player) {
+        players.add(player);
+    }
+
+    public void removePlayer(Player player) {
+        players.remove(player);
+    }
 
 
 }

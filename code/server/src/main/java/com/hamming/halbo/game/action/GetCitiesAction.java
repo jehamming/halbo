@@ -30,10 +30,10 @@ public class GetCitiesAction implements Action {
         if ( c != null ) {
             for ( City city : c.getCities() ) {
                 CityDto dto = DTOFactory.getInstance().getCityDto(continentId, city);
-                client.send(Protocol.Command.GETCITIES.ordinal() + StringUtils.delimiter + dto.toNetData());
+                client.send(Protocol.Command.GETCITIES,dto.toNetData());
             }
         } else {
-            client.send(Protocol.Command.GETCITIES.ordinal() + StringUtils.delimiter + Protocol.FAILED);
+            client.send(Protocol.Command.GETCITIES,Protocol.FAILED);
         }
     }
 

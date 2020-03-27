@@ -29,9 +29,9 @@ public class GetBaseplateAction implements Action {
         Baseplate bp = BaseplateFactory.getInstance().findBaseplateByID(baseplateId);
         if ( bp != null ) {
             BaseplateDto dto = DTOFactory.getInstance().getBaseplateDto(bp);
-            client.send(Protocol.Command.GETBASEPLATE.ordinal() + StringUtils.delimiter + dto.toNetData());
+            client.send(Protocol.Command.GETBASEPLATE,dto.toNetData());
         } else {
-            client.send(Protocol.Command.GETBASEPLATE.ordinal() + StringUtils.delimiter + Protocol.FAILED + StringUtils.delimiter + "Baseplate not found!");
+            client.send(Protocol.Command.GETBASEPLATE,Protocol.FAILED + StringUtils.delimiter + "Baseplate not found!");
         }
     }
 

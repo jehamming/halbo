@@ -29,10 +29,12 @@ public class ClientConnection implements Runnable, GameStateListener {
     private GameController gameController;
     private ProtocolHandler protocolHandler;
     private ClientSender clientSender;
+    private String id;
 
-    public ClientConnection(Socket s, BufferedReader in, PrintWriter out, GameController controller) {
+    public ClientConnection(String id, Socket s, BufferedReader in, PrintWriter out, GameController controller) {
         this.socket = s;
         this.in = in;
+        this.id = id;
         this.gameController = controller;
         this.protocolHandler = new ProtocolHandler(controller, this);
         clientSender = new ClientSender(out);
@@ -44,7 +46,7 @@ public class ClientConnection implements Runnable, GameStateListener {
         while (running && scanner.hasNextLine()) {
             try {
                 String s = scanner.nextLine();
-                if ( s != null ) {
+                if (s != null) {
                     handleInput(s);
                 }
             } catch (Exception e) {
@@ -53,22 +55,26 @@ public class ClientConnection implements Runnable, GameStateListener {
             }
         }
         gameController.removeListener(this);
-        if (user != null ) {
+        if (user != null) {
             gameController.userDisconnected(user);
         }
-        try { socket.close(); } catch (IOException e) {}
+        try {
+            socket.close();
+        } catch (IOException e) {
+        }
         System.out.println(this.getClass().getName() + ":" + "Client Socket closed");
     }
 
     private void handleInput(String s) {
         Action cmd = protocolHandler.parseCommandString(s);
-        if (cmd != null ) {
+        if (cmd != null) {
             gameController.addCommand(cmd);
         }
     }
 
-    public void send(String s) {
-        clientSender.enQueue(s);
+    public void send(Protocol.Command cmd, String s) {
+        System.out.println(this.getClass().getName() + ":" + id + ":send " + cmd + "(" + cmd.ordinal() + "):" + s);
+        clientSender.enQueue(cmd.ordinal() + StringUtils.delimiter + s);
     }
 
     public User getUser() {
@@ -77,7 +83,7 @@ public class ClientConnection implements Runnable, GameStateListener {
 
     public void setUser(User user) {
         this.user = user;
-        if ( user != null ) {
+        if (user != null) {
             gameController.userConnected(user);
         }
     }
@@ -88,11 +94,11 @@ public class ClientConnection implements Runnable, GameStateListener {
             sendWorldData();
             // City Grid of baseplates
             userLocation = gameController.getGameState().getLocation(user);
-            if (userLocation != null ) {
+            if (userLocation != null) {
                 sendCityDetails(userLocation.getCity());
             }
             // Logged in Users;
-            for ( User u: gameController.getGameState().getOnlineUsers()) {
+            for (User u : gameController.getGameState().getOnlineUsers()) {
                 if (!u.getId().equals(user.getId())) {
                     sendUserDetails(u);
                     handleUserConnected(u);
@@ -100,24 +106,30 @@ public class ClientConnection implements Runnable, GameStateListener {
             }
             // UserLocations
             for (UserLocation loc : gameController.getGameState().getUserLocations().values()) {
-                handleUserLocation(loc);
+                if ( isOnline(loc.getUser())) {
+                    handleUserLocation(loc);
+                }
             }
         }
     }
 
+    private boolean isOnline(User user) {
+        return gameController.getGameState().getOnlineUsers().contains(user);
+    }
+
     private void sendWorldData() {
         // Worlds
-        for (World world: WorldFactory.getInstance().getWorlds()) {
+        for (World world : WorldFactory.getInstance().getWorlds()) {
             WorldDto worldDto = DTOFactory.getInstance().getWorldDto(world);
-            send(Protocol.Command.GETWORLDS.ordinal() + StringUtils.delimiter + worldDto.toNetData());
+            send(Protocol.Command.GETWORLDS, worldDto.toNetData());
             // Continents
             for (Continent continent : world.getContinents()) {
                 ContinentDto continentDto = DTOFactory.getInstance().getContinentDto(world.getId().toString(), continent);
-                send(Protocol.Command.GETCONTINENTS.ordinal() + StringUtils.delimiter + continentDto.toNetData());
+                send(Protocol.Command.GETCONTINENTS, continentDto.toNetData());
                 // Cities
                 for (City city : continent.getCities()) {
                     CityDto cityDto = DTOFactory.getInstance().getCityDto(continent.getId().toString(), city);
-                    send(Protocol.Command.GETCITIES.ordinal() + StringUtils.delimiter + cityDto.toNetData());
+                    send(Protocol.Command.GETCITIES, cityDto.toNetData());
                 }
             }
         }
@@ -148,29 +160,43 @@ public class ClientConnection implements Runnable, GameStateListener {
 
     private void handleTeleported(UserLocation loc) {
         if (loc.getUser().equals(user)) {
-            sendCityDetails(loc.getCity());
             userLocation = loc;
+            sendCityDetails(loc.getCity());
+            sendUsersInCity(loc.getCity());
+        } else {
+            UserLocationDto dto = DTOFactory.getInstance().getUserLocationDTO(loc);
+            send(Protocol.Command.USERTELEPORTED, dto.toNetData());
         }
+
     }
 
-    private void handleUserLocation(UserLocation loc) {
+    public void sendUsersInCity(City city) {
+        gameController.getGameState().getUserLocations().values().forEach(location -> {
+            if (!location.getUser().equals(user) && location.getCity().equals(city)) {
+                UserLocationDto dto = DTOFactory.getInstance().getUserLocationDTO(location);
+                send(Protocol.Command.LOCATION, dto.toNetData());
+            }
+        });
+    }
+
+    public void handleUserLocation(UserLocation loc) {
         if (loc.getUser().equals(user)) {
             // Location of this user!
             userLocation = loc;
         }
         if (userLocation != null && loc.getCity().equals(userLocation.getCity())) {
             UserLocationDto dto = DTOFactory.getInstance().getUserLocationDTO(loc);
-            send(Protocol.Command.LOCATION.ordinal() + StringUtils.delimiter + dto.toNetData());
+            send(Protocol.Command.LOCATION, dto.toNetData());
         }
     }
 
     public void sendCityDetails(City city) {
-        city.getCityGrid().getAllBaseplates().forEach( cbp -> {
-            CityBaseplateDto dto = DTOFactory.getInstance().getCityBaseplateDto(city.getId().toString(),cbp);
-            send(Protocol.Command.CITYBASEPLATE.ordinal() + StringUtils.delimiter + dto.toNetData());
+        city.getCityGrid().getAllBaseplates().forEach(cbp -> {
+            CityBaseplateDto dto = DTOFactory.getInstance().getCityBaseplateDto(city.getId().toString(), cbp);
+            send(Protocol.Command.CITYBASEPLATE, dto.toNetData());
             // Send also the Baseplate
             BaseplateDto baseplateDto = DTOFactory.getInstance().getBaseplateDto(cbp.getBaseplate());
-            send(Protocol.Command.GETBASEPLATE.ordinal() + StringUtils.delimiter + baseplateDto.toNetData());
+            send(Protocol.Command.GETBASEPLATE, baseplateDto.toNetData());
         });
     }
 
@@ -178,7 +204,7 @@ public class ClientConnection implements Runnable, GameStateListener {
         if (user != null && !user.equals(u)) {
             GetUserAction action = new GetUserAction(gameController, this);
             action.setUserId(u.getId().toString());
-            gameController.addCommand( action );
+            gameController.addCommand(action);
         }
     }
 
@@ -186,7 +212,7 @@ public class ClientConnection implements Runnable, GameStateListener {
         if (user != null && !user.equals(u)) {
             UserConnectedAction action = new UserConnectedAction(gameController, this);
             action.setUserId(u.getId().toString());
-            gameController.addCommand( action );
+            gameController.addCommand(action);
         }
     }
 
@@ -194,15 +220,15 @@ public class ClientConnection implements Runnable, GameStateListener {
         if (user != null && !user.equals(u)) {
             UserDisconnectedAction action = new UserDisconnectedAction(gameController, this);
             action.setUserId(u.getId().toString());
-            gameController.addCommand( action );
+            gameController.addCommand(action);
         }
     }
 
     public void sendUserLocation() {
         userLocation = gameController.getGameState().getLocation(user);
-        if (userLocation != null ) {
+        if (userLocation != null) {
             UserLocationDto dto = DTOFactory.getInstance().getUserLocationDTO(userLocation);
-            send(Protocol.Command.LOCATION.ordinal() + StringUtils.delimiter + dto.toNetData());
+            send(Protocol.Command.LOCATION, dto.toNetData());
         }
     }
 

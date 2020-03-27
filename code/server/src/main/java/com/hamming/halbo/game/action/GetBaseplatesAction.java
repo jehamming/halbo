@@ -34,11 +34,11 @@ public class GetBaseplatesAction implements Action {
             //TODO IMPLEMENT
 /*            for ( Baseplate b : c.getBaseplates() ) {
                 BaseplateDto dto = DTOFactory.getInstance().getBaseplateDto(b);
-                client.send(Protocol.Command.GETBASEPLATES.ordinal() + StringUtils.delimiter + dto.toNetData());
+                client.send(Protocol.Command.GETBASEPLATES,dto.toNetData());
             }*/
-            client.send(Protocol.Command.GETBASEPLATES.ordinal() + StringUtils.delimiter + Protocol.FAILED);
+            client.send(Protocol.Command.GETBASEPLATES,Protocol.FAILED);
         } else {
-            client.send(Protocol.Command.GETBASEPLATES.ordinal() + StringUtils.delimiter + Protocol.FAILED);
+            client.send(Protocol.Command.GETBASEPLATES,Protocol.FAILED);
         }
     }
 

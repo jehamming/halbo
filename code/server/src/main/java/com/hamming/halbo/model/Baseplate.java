@@ -2,7 +2,7 @@ package com.hamming.halbo.model;
 
 import java.awt.*;
 
-// A baseplate is like a lego baseplate. There are several types of plates, with grass or with road parts, etc.
+// A baseplate is like a lego baseplate.
 public class Baseplate extends BasicObject   {
 
     private BaseplateType type ;
@@ -13,9 +13,9 @@ public class Baseplate extends BasicObject   {
 
     public Baseplate(HalboID id) {
         super(id);
-        spawnPointX = 0;
+        spawnPointX = 40;
         spawnPointY = 0;
-        spawnPointZ = 0;
+        spawnPointZ = 40;
         size = 80;
     }
 

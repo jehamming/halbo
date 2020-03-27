@@ -25,7 +25,7 @@ public class GetWorldsAction implements Action {
     public void execute() {
         for (World w : WorldFactory.getInstance().getWorlds() ) {
             WorldDto dto = DTOFactory.getInstance().getWorldDto(w);
-            client.send(Protocol.Command.GETWORLDS.ordinal() + StringUtils.delimiter + dto.toNetData());
+            client.send(Protocol.Command.GETWORLDS,dto.toNetData());
         }
     }
 

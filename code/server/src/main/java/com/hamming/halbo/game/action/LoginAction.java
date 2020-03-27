@@ -29,20 +29,20 @@ public class LoginAction implements Action {
             if (controller.getGameState().getOnlineUsers().contains(u)) {
                 // Already online
                 client.setUser(null);
-                client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + Protocol.FAILED + StringUtils.delimiter + "You are already logged in!");
+                client.send(Protocol.Command.LOGIN,Protocol.FAILED + StringUtils.delimiter + "You are already logged in!");
             } else {
                 // Connected!
                 client.setUser(u);
                 client.getProtocolHandler().LoggedIn();
                 UserDto dto = DTOFactory.getInstance().getUserDTO(u);
-                client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + Protocol.SUCCESS + StringUtils.delimiter + dto.toNetData());
+                client.send(Protocol.Command.LOGIN,Protocol.SUCCESS + StringUtils.delimiter + dto.toNetData());
                 client.sendFullGameState();
                 client.sendUserLocation();
             }
         } else {
             // Invalid user/password
             client.setUser(null);
-            client.send(Protocol.Command.LOGIN.ordinal() + StringUtils.delimiter + Protocol.FAILED + StringUtils.delimiter + "Not a valid username/password combo");
+            client.send(Protocol.Command.LOGIN,Protocol.FAILED + StringUtils.delimiter + "Not a valid username/password combo");
         }
     }
 

@@ -26,11 +26,10 @@ public class UserConnectedAction implements Action {
     public void execute() {
         User u = UserFactory.getInstance().findUserById(userId);;
         UserDto dto = DTOFactory.getInstance().getUserDTO(u);
-        client.send(Protocol.Command.USERCONNECTED.ordinal() + StringUtils.delimiter + dto.toNetData());
+        client.send(Protocol.Command.USERCONNECTED,dto.toNetData());
         UserLocation loc = controller.getGameState().getLocation(u);
         if (loc != null ) {
-            UserLocationDto userLocationDTO = DTOFactory.getInstance().getUserLocationDTO(loc);
-            client.send(Protocol.Command.LOCATION.ordinal() + StringUtils.delimiter + userLocationDTO.toNetData());
+            client.handleUserLocation(loc);
         }
     }
 

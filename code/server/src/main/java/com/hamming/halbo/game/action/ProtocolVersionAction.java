@@ -23,11 +23,11 @@ public class ProtocolVersionAction implements Action {
     @Override
     public void execute() {
         if (Protocol.version.equals(clientProtocol)) {
-            client.send(Protocol.Command.VERSION.ordinal() + StringUtils.delimiter + Protocol.SUCCESS);
+            client.send(Protocol.Command.VERSION,Protocol.SUCCESS);
             client.getProtocolHandler().protocolVersionCompatible();
         } else {
             String msg = "Incompatible protocol : " + clientProtocol + ", server=" + Protocol.version;
-            client.send(Protocol.Command.VERSION.ordinal() + StringUtils.delimiter + Protocol.FAILED + StringUtils.delimiter + msg);
+            client.send(Protocol.Command.VERSION,Protocol.FAILED + StringUtils.delimiter + msg);
         }
     }
 
