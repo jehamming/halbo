@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hamming.halbo.ldraw.LDRenderedModel;
 import com.wijlen.ter.halbo.lwjgl.models.TexturedModel;
 
 import com.wijlen.ter.halbo.lwjgl.terrains.FlatTerrain;
@@ -38,10 +39,15 @@ public class MasterRenderer {
 	
 	private FlatTerrainRenderer terrainRenderer;
 	private TerrainShader terrainShader = new TerrainShader();
+
+	private ConstructionRenderer constructionRenderer;
 	
 	
 	private Map<TexturedModel,List<Entity>> entities = new HashMap<TexturedModel,List<Entity>>();
 	private List<FlatTerrain> terrains = new ArrayList<FlatTerrain>();
+
+
+	private List<LDRenderedModel> constructions = new ArrayList<LDRenderedModel>();
 
 	private SkyboxRenderer skyboxRenderer;
 
@@ -50,6 +56,7 @@ public class MasterRenderer {
 		createProjectionMatrix();
 		renderer = new EntityRenderer(shader,projectionMatrix);
 		terrainRenderer = new FlatTerrainRenderer(terrainShader,projectionMatrix);
+		constructionRenderer = new ConstructionRenderer(shader,projectionMatrix);
 		skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
 	}
 
@@ -75,6 +82,7 @@ public class MasterRenderer {
 		terrainShader.loadLights(lights);
 		terrainShader.loadViewMatrix(camera);
 		terrainRenderer.render(terrains);
+		constructionRenderer.render(constructions);
 		terrainShader.stop();
 		skyboxRenderer.render(camera);
 		terrains.clear();
@@ -83,6 +91,10 @@ public class MasterRenderer {
 	
 	public void processTerrain(FlatTerrain terrain){
 		terrains.add(terrain);
+	}
+
+	public void processConstruction(LDRenderedModel construction){
+		constructions.add(construction);
 	}
 
 
@@ -123,6 +135,6 @@ public class MasterRenderer {
 		projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
 		projectionMatrix.m33 = 0;
 	}
-	
+
 
 }

@@ -50,9 +50,7 @@ public class Player extends Entity {
             isInAir = false;
             super.getPosition().y = 1;
         }
-
-        System.out.println(getPosition());
-    }
+   }
 
     private void jump() {
         if (!isInAir) {
