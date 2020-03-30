@@ -12,8 +12,6 @@ public class GameController implements Runnable {
     private boolean running = true;
     private GameState gameState;
     private List<GameStateListener> listeners;
-    private static final float RUN_SPEED = 1;
-    private static final float TURN_SPEED = 7;
 
     public GameController() {
         gameState = new GameState();
@@ -53,35 +51,6 @@ public class GameController implements Runnable {
     }
 
 
-    public UserLocation handleTeleportRequest(String userId, String worldId, String continentId, String cityId) {
-        User u = UserFactory.getInstance().findUserById(userId);
-        World w = WorldFactory.getInstance().findWorldById(worldId);
-        ;
-        Continent c = ContinentFactory.getInstance().findContinentById(continentId);
-        City ct = CityFactory.getInstance().findCityByID(cityId);
-        Baseplate b = ct.getTeleportBaseplate();
-        UserLocation loc = null;
-        if (u != null && w != null && c != null && ct != null && b != null) {
-            loc = gameState.getLocation(u);
-            if (loc == null) {
-                loc = new UserLocation(IDManager.getInstance().getNextID(HalboID.Prefix.LOC));
-                loc.setUser(u);
-            }
-            loc.setWorld(w);
-            loc.setContinent(c);
-            loc.setCity(ct);
-            loc.setBaseplate(b);
-            loc.setX(b.getSpawnPointX());
-            loc.setY(b.getSpawnPointY());
-            loc.setZ(b.getSpawnPointZ());
-            loc.setPitch(0);
-            loc.setYaw(0);
-            gameState.setLocation(u, loc);
-            fireGameStateEvent(GameStateEvent.Type.USERTELEPORTED, loc);
-        }
-        return loc;
-    }
-
     public void addCommand(Action cmd) {
         actionQueue.addLast(cmd);
         synchronized (this) {
@@ -94,101 +63,8 @@ public class GameController implements Runnable {
     }
 
 
-    public void handleMoveRequest(Long sequence, User u, boolean forward, boolean back, boolean left, boolean right, boolean buildMode) {
-        UserLocation location = gameState.getLocation(u);
-        if (location != null) {
-            float currentSpeed = 0;
-            if (forward) {
-                currentSpeed = RUN_SPEED;
-            } else if (back) {
-                currentSpeed = -RUN_SPEED;
-            }
-            float currentTurnSpeed = 0;
-            if (right) {
-                currentTurnSpeed = -TURN_SPEED;
-            } else if (left) {
-                currentTurnSpeed = TURN_SPEED;
-            }
 
-            location = calculateNewPosition(location, currentSpeed, currentTurnSpeed);
-
-            checkBaseplateBounds(location, buildMode);
-
-            location.setSequence(sequence);
-            gameState.setLocation(u, location);
-            fireGameStateEvent(GameStateEvent.Type.USERLOCATION, location);
-        }
-    }
-
-    private void checkBaseplateBounds(UserLocation l, boolean buildMode) {
-        Baseplate b = l.getBaseplate();
-        if ( l.getX() > b.getSize()) {
-            // Switch to baseplate to the right(EAST)
-            Baseplate eastBaseplate = l.getCity().getCityGrid().getBaseplate(l.getBaseplate(), CityGrid.Direction.EAST);
-            if (eastBaseplate != null ) {
-                float x = l.getX() - l.getBaseplate().getSize();
-                l.setBaseplate(eastBaseplate);
-                l.setX(x);
-            } else if (eastBaseplate == null && buildMode) {
-                eastBaseplate = createBaseplate("AUTOBUILD",l,CityGrid.Direction.EAST);
-                float x = l.getX() - l.getBaseplate().getSize();
-                l.setBaseplate(eastBaseplate);
-                l.setX(x);
-            } else {
-                l.setX(b.getSize());
-            }
-        }
-        if ( l.getX() < 0 ) {
-            // Switch to baseplate to the left(WEST)
-            Baseplate westBaseplate = l.getCity().getCityGrid().getBaseplate(l.getBaseplate(), CityGrid.Direction.WEST);
-            if (westBaseplate != null ) {
-                float x = westBaseplate.getSize() + l.getX();
-                l.setBaseplate(westBaseplate);
-                l.setX(x);
-            } else if (westBaseplate == null && buildMode) {
-                westBaseplate = createBaseplate("AUTOBUILD",l,CityGrid.Direction.WEST);
-                float x = westBaseplate.getSize() + l.getX();
-                l.setBaseplate(westBaseplate);
-                l.setX(x);
-            } else {
-                l.setX(0);
-            }
-        }
-        if ( l.getZ() > b.getSize()) {
-            // Switch to baseplate to the top(NORTH)
-            Baseplate northBaseplate = l.getCity().getCityGrid().getBaseplate(l.getBaseplate(), CityGrid.Direction.NORTH);
-            if (northBaseplate != null ) {
-                float z = l.getZ() - l.getBaseplate().getSize();
-                l.setBaseplate(northBaseplate);
-                l.setZ(z);
-            } else if (northBaseplate == null && buildMode) {
-                northBaseplate = createBaseplate("AUTOBUILD",l,CityGrid.Direction.NORTH);
-                float z = l.getZ() - l.getBaseplate().getSize();
-                l.setBaseplate(northBaseplate);
-                l.setZ(z);
-            } else {
-                l.setZ(b.getSize());
-            }
-        }
-        if ( l.getZ() < 0 ) {
-            // Switch to baseplate to the bottom(SOUTH)
-            Baseplate southBaseplate = l.getCity().getCityGrid().getBaseplate(l.getBaseplate(), CityGrid.Direction.SOUTH);
-            if (southBaseplate != null ) {
-                float z = southBaseplate.getSize() + l.getZ();
-                l.setBaseplate(southBaseplate);
-                l.setZ(z);
-            } else if (southBaseplate == null && buildMode) {
-                southBaseplate = createBaseplate("AUTOBUILD",l,CityGrid.Direction.SOUTH);
-                float z = southBaseplate.getSize() + l.getZ();
-                l.setBaseplate(southBaseplate);
-                l.setZ(z);
-            } else {
-                l.setZ(0);
-            }
-        }
-    }
-
-    private Baseplate createBaseplate(String name, UserLocation l, CityGrid.Direction direction) {
+    public Baseplate createBaseplate(String name, UserLocation l, CityGrid.Direction direction) {
         Baseplate newBaseplate = BaseplateFactory.getInstance().createBaseplate(name, l.getUser());
         try {
             l.getCity().getCityGrid().addBasePlate(newBaseplate, l.getBaseplate(), direction);
@@ -204,21 +80,6 @@ public class GameController implements Runnable {
         return newBaseplate;
     }
 
-    private UserLocation calculateNewPosition(UserLocation location, float currentSpeed, float currentTurnSpeed) {
-        // Calculate new position
-        location.setYaw(location.getYaw() + currentTurnSpeed);
-        float distance = currentSpeed;
-        float dx = (float) (distance * Math.sin(Math.toRadians(location.getYaw() + currentTurnSpeed)));
-        float dz = (float) (distance * Math.cos(Math.toRadians(location.getYaw() + currentTurnSpeed)));
-        increasePosition(location, -dx, 0, dz);
-        return location;
-    }
-
-    public void increasePosition(UserLocation l, float dx, float dy, float dz) {
-        l.setX(l.getX() + dx );
-        l.setY(l.getY() + dy );
-        l.setZ(l.getZ() + dz );
-    }
 
     private void fireGameStateEvent(GameStateEvent.Type type, BasicObject object) {
         for (GameStateListener l : listeners) {
@@ -241,4 +102,13 @@ public class GameController implements Runnable {
         }
     }
 
+    public void setLocation(User u, UserLocation location) {
+        gameState.setLocation(u, location);
+        fireGameStateEvent(GameStateEvent.Type.USERLOCATION, location);
+    }
+
+    public void userTeleported(User u, UserLocation loc) {
+        gameState.setLocation(u, loc);
+        fireGameStateEvent(GameStateEvent.Type.USERTELEPORTED, loc);
+    }
 }
