@@ -5,15 +5,16 @@ import com.hamming.halbo.util.StringUtils;
 
 public class MovementDto implements DTO {
     private long sequence;
-    private boolean forward, back, left, right;
+    private boolean forward, back, left, right, buildMode;
 
 
-    public MovementDto(long sequence, boolean forward, boolean back, boolean left, boolean right) {
+    public MovementDto(long sequence, boolean forward, boolean back, boolean left, boolean right, boolean buildMode) {
         this.sequence = sequence;
         this.forward = forward;
         this.back = back;
         this.left =left;
         this.right = right;
+        this.buildMode = buildMode;
     }
 
     @Override
@@ -22,18 +23,20 @@ public class MovementDto implements DTO {
                 + forward + StringUtils.delimiter
                 + back + StringUtils.delimiter
                 + left + StringUtils.delimiter
-                + right ;
+                + right + StringUtils.delimiter
+                + buildMode;
         return cmd;
     }
 
     @Override
     public void setValues(String... values) {
-        if ( values.length == 5) {
+        if ( values.length == 6) {
             sequence = Long.valueOf(values[0]);
             forward = Boolean.valueOf(values[1]);
             back = Boolean.valueOf(values[2]);
             left = Boolean.valueOf(values[3]);
             right = Boolean.valueOf(values[4]);
+            buildMode = Boolean.valueOf(values[5]);
         }
     }
 
@@ -41,24 +44,12 @@ public class MovementDto implements DTO {
         return sequence;
     }
 
-    public void setSequence(long sequence) {
-        this.sequence = sequence;
-    }
-
     public boolean isForward() {
         return forward;
     }
 
-    public void setForward(boolean forward) {
-        this.forward = forward;
-    }
-
     public boolean isBack() {
         return back;
-    }
-
-    public void setBack(boolean back) {
-        this.back = back;
     }
 
     public boolean isLeft() {
@@ -75,5 +66,9 @@ public class MovementDto implements DTO {
 
     public void setRight(boolean right) {
         this.right = right;
+    }
+
+    public boolean isBuildMode() {
+        return buildMode;
     }
 }

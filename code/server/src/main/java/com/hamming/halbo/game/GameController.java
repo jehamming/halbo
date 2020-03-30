@@ -94,7 +94,7 @@ public class GameController implements Runnable {
     }
 
 
-    public void handleMoveRequest(Long sequence, User u, boolean forward, boolean back, boolean left, boolean right) {
+    public void handleMoveRequest(Long sequence, User u, boolean forward, boolean back, boolean left, boolean right, boolean buildMode) {
         UserLocation location = gameState.getLocation(u);
         if (location != null) {
             float currentSpeed = 0;
@@ -112,7 +112,7 @@ public class GameController implements Runnable {
 
             location = calculateNewPosition(location, currentSpeed, currentTurnSpeed);
 
-            checkBaseplateBounds(location);
+            checkBaseplateBounds(location, buildMode);
 
             location.setSequence(sequence);
             gameState.setLocation(u, location);
@@ -120,12 +120,17 @@ public class GameController implements Runnable {
         }
     }
 
-    private void checkBaseplateBounds(UserLocation l) {
+    private void checkBaseplateBounds(UserLocation l, boolean buildMode) {
         Baseplate b = l.getBaseplate();
         if ( l.getX() > b.getSize()) {
             // Switch to baseplate to the right(EAST)
             Baseplate eastBaseplate = l.getCity().getCityGrid().getBaseplate(l.getBaseplate(), CityGrid.Direction.EAST);
             if (eastBaseplate != null ) {
+                float x = l.getX() - l.getBaseplate().getSize();
+                l.setBaseplate(eastBaseplate);
+                l.setX(x);
+            } else if (eastBaseplate == null && buildMode) {
+                eastBaseplate = createBaseplate("AUTOBUILD",l,CityGrid.Direction.EAST);
                 float x = l.getX() - l.getBaseplate().getSize();
                 l.setBaseplate(eastBaseplate);
                 l.setX(x);
@@ -140,6 +145,11 @@ public class GameController implements Runnable {
                 float x = westBaseplate.getSize() + l.getX();
                 l.setBaseplate(westBaseplate);
                 l.setX(x);
+            } else if (westBaseplate == null && buildMode) {
+                westBaseplate = createBaseplate("AUTOBUILD",l,CityGrid.Direction.WEST);
+                float x = westBaseplate.getSize() + l.getX();
+                l.setBaseplate(westBaseplate);
+                l.setX(x);
             } else {
                 l.setX(0);
             }
@@ -148,6 +158,11 @@ public class GameController implements Runnable {
             // Switch to baseplate to the top(NORTH)
             Baseplate northBaseplate = l.getCity().getCityGrid().getBaseplate(l.getBaseplate(), CityGrid.Direction.NORTH);
             if (northBaseplate != null ) {
+                float z = l.getZ() - l.getBaseplate().getSize();
+                l.setBaseplate(northBaseplate);
+                l.setZ(z);
+            } else if (northBaseplate == null && buildMode) {
+                northBaseplate = createBaseplate("AUTOBUILD",l,CityGrid.Direction.NORTH);
                 float z = l.getZ() - l.getBaseplate().getSize();
                 l.setBaseplate(northBaseplate);
                 l.setZ(z);
@@ -162,11 +177,31 @@ public class GameController implements Runnable {
                 float z = southBaseplate.getSize() + l.getZ();
                 l.setBaseplate(southBaseplate);
                 l.setZ(z);
+            } else if (southBaseplate == null && buildMode) {
+                southBaseplate = createBaseplate("AUTOBUILD",l,CityGrid.Direction.SOUTH);
+                float z = southBaseplate.getSize() + l.getZ();
+                l.setBaseplate(southBaseplate);
+                l.setZ(z);
             } else {
                 l.setZ(0);
             }
-
         }
+    }
+
+    private Baseplate createBaseplate(String name, UserLocation l, CityGrid.Direction direction) {
+        Baseplate newBaseplate = BaseplateFactory.getInstance().createBaseplate(name, l.getUser());
+        try {
+            l.getCity().getCityGrid().addBasePlate(newBaseplate, l.getBaseplate(), direction);
+            UserLocation baseplateLocation = new UserLocation(null);
+            baseplateLocation.setWorld(l.getWorld());
+            baseplateLocation.setContinent(l.getContinent());
+            baseplateLocation.setCity(l.getCity());
+            baseplateLocation.setBaseplate(newBaseplate);
+            fireGameStateEvent(GameStateEvent.Type.CITYBASEPLATEADDED, baseplateLocation);
+        } catch (CityGridException e) {
+            e.printStackTrace();
+        }
+        return newBaseplate;
     }
 
     private UserLocation calculateNewPosition(UserLocation location, float currentSpeed, float currentTurnSpeed) {

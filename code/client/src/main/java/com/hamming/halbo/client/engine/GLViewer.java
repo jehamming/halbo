@@ -53,10 +53,8 @@ public class GLViewer implements Runnable {
 
     @Override
     public void run() {
-        DisplayManager.createDisplay("GLViewer");
+        DisplayManager.createDisplay("3DViewer");
         loader = new Loader();
-
-
         MasterRenderer renderer = new MasterRenderer(loader);
 
         Light light = new Light(new Vector3f(0, 1000, -7000), new Vector3f(0.4f, 0.4f, 0.4f));
@@ -165,6 +163,10 @@ public class GLViewer implements Runnable {
         }
     }
 
+    public void setTitle(String title) {
+        DisplayManager.setTitle(title);
+    }
+
     public boolean getForward() {
         return  initialized && Keyboard.isKeyDown(Keyboard.KEY_W);
     }
@@ -179,6 +181,10 @@ public class GLViewer implements Runnable {
 
     public boolean getRight() {
         return initialized && Keyboard.isKeyDown(Keyboard.KEY_D);
+    }
+
+    public boolean isBuildMode() {
+        return initialized && Keyboard.isKeyDown(Keyboard.KEY_B);
     }
 
     public TexturedModel getBasicPlayerTexture() {

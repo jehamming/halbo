@@ -11,6 +11,7 @@ import com.wijlen.ter.halbo.lwjgl.models.TexturedModel;
 import com.wijlen.ter.halbo.lwjgl.objConverter.ModelData;
 import com.wijlen.ter.halbo.lwjgl.objConverter.OBJFileLoader;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import com.wijlen.ter.halbo.lwjgl.renderEngine.DisplayManager;
 import com.wijlen.ter.halbo.lwjgl.renderEngine.Loader;
@@ -110,8 +111,8 @@ public class MainGameLoop {
         Camera camera = new Camera(player);
 
         List<GuiTexture> guis = new ArrayList<>();
-//        GuiTexture gui = new GuiTexture(loader.loadTexture("socuwan"), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
-//        com.wijlen.ter.halbo.lwjgl.guis.add(gui);
+        GuiTexture gui = new GuiTexture(loader.loadTexture("socuwan"), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+        guis.add(gui);
 
         GuiRenderer guiRenderer = new GuiRenderer(loader);
 

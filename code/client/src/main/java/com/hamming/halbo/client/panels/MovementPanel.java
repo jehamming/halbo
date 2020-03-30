@@ -20,7 +20,7 @@ public class MovementPanel extends JPanel{
 
     private void createPanel() {
         setBorder(new TitledBorder("Movement"));
-        add(new JLabel("Use WSAD to Move)"));
+        add(new JLabel("<html>Use WSAD to Move,<br>Press 'B' for auto Baseplate mode</html>"));
     }
 
 

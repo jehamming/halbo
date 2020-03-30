@@ -3,6 +3,7 @@ package com.hamming.halbo.client.controllers;
 import com.hamming.halbo.client.CalcTools;
 import com.hamming.halbo.client.Controllers;
 import com.hamming.halbo.client.engine.GLViewer;
+import com.hamming.halbo.client.interfaces.CityListener;
 import com.hamming.halbo.client.interfaces.ConnectionListener;
 import com.hamming.halbo.client.interfaces.MovementListener;
 import com.hamming.halbo.client.interfaces.UserListener;
@@ -14,7 +15,7 @@ import org.lwjgl.util.vector.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewController implements MovementListener, ConnectionListener, UserListener {
+public class ViewController implements MovementListener, ConnectionListener, UserListener, CityListener {
 
     private ProtocolHandler protocolHandler;
     private ConnectionController connectionController;
@@ -41,6 +42,7 @@ public class ViewController implements MovementListener, ConnectionListener, Use
         moveController.addMovementListener(this);
         connectionController.addConnectionListener(this);
         userController.addUserListener(this);
+        cityController.addCityListener(this);
         movementSender = new MovementSender(this, connectionController);
         sequenceNumber = 0;
         movementRequests = new ArrayList<MovementDto>();
@@ -85,6 +87,21 @@ public class ViewController implements MovementListener, ConnectionListener, Use
         deleteRequestsUpTO(l.getSequence());
         // Apply all the requests that server has not processed yet.
         applyMoveRequests(l);
+        String title = generateTitle(l, viewer.isBuildMode());
+        viewer.setTitle(title);
+    }
+
+    private String generateTitle(UserLocationDto l, boolean autoBaseplate) {
+        WorldDto world = worldController.getWorld(l.getWorldId());
+        ContinentDto continent = continentController.getContinent(l.getContinentId());
+        CityDto city = cityController.getCity(l.getCityId());
+        BaseplateDto baseplate = cityController.getBaseplate(l.getBaseplateId());
+        String xyz = "X:"+Math.round(l.getX())+",Y:"+Math.round(l.getY())+",Z:"+Math.round(l.getZ());
+        String title = world.getName()+"\\"+continent.getName()+"\\"+city.getName()+"\\"+baseplate.getName()+":" + xyz;
+        if (autoBaseplate) {
+            title = title.concat(" - Buildmode");
+        }
+        return  title;
     }
 
     private Vector3f getViewerLocation(UserLocationDto l) {
@@ -147,7 +164,7 @@ public class ViewController implements MovementListener, ConnectionListener, Use
         boolean left = viewer.getLeft();
         boolean right = viewer.getRight();
         if (forward || back || left || right) {
-            dto = new MovementDto(getNextSequenceNumber(), forward, back, left, right);
+            dto = new MovementDto(getNextSequenceNumber(), forward, back, left, right, viewer.isBuildMode());
             synchronized (movementRequests) {
                 movementRequests.add(dto);
             }
@@ -182,6 +199,7 @@ public class ViewController implements MovementListener, ConnectionListener, Use
     @Override
     public void userDisconnected(UserDto user) {
         viewer.removePlayer(user.getId());
+        viewer.setTitle("3DViewer");
     }
 
     @Override
@@ -190,5 +208,13 @@ public class ViewController implements MovementListener, ConnectionListener, Use
             UserDto user = userController.getCurrentUser();
             viewer.addPlayer(user.getId(), user.getName());
         }
+    }
+
+    @Override
+    public void cityBaseplateAdded(String cityId, String baseplateId) {
+        BaseplateDto baseplate = cityController.getBaseplate(baseplateId);
+        CityDto city = cityController.getCity(cityId);
+        SimpleCityGrid.GridPosition pos = city.getCityGrid().getPosition(baseplateId);
+        viewer.addBaseplate(baseplateId, baseplate.getName(), baseplate.getSize(), city.getCityGrid().getSize(), pos.x, pos.y );
     }
 }

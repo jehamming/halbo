@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CityGrid implements Serializable  {
+
     public class GridPosition {
         public int x, y;
     }
@@ -17,9 +18,11 @@ public class CityGrid implements Serializable  {
     }
 
     private int size = 0;
+    private City city;
     private Baseplate[][] baseplates;
 
-    public CityGrid(int size, Baseplate startBaseplate, int startX, int startY) {
+    public CityGrid(City city, int size, Baseplate startBaseplate, int startX, int startY) {
+        this.city = city;
         this.size = size;
         this.baseplates = new Baseplate[size][size];
         baseplates[startX][startY] = startBaseplate;
@@ -49,38 +52,38 @@ public class CityGrid implements Serializable  {
         addBasePlate(baseplate, pos.x, pos.y);
     }
 
-    public void addBasePlate(Baseplate baseplate, int row, int col) throws CityGridException {
-        if (row > size || col > size) {
-            String msg = "(" + row + ", " + col + ") is out of bounds, Gridsize=" + size;
+    public void addBasePlate(Baseplate baseplate, int x, int y) throws CityGridException {
+        if (x > size || y > size) {
+            String msg = "(" + x + ", " + y + ") is out of bounds, Gridsize=" + size;
             throw new CityGridException(msg);
         }
-        if (baseplates[row][col] != null) {
-            String msg = "(" + row + ", " + col + ") is occupied";
+        if (baseplates[x][y] != null) {
+            String msg = "(" + x + ", " + y + ") is occupied";
             throw new CityGridException(msg);
         }
         boolean connected = false;
-        connected = connected || hasConnection(row, col, Direction.NORTH);
-        connected = connected || hasConnection(row, col, Direction.SOUTH);
-        connected = connected || hasConnection(row, col, Direction.EAST);
-        connected = connected || hasConnection(row, col, Direction.WEST);
+        connected = connected || hasConnection(x, y, Direction.NORTH);
+        connected = connected || hasConnection(x, y, Direction.SOUTH);
+        connected = connected || hasConnection(x, y, Direction.EAST);
+        connected = connected || hasConnection(x, y, Direction.WEST);
         if (!connected) throw new CityGridException("Baseplate needs to be connected to another baseplate");
-        baseplates[row][col] = baseplate;
+        baseplates[x][y] = baseplate;
     }
 
-    private boolean hasConnection(int row, int col, Direction dir) {
+    private boolean hasConnection(int x, int y, Direction dir) {
         boolean hasConnection = false;
         switch (dir) {
             case NORTH:
-                if (row > 0 && baseplates[row - 1][col] != null) hasConnection = true;
+                if (x > 0 && baseplates[x - 1][y] != null) hasConnection = true;
                 break;
             case SOUTH:
-                if (row < size && baseplates[row + 1][col] != null) hasConnection = true;
+                if (x < size && baseplates[x + 1][y] != null) hasConnection = true;
                 break;
             case EAST:
-                if (col < size && baseplates[row][col + 1] != null) hasConnection = true;
+                if (y < size && baseplates[x][y + 1] != null) hasConnection = true;
                 break;
             case WEST:
-                if (col > 0 && baseplates[row][col - 1] != null) hasConnection = true;
+                if (y > 0 && baseplates[x][y - 1] != null) hasConnection = true;
                 break;
         }
         return hasConnection;
@@ -149,16 +152,29 @@ public class CityGrid implements Serializable  {
 
     public List<CityBaseplate> getAllBaseplates() {
         List<CityBaseplate> cityBaseplates = new ArrayList<CityBaseplate>();
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
-                if (baseplates[row][col] != null) {
-                    CityBaseplate cbp = new CityBaseplate(baseplates[row][col], row, col);
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+                if (baseplates[x][y] != null) {
+                    CityBaseplate cbp = new CityBaseplate(city, baseplates[x][y], x, y);
                     cityBaseplates.add(cbp);
                 }
             }
         }
         return cityBaseplates;
     }
+
+
+
+
+    public CityBaseplate getCitBaseplate(Baseplate baseplate) {
+        CityBaseplate cityBaseplate = null;
+        GridPosition position = findBaseplatePosition(baseplate);
+        if ( position != null ) {
+            cityBaseplate = new CityBaseplate(city, baseplate, position.x, position.y);
+        }
+        return cityBaseplate;
+    }
+
 
     public int getSize() {
         return size;
@@ -167,9 +183,9 @@ public class CityGrid implements Serializable  {
     @Override
     public String toString() {
         String str = "CityGrid :, size = " + size + "\n";
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
-                if (baseplates[row][col] != null) {
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+                if (baseplates[x][y] != null) {
                     str = str.concat(" o ");
                 } else {
                     str = str.concat(" . ");

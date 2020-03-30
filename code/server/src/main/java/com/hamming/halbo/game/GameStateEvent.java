@@ -8,6 +8,7 @@ public class GameStateEvent {
         USERCONNECTED,
         USERDISCONNECTED,
         USERTELEPORTED,
+        CITYBASEPLATEADDED,
         USERLOCATION
     }
 

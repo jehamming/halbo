@@ -12,6 +12,7 @@ public class MoveAction implements Action {
     private boolean back = false;
     private boolean left = false;
     private boolean right = false;
+    private boolean buildMode = false;
 
 
     public MoveAction(GameController controller, ClientConnection client) {
@@ -22,17 +23,18 @@ public class MoveAction implements Action {
     @Override
     public void execute() {
         User u = client.getUser();
-        controller.handleMoveRequest(sequence, u, forward, back, left, right);
+        controller.handleMoveRequest(sequence, u, forward, back, left, right, buildMode);
     }
 
     @Override
     public void setValues(String... values) {
-        if (values.length == 5 ) {
+        if (values.length == 6 ) {
             sequence = Long.valueOf(values[0]);
             forward = Boolean.valueOf(values[1]);
             back = Boolean.valueOf(values[2]);
             left = Boolean.valueOf(values[3]);
             right = Boolean.valueOf(values[4]);
+            buildMode = Boolean.valueOf(values[5]);
         } else {
             System.out.println(this.getClass().getName() + ":" + "Error at "+getClass().getName()+", size not ok of: "+values);
         }
