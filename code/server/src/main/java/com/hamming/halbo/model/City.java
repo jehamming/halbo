@@ -18,7 +18,7 @@ public class City extends BasicObject {
         super(id);
         setName(name);
         this.teleportBaseplate = teleportBaseplate;
-        this.cityGrid = new CityGrid(CITYSIZE, teleportBaseplate,Math.round(CITYSIZE/2), Math.round(CITYSIZE/2));
+        this.cityGrid = new CityGrid(this,CITYSIZE, teleportBaseplate,Math.round(CITYSIZE/2), Math.round(CITYSIZE/2));
     }
 
     public User getMayor() {

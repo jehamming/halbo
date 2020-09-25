@@ -5,10 +5,7 @@ import com.hamming.halbo.model.dto.ContinentDto;
 import com.hamming.halbo.model.dto.WorldDto;
 import com.hamming.halbo.net.CommandReceiver;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ContinentController implements CommandReceiver {
 
@@ -29,7 +26,7 @@ public class ContinentController implements CommandReceiver {
 
     public void addContinent(ContinentDto dto) {
         List<ContinentDto> continentsForWorld = continents.get(dto.getWorldID());
-        if (continentsForWorld == null ) {
+        if (continentsForWorld == null) {
             continentsForWorld = new ArrayList<ContinentDto>();
         }
         continentsForWorld.add(dto);
@@ -46,8 +43,8 @@ public class ContinentController implements CommandReceiver {
     }
 
 
-    public List<ContinentDto> getContinents(WorldDto world) {
-        return continents.get(world.getId());
+    public List<ContinentDto> getContinents(String worldId) {
+        return continents.get(worldId);
     }
 
     public void reset() {
@@ -55,4 +52,19 @@ public class ContinentController implements CommandReceiver {
     }
 
 
+    public ContinentDto getContinent(String continentId) {
+        ContinentDto found = null;
+        Set<String> worldIs = continents.keySet();
+        for (String worldId : worldIs) {
+            List<ContinentDto> contentsForWorld = getContinents(worldId);
+            for (ContinentDto continent : contentsForWorld) {
+                if (continent.getId().equals(continentId)) {
+                    found = continent;
+                    break;
+                }
+            }
+            if (found != null ) break;
+        }
+        return found;
+    }
 }

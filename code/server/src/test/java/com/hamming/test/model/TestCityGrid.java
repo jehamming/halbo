@@ -13,7 +13,7 @@ public class TestCityGrid {
     @Test
     public void testBasicGrid() {
         Baseplate startBaseplate = new Baseplate(HalboID.valueOf("BPL0"));
-        CityGrid grid = new CityGrid(5, startBaseplate, 2,2);
+        CityGrid grid = new CityGrid(null, 5, startBaseplate, 2,2);
         // Add one
         Baseplate bp01 = new Baseplate(HalboID.valueOf("BPL01"));
         try {
@@ -27,7 +27,7 @@ public class TestCityGrid {
     @Test
     public void testAllDirections() {
         Baseplate startBaseplate = new Baseplate(HalboID.valueOf("BPL0"));
-        CityGrid grid = new CityGrid(5, startBaseplate, 2,2);
+        CityGrid grid = new CityGrid( null, 5, startBaseplate, 2,2);
         // Add one
         Baseplate bp01 = new Baseplate(HalboID.valueOf("BPL01"));
         try {
@@ -44,7 +44,7 @@ public class TestCityGrid {
     @Test
     public void testOccupied() {
         Baseplate startBaseplate = new Baseplate(HalboID.valueOf("BPL0"));
-        CityGrid grid = new CityGrid(5, startBaseplate, 2,2);
+        CityGrid grid = new CityGrid( null, 5, startBaseplate, 2,2);
         Baseplate bp01 = new Baseplate(HalboID.valueOf("BPL01"));
         try {
             grid.addBasePlate(bp01, startBaseplate, CityGrid.Direction.NORTH);
@@ -69,7 +69,7 @@ public class TestCityGrid {
     @Test
     public void testOutOfBounds() {
         Baseplate startBaseplate = new Baseplate(HalboID.valueOf("BPL0"));
-        CityGrid grid = new CityGrid(2, startBaseplate, 1,1);
+        CityGrid grid = new CityGrid( null, 2, startBaseplate, 1,1);
         // Add one
         Baseplate bp01 = new Baseplate(HalboID.valueOf("BPL01"));
         boolean exceptionThrown = false;

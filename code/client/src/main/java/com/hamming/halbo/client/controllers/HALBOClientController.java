@@ -34,7 +34,7 @@ public class HALBOClientController implements UserListener, ConnectionListener {
         application.getBaseWindow().getContinentsPanel().empty();
         application.getBaseWindow().getCitiesPanel().empty();
         // Add the continents
-        application.getBaseWindow().getContinentsPanel().addContinents(controllers.getContinentController().getContinents(world));
+        application.getBaseWindow().getContinentsPanel().addContinents(controllers.getContinentController().getContinents(world.getId()));
     }
 
 

@@ -1,5 +1,7 @@
 package com.hamming.halbo.client.controllers;
 
+import com.hamming.halbo.client.interfaces.CityListener;
+import com.hamming.halbo.client.interfaces.UserListener;
 import com.hamming.halbo.game.Protocol;
 import com.hamming.halbo.game.ProtocolHandler;
 import com.hamming.halbo.model.dto.BaseplateDto;
@@ -18,11 +20,14 @@ public class CityController implements CommandReceiver {
     private ProtocolHandler protocolHandler;
     private List<BaseplateDto> baseplates;
     private Map<String, List<CityDto>> cities;
+    private List<CityListener> cityListeners;
+
 
     public CityController(ConnectionController connectionController) {
         protocolHandler = new ProtocolHandler();
         baseplates = new ArrayList<BaseplateDto>();
         cities = new HashMap<>();
+        cityListeners = new ArrayList<CityListener>();
         connectionController.registerReceiver(Protocol.Command.GETCITIES, this);
         connectionController.registerReceiver(Protocol.Command.GETCITYDETAILS, this);
         connectionController.registerReceiver(Protocol.Command.CITYBASEPLATE, this);
@@ -69,6 +74,13 @@ public class CityController implements CommandReceiver {
         if ( city != null ) {
             city.getCityGrid().setBaseplate(dto.getBaseplateId(), dto.getRow(), dto.getCol());
         }
+        fireCityBaseplateAdded(city, dto);
+    }
+
+    private void fireCityBaseplateAdded(CityDto city, CityBaseplateDto dto) {
+        for (CityListener l: cityListeners) {
+            l.cityBaseplateAdded(city.getId(), dto.getBaseplateId());
+        }
     }
 
 
@@ -112,6 +124,10 @@ public class CityController implements CommandReceiver {
 
     public void reset() {
         cities = new HashMap<>();
+    }
+
+    public void addCityListener(CityListener l) {
+        cityListeners.add(l);
     }
 
 }

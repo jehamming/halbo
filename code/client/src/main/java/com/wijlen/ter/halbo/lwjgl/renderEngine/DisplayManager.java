@@ -43,6 +43,10 @@ public class DisplayManager {
 		lastFrameTime = currentFrameTime;
     }
 
+    public static void setTitle(String title) {
+        Display.setTitle(title);
+    }
+
     public static float getFrameTimeSeconds(){
     	return delta;
 	}

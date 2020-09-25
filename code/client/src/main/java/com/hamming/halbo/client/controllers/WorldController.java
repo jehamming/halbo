@@ -54,4 +54,15 @@ public class WorldController implements CommandReceiver {
     public void reset() {
         worlds = new ArrayList<WorldDto>();
     }
+
+    public WorldDto getWorld(String worldId) {
+        WorldDto found = null;
+        for (WorldDto world: worlds) {
+            if ( world.getId().equals(worldId)) {
+                found = world;
+                break;
+            }
+        }
+        return found;
+    }
 }

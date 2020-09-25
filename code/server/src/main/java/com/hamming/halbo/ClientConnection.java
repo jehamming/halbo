@@ -155,6 +155,16 @@ public class ClientConnection implements Runnable, GameStateListener {
             case USERTELEPORTED:
                 handleTeleported((UserLocation) event.getObject());
                 break;
+            case CITYBASEPLATEADDED:
+                handleCityBaseplateAdded((UserLocation) event.getObject());
+                break;
+        }
+    }
+
+    private void handleCityBaseplateAdded(UserLocation l) {
+        if (userLocation != null && l.getCity().equals(userLocation.getCity())) {
+            CityBaseplate cpb = userLocation.getCity().getCityGrid().getCitBaseplate(l.getBaseplate());
+            sendCityBaseplate(cpb);
         }
     }
 
@@ -192,12 +202,17 @@ public class ClientConnection implements Runnable, GameStateListener {
 
     public void sendCityDetails(City city) {
         city.getCityGrid().getAllBaseplates().forEach(cbp -> {
-            CityBaseplateDto dto = DTOFactory.getInstance().getCityBaseplateDto(city.getId().toString(), cbp);
-            send(Protocol.Command.CITYBASEPLATE, dto.toNetData());
-            // Send also the Baseplate
-            BaseplateDto baseplateDto = DTOFactory.getInstance().getBaseplateDto(cbp.getBaseplate());
-            send(Protocol.Command.GETBASEPLATE, baseplateDto.toNetData());
+            sendCityBaseplate(cbp);
         });
+    }
+
+    private void sendCityBaseplate(CityBaseplate cbp) {
+        CityBaseplateDto dto = DTOFactory.getInstance().getCityBaseplateDto(cbp.getCity().getId().toString(), cbp);
+        BaseplateDto baseplateDto = DTOFactory.getInstance().getBaseplateDto(cbp.getBaseplate());
+        // 1st - send Baseplate
+        send(Protocol.Command.GETBASEPLATE, baseplateDto.toNetData());
+        // 2nd - send CityBaseplate info
+        send(Protocol.Command.CITYBASEPLATE, dto.toNetData());
     }
 
     private void sendUserDetails(User u) {
