@@ -1,14 +1,17 @@
+Note: This works with jdk-11.0.8
+
 Import pom.xmls into IntelliJ
 
 Make a Run Configuration for the Client : HALBOClientApplication
-make sure that you set the -Djava.library.path to the resources/lib/natives/linux (or windows)
-make sure that the working dir is set to [..]/git/halbo/code/client
+make sure that you set the -Djava.library.path to the resources/lib/natives/linux (or windows) 
+(Note: if you get strange SUNWPrivate stuff, please change the JDK you are using... Have seen this with Oracle JDK 15)
+make sure that the working dir is set to [..]/code/client/src/main/resources
 
 Make a Run Configuration for the Server : HALBOServer
 make sure that the working dir is set to [..]/git/halbo/code/server
 
 
-# First time run:
+# Note: First time run:
 copy server/src/main/resources/server.properties to the server dir. 
 Make a Run Configuration for : CreateMinimalWorld
 make sure that the working dir is set to [..]/git/halbo/code/server
