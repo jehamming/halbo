@@ -14,7 +14,7 @@
     <natives.version>0.0.6</natives.version>
     <lwjgl.version>2.9.3</lwjgl.version>
     <slick.version>274</slick.version>
-    <junit.version>4.10</junit.version>
+    <junit.version>4.13.1</junit.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
