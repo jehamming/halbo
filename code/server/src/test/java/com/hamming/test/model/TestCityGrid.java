@@ -59,7 +59,7 @@ public class TestCityGrid {
             // Expect an occupied exception
             grid.addBasePlate(bp01, startBaseplate, CityGrid.Direction.NORTH);
         } catch (CityGridException e) {
-            e.printStackTrace();
+            System.err.println(e);
             exceptionThrown = true;
         }
         assert exceptionThrown;
@@ -77,7 +77,8 @@ public class TestCityGrid {
             // Expect an exception
             grid.addBasePlate(bp01, startBaseplate, CityGrid.Direction.SOUTH);
         } catch (CityGridException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.err.println(e);
             exceptionThrown = true;
         }
         System.out.println(grid);

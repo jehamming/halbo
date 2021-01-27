@@ -70,21 +70,26 @@ public class CityGrid implements Serializable  {
         baseplates[x][y] = baseplate;
     }
 
-    private boolean hasConnection(int x, int y, Direction dir) {
+    private boolean hasConnection(int x, int y, Direction dir) throws CityGridException {
         boolean hasConnection = false;
-        switch (dir) {
-            case NORTH:
-                if (x > 0 && baseplates[x - 1][y] != null) hasConnection = true;
-                break;
-            case SOUTH:
-                if (x < size && baseplates[x + 1][y] != null) hasConnection = true;
-                break;
-            case EAST:
-                if (y < size && baseplates[x][y + 1] != null) hasConnection = true;
-                break;
-            case WEST:
-                if (y > 0 && baseplates[x][y - 1] != null) hasConnection = true;
-                break;
+        try {
+            switch (dir) {
+                case NORTH:
+                    if (x > 0 && baseplates[x - 1][y] != null) hasConnection = true;
+                    break;
+                case SOUTH:
+                    if (x < size && baseplates[x + 1][y] != null) hasConnection = true;
+                    break;
+                case EAST:
+                    if (y < size && baseplates[x][y + 1] != null) hasConnection = true;
+                    break;
+                case WEST:
+                    if (y > 0 && baseplates[x][y - 1] != null) hasConnection = true;
+                    break;
+            }
+        } catch (IndexOutOfBoundsException e) {
+            String msg = "(" + x + ", " + y + ") is out of bounds, Gridsize=" + size;
+            throw new CityGridException("hasConnection: " + msg);
         }
         return hasConnection;
     }
