@@ -46,7 +46,7 @@ public class CityGrid implements Serializable  {
                 break;
             case WEST:
                 pos.x -= 1;
-                if (pos.x < 0) throw new CityGridException("Col out of boundss");
+                if (pos.x < 0) throw new CityGridException("Col out of bounds");
                 break;
         }
         addBasePlate(baseplate, pos.x, pos.y);
